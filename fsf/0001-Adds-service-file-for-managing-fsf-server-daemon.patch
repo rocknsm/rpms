@@ -1,0 +1,39 @@
+From 21091a665363d97a7866b7124218fc3c5e22c1bf Mon Sep 17 00:00:00 2001
+From: Derek Ditch <derek@rocknsm.io>
+Date: Sun, 12 Feb 2017 16:11:02 +0000
+Subject: [PATCH] Adds service file for managing fsf-server daemon.
+
+---
+ contrib/fsf.service | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 contrib/fsf.service
+
+diff --git a/contrib/fsf.service b/contrib/fsf.service
+new file mode 100644
+index 0000000..d29f3f4
+--- /dev/null
++++ b/contrib/fsf.service
+@@ -0,0 +1,20 @@
++[Unit]
++Description=File Scanning Framework (FSF-Server) Service
++After=network.target 
++
++[Service]
++Type=forking
++User=fsf
++Group=fsf
++WorkingDirectory=/
++PIDFile=/run/fsf/fsf.pid
++PermissionsStartOnly=true
++ExecStartPre=/bin/mkdir -p /run/fsf
++ExecStartPre=/bin/chown -R fsf:fsf /run/fsf
++ExecStart=/opt/fsf/fsf-server/main.py start
++ExecStop=/opt/fsf/fsf-server/main.py stop
++ExecReload=/opt/fsf/fsf-server/main.py restart
++
++[Install]
++WantedBy=multi-user.target
++
+-- 
+1.8.3.1
+

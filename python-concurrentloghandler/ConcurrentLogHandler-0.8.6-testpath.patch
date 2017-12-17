@@ -1,0 +1,19 @@
+diff --git a/setup.py b/setup.py
+index 11c0049..989899b 100755
+--- a/setup.py
++++ b/setup.py
+@@ -247,13 +247,7 @@ setup(name='ConcurrentLogHandler',
+         "portalocker",
+         ],
+       package_dir={ '' : 'src', },
+-      data_files=[
+-        ('tests', ["stresstest.py"]),
+-        ('docs', [
+-            'README',
+-            'LICENSE',
+-            ]),
+-      ],
++      data_files=[ ],
+       url="http://launchpad.net/python-concurrent-log-handler",
+       license = "http://www.apache.org/licenses/LICENSE-2.0",
+       description=doc.pop(0),

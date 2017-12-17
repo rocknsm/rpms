@@ -1,0 +1,7 @@
+--- src/pefile.cpp.orig	2009-02-27 10:01:44.000000000 -0600
++++ src/pefile.cpp	2009-02-27 10:01:44.000000000 -0600
+@@ -1352,2 +1352,2 @@
+-        char *delim1 = strchr(keep, '/');
+-        char *delim2 = strchr(keep, ',');
++        const char *delim1 = strchr(keep, '/');
++        const char *delim2 = strchr(keep, ',');

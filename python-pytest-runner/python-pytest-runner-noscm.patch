@@ -1,0 +1,52 @@
+diff --git a/docs/conf.py b/docs/conf.py
+index 5d50361..1bd6b91 100644
+--- a/docs/conf.py
++++ b/docs/conf.py
+@@ -20,10 +20,6 @@ link_files = {
+ 				url='{package_url}/issues/{issue}',
+ 			),
+ 			dict(
+-				pattern=r'^(?m)((?P<scm_version>v?\d+(\.\d+){1,2}))\n[-=]+\n',
+-				with_scm='{text}\n{rev[timestamp]:%d %b %Y}\n',
+-			),
+-			dict(
+ 				pattern=r'PEP[- ](?P<pep_number>\d+)',
+ 				url='https://www.python.org/dev/peps/pep-{pep_number:0>4}/',
+ 			),
+diff --git a/setup.py b/setup.py
+index b41096f..97f948b 100644
+--- a/setup.py
++++ b/setup.py
+@@ -4,8 +4,13 @@
+ 
+ import io
+ 
++import re
+ import setuptools
+ 
++with io.open('PKG-INFO', 'r') as fd:
++    version = re.search(r'^Version:\s*([\d.]+)',
++            fd.read(), re.MULTILINE).group(1)
++
+ with io.open('README.rst', encoding='utf-8') as readme:
+ 	long_description = readme.read()
+ 
+@@ -19,7 +24,7 @@ pkg_resources "managed" namespace packages?
+ 
+ params = dict(
+ 	name=name,
+-	use_scm_version=True,
++	version=version,
+ 	author="Jason R. Coombs",
+ 	author_email="jaraco@jaraco.com",
+ 	description=description or name,
+@@ -46,9 +51,6 @@ params = dict(
+ 			'rst.linker>=1.9',
+ 		],
+ 	},
+-	setup_requires=[
+-		'setuptools_scm>=1.15.0',
+-	],
+ 	classifiers=[
+ 		"Development Status :: 5 - Production/Stable",
+ 		"Intended Audience :: Developers",
