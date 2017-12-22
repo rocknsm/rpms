@@ -15,13 +15,9 @@ Prefix:   %{_prefix}
 
 Provides: fsf-server = %{version}
 
-BuildRequires:    git
-BuildRequires:    bash
-BuildRequires:    systemd
-
-Requires(post):   systemd
-Requires(preun):  systemd
-Requires(postun): systemd
+%{?systemd_requires}
+BuildRequires: systemd
+BuildRequires: git
 
 Requires: cabextract
 Requires: libffi-devel
@@ -114,9 +110,7 @@ ln -sf %{_prefix}/fsf-server/main.py %{buildroot}/usr/bin/fsfserver
 /usr/bin/fsfserver
 /usr/bin/fsfclient
 
-%pre -p /bin/sh
-#! /usr/bin/bash
-#
+%pre
 # Add fsf user & group if doesn't exist
 if ! getent group fsf; then
   groupadd --system fsf
