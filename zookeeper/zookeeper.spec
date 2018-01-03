@@ -14,7 +14,7 @@ Release: 1%{?dist}
 License: ASL 2.0 and BSD
 Group: Applications/Databases
 URL: https://zookeeper.apache.org/
-Source0: https://www.apache.org/dyn/closer.cgi/zookeeper/zookeeper-%{version}/zookeeper-%{version}.tar.gz
+Source0: http://www-us.apache.org/dist/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
 Source1: zookeeper.service
 Source2: zkcli
 Source3: zookeeper.logrotate
