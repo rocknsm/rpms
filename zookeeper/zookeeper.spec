@@ -9,7 +9,7 @@ Summary: High-performance coordination service for distributed applications
 Name: zookeeper
 #Version: %{version}
 #Release: %{release}%{?dist}
-Version: 3.4.9
+Version: 3.4.11
 Release: 1%{?dist}
 License: ASL 2.0 and BSD
 Group: Applications/Databases
@@ -46,6 +46,7 @@ install -p -m 0644 zookeeper-%{version}.jar lib/*.jar \
   %{buildroot}%{zk_prefix}/
 # Service, systemd fails to expand file paths in runtime
 mkdir -p %{buildroot}%{_unitdir}
+install -p -D -m 0644 %{S:1} %{buildroot}%{_unitdir}/zookeeper.service
 CLASSPATH=
 for i in %{buildroot}%{zk_prefix}/*.jar; do
   CLASSPATH="%{zk_prefix}/$(basename ${i}):${CLASSPATH}"
