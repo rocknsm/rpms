@@ -10,7 +10,7 @@ Name: zookeeper
 #Version: %{version}
 #Release: %{release}%{?dist}
 Version: 3.4.11
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: ASL 2.0 and BSD
 Group: Applications/Databases
 URL: https://zookeeper.apache.org/
@@ -93,6 +93,6 @@ fi
 %attr(0700,zookeeper,zookeeper) %dir %{zk_datadir}/
 
 %changelog
-* Wed Jan 10 2018 Bradford Dabbs <bndabbs@gmail.com> 3.4.11-2
+* Wed Jan 10 2018 Bradford Dabbs <bndabbs@gmail.com> 3.4.11-1
 - Change zookeeper version from 3.4.9 to 3.4.11
 - Add install command for zookeeper.service
