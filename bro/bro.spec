@@ -1,6 +1,6 @@
 Name:             bro
 Version:          2.5.2
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
 License:          BSD
@@ -395,11 +395,12 @@ make test
 %{python2_sitelib}/BroControl
 %{_mandir}/man8/broctl.8*
 
-%dir %{_localstatedir}/log/bro/
 %dir %{_localstatedir}/lib/bro/
-%dir %{_localstatedir}/spool/bro/
-%ghost %{_localstatedir}/log/bro/*
 %ghost %{_localstatedir}/lib/bro/*
+
+%dir %%attr(-, bro, bro) {_localstatedir}/log/bro/
+%dir %%attr(-, bro, bro) {_localstatedir}/spool/bro/
+%ghost %{_localstatedir}/log/bro/*
 %ghost %{_localstatedir}/spool/bro/*
 
 # Needed if user moves the /var/spool/bro directory elsewhere
@@ -429,6 +430,10 @@ make test
 
 ################################################################################
 %changelog
+* Sat Jan 27 2018 Derek Ditch <derek@rocknsm.io> 2.5.2-4
+- Fixes permissions on spool and log dirs
+- Adds net_admin, net_raw, and sys_nice caps to service file.
+
 * Mon Nov 20 2017 Derek Ditch <derek@rocknsm.io> 2.5.2-3
 - Adds bro system user and group in broctl \%post script
 - Fixes bug in broccoli \%post scriplets to run ldconfig
