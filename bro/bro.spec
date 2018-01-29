@@ -126,7 +126,9 @@ Requires:         broccoli = %{version}-%{release}
 Requires:         python2-broccoli = %{version}-%{release}
 Requires:         bro-core = %{version}-%{release}
 
-Requires(pre):    /usr/sbin/groupadd, /usr/bin/getent
+Requires(pre):    /usr/bin/getent
+Requires(pre):    /usr/sbin/groupadd
+Requires(pre):    /usr/sbin/useradd
 Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
@@ -318,12 +320,18 @@ find "%{buildroot}" -iname "*.log" -delete;
 rm -rf %{buildroot}%{_includedir}/binpac.h.in
 
 ################################################################################
-%post -n broctl
-%systemd_post bro.service
+%pre -n broctl
 getent group bro >/dev/null || groupadd -r bro
 getent passwd bro >/dev/null || \
     useradd -r -g bro -d %{_localstatedir}/lib/bro/ -s /sbin/nologin \
-    -c "System account for Bro service" %{name}
+    -c "System account for Bro service" bro
+
+exit 0
+
+################################################################################
+%post -n broctl
+%systemd_post bro.service
+
 exit 0
 
 ################################################################################
@@ -360,14 +368,13 @@ make test
 %files -n bro-core
 %doc CHANGES NEWS README VERSION
 %license COPYING
-%{_bindir}/bro
+%caps(cap_net_admin,cap_net_raw=pie) %{_bindir}/bro
 %{_bindir}/bro-config
 %{_bindir}/bro-cut
 %{_mandir}/man1/bro-cut.1*
 %{_mandir}/man8/bro.8*
-%{_datadir}/bro/
 %config(noreplace) %{_datadir}/bro/site/local.bro
-%caps(cap_net_admin,cap_net_raw=pie) %{_bindir}/bro
+%{_datadir}/bro/
 
 ################################################################################
 %files -n bro-devel
@@ -398,8 +405,8 @@ make test
 %dir %{_localstatedir}/lib/bro/
 %ghost %{_localstatedir}/lib/bro/*
 
-%dir %%attr(-, bro, bro) {_localstatedir}/log/bro/
-%dir %%attr(-, bro, bro) {_localstatedir}/spool/bro/
+%dir %attr(-, bro, bro) %{_localstatedir}/log/bro/
+%dir %attr(-, bro, bro) %{_localstatedir}/spool/bro/
 %ghost %{_localstatedir}/log/bro/*
 %ghost %{_localstatedir}/spool/bro/*
 
