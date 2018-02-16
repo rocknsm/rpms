@@ -1,0 +1,60 @@
+From d84d8908a18f021fcb9389a2ff4d40a63f4aec03 Mon Sep 17 00:00:00 2001
+From: Derek Ditch <derek@rocknsm.io>
+Date: Thu, 15 Feb 2018 14:15:08 -0600
+Subject: [PATCH] Added atoi function to template funcs and test
+
+---
+ resource/template/template_funcs.go |  2 ++
+ resource/template/template_test.go  | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/resource/template/template_funcs.go b/resource/template/template_funcs.go
+index 35e6beef..50cfbc9d 100644
+--- a/resource/template/template_funcs.go
++++ b/resource/template/template_funcs.go
+@@ -9,6 +9,7 @@ import (
+ 	"os"
+ 	"path"
+ 	"sort"
++	"strconv"
+ 	"strings"
+ 	"time"
+ 
+@@ -45,6 +46,7 @@ func newFuncMap() map[string]interface{} {
+ 	m["mod"] = func(a, b int) int { return a % b }
+ 	m["mul"] = func(a, b int) int { return a * b }
+ 	m["seq"] = Seq
++	m["atoi"] = strconv.Atoi
+ 	return m
+ }
+ 
+diff --git a/resource/template/template_test.go b/resource/template/template_test.go
+index 090350d3..4828654a 100644
+--- a/resource/template/template_test.go
++++ b/resource/template/template_test.go
+@@ -698,6 +698,25 @@ dest = "./tmp/test.conf"
+ [1 2 3]
+ `,
+ 		updateStore: func(tr *TemplateResource) {},
++	}, templateTest{
++		desc: "atoi test",
++		toml: `
++[template]
++src = "test.conf.tmpl"
++dest = "./tmp/test.conf"
++keys = [
++    "/test/count/",
++]
++`,
++		tmpl: `
++{{ seq 1 (atoi (getv "/test/count")) }}
++`,
++		expected: `
++[1 2 3]
++`,
++		updateStore: func(tr *TemplateResource) {
++			tr.store.Set("/test/count", "3")
++		},
+ 	},
+ }
+ 
