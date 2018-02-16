@@ -1,6 +1,6 @@
 Name:             bro
-Version:          2.5.2
-Release:          4%{?dist}
+Version:          2.5.3
+Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
 License:          BSD
@@ -437,6 +437,10 @@ make test
 
 ################################################################################
 %changelog
+* Thu Feb 15 2018 Derek Ditch <derek@rocknsm.io> 2.5.3-1
+- Security fix for binpac, bump to 2.5.3 
+- Remove linux capabilities from service file. Didn't work.
+
 * Sat Jan 27 2018 Derek Ditch <derek@rocknsm.io> 2.5.2-4
 - Fixes permissions on spool and log dirs
 - Adds net_admin, net_raw, and sys_nice caps to service file.

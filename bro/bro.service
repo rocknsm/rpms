@@ -9,10 +9,6 @@ Group=bro
 Environment=HOME=/var/spool/bro
 ExecStart=/usr/bin/broctl deploy
 ExecStop=/usr/bin/broctl stop
-# net_admin is for bringing interface up
-# net_raw is for creating a promiscuous socket
-# sys_nice is for process pinning if used
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_SYS_NICE
 
 [Install]
 WantedBy=multi-user.target
