@@ -5,3 +5,4 @@ RPMS/
 *.tar.gz
 *.tar.xz
 *.tar.bz2
+*RPM-GPG-KEY-*

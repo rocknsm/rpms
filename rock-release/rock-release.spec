@@ -28,6 +28,7 @@ Source0:        http://rocknsm.io/RPM-GPG-KEY-RockNSM-2
 Source1:        LICENSE
 Source2:        rocknsm.repo
 Source3:        rocknsm-testing.repo
+Source4:        https://packagecloud.io/rocknsm/2_1/gpgkey/rocknsm-2_1-B57A427BA885D65E.pub.gpg#/RPM-GPG-KEY-RockNSM-pkgcloud-2_1
 
 BuildArch:     noarch
 Requires:      redhat-release >=  %{version}
@@ -42,6 +43,7 @@ repository GPG key as well as configuration for yum.
 %setup -q  -c -T
 install -pm 644 %{SOURCE0} .
 install -pm 644 %{SOURCE1} .
+install -pm 644 %{SOURCE4} .
 
 %build
 
@@ -52,6 +54,8 @@ rm -rf $RPM_BUILD_ROOT
 #GPG Key
 install -Dpm 644 %{SOURCE0} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
+install -Dpm 644 %{SOURCE4} \
+    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_1
 
 # yum
 install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d
@@ -63,7 +67,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc GPL
+%doc LICENSE
 %config(noreplace) /etc/yum.repos.d/*
 /etc/pki/rpm-gpg/*
 
