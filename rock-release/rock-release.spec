@@ -28,7 +28,8 @@ Source0:        http://rocknsm.io/RPM-GPG-KEY-RockNSM-2
 Source1:        LICENSE
 Source2:        rocknsm.repo
 Source3:        rocknsm-testing.repo
-Source4:        https://packagecloud.io/rocknsm/2_1/gpgkey/rocknsm-2_1-B57A427BA885D65E.pub.gpg#/RPM-GPG-KEY-RockNSM-pkgcloud-2_1
+Source4:        https://packagecloud.io/rocknsm/2_1/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_1
+Source5:        https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/pubkey.gpg#/RPM-GPG-KEY-RockNSM-2.1-Testing
 
 BuildArch:     noarch
 Requires:      redhat-release >=  %{version}
@@ -44,9 +45,9 @@ repository GPG key as well as configuration for yum.
 install -pm 644 %{SOURCE0} .
 install -pm 644 %{SOURCE1} .
 install -pm 644 %{SOURCE4} .
+install -pm 644 %{SOURCE5} .
 
 %build
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -56,6 +57,9 @@ install -Dpm 644 %{SOURCE0} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
 install -Dpm 644 %{SOURCE4} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_1
+install -Dpm 644 %{SOURCE5} \
+    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2.1-Testing
+
 
 # yum
 install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d
