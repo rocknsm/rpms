@@ -14,7 +14,7 @@
 
 Name:           rock-release
 Version:        2.1
-Release:        1
+Release:        2
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
@@ -76,5 +76,8 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Sun Mar 4 2018 Derek Ditch <derek@rocknsm.io> - 2.1-2
+- Added GPG pub key for testing repo
+
 * Fri Feb 23 2018 Derek Ditch <derek@rocknsm.io> - 2.1-1
 - Initial release. Contains stable and testing repos.
