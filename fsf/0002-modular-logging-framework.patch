@@ -1,0 +1,428 @@
+From 32dddab3185d68936f9f52e034827756b681f6b8 Mon Sep 17 00:00:00 2001
+From: Adam Kniffen <akniffen@cisco.com>
+Date: Tue, 21 Feb 2017 17:33:42 -0600
+Subject: [PATCH] Initial stab at a modular logging framework with a
+ Elasticsearch friendly output and standard output
+
+---
+ fsf-server/conf/config.py                     |   4 +-
+ fsf-server/logging_modules/__init__.py        |   4 +
+ fsf-server/logging_modules/rockout.py         | 122 ++++++++++++++++++++++++++
+ fsf-server/logging_modules/scan_log.py        |  22 +++++
+ fsf-server/main.py                            |  63 ++++++++++---
+ fsf-server/modules/EXTRACT_GZIP.py            |   4 +-
+ fsf-server/modules/EXTRACT_SWF.py             |   3 +-
+ fsf-server/scanner.py                         |  35 ++++++--
+ fsf-server/yara/misc_hexascii_pe_in_html.yara |  11 ---
+ 9 files changed, 233 insertions(+), 35 deletions(-)
+ create mode 100644 fsf-server/logging_modules/__init__.py
+ create mode 100644 fsf-server/logging_modules/rockout.py
+ create mode 100644 fsf-server/logging_modules/scan_log.py
+
+diff --git a/fsf-server/conf/config.py b/fsf-server/conf/config.py
+index 71edc37..f1d050b 100644
+--- a/fsf-server/conf/config.py
++++ b/fsf-server/conf/config.py
+@@ -11,7 +11,9 @@ SCANNER_CONFIG = { 'LOG_PATH' : '/tmp',
+                    'PID_PATH' : '/tmp/scanner.pid',
+                    'EXPORT_PATH' : '/tmp',
+                    'TIMEOUT' : 60,
+-                   'MAX_DEPTH' : 10 }
++                   'MAX_DEPTH' : 10,
++                   'ACTIVE_LOGGING_MODULES' : ['scan_log', 'rockout'],
++                   }
+ 
+ SERVER_CONFIG = { 'IP_ADDRESS' : socket.gethostname(),
+                   'PORT' : 5800 }
+diff --git a/fsf-server/logging_modules/__init__.py b/fsf-server/logging_modules/__init__.py
+new file mode 100644
+index 0000000..f46d59f
+--- /dev/null
++++ b/fsf-server/logging_modules/__init__.py
+@@ -0,0 +1,4 @@
++__all__ = [
++    'scan_log',
++    'rockout'
++]
+diff --git a/fsf-server/logging_modules/rockout.py b/fsf-server/logging_modules/rockout.py
+new file mode 100644
+index 0000000..4e3ccc6
+--- /dev/null
++++ b/fsf-server/logging_modules/rockout.py
+@@ -0,0 +1,122 @@
++#! /usr/bin/env python
++#
++"""
++@author: Adam Kniffen
++@contact: adamkniffen@gmail.com
++@copyright: Copyright 2017
++@organization: MOCYBER
++@status: Development
++"""
++import json
++import hashlib
++import sys
++
++
++def template(job, objectid, generated_by, parent=False):
++    """
++    return the dict template for an object
++    :param job: type(str), the scan job
++    :param objectid: type(str) the objectID of the new object you're creating
++    :param generated_by: type(str), the FSF module that producted the object
++    :param parent: (OPTIONAL) type(str), the parent objectid or False to return an empty string
++    :return: object dict
++    """
++    if parent is False:
++        parent = ""
++    doc = {
++            "meta": {
++                "parentid": parent,
++                "job": job,
++                "objectid": objectid,
++                "generated_by": generated_by
++            },
++    }
++    return doc
++
++
++def objectid(salt, scanid):
++    """
++    return a md5 UID. Note, be careful with the salt value, if you dig too far into the scan dict you might find that
++    keys you expected aren't there
++    :param salt:
++    :param scanid:
++    :return:
++    """
++    return hashlib.md5("%s%s" % (salt, scanid)).hexdigest()
++
++
++def walk(d, job, parent, generated_by):
++    """
++    walk a FSF scan dict where the clue to recurse is "EXTRACT_", and whenever we recurse we need to provide a parentID
++    module name
++    :param d: the dictionary
++    :param job: the scan job
++    :param parent: the object parent
++    :param generated_by: the EXTRACT module or submission event that spawned object mining
++    :return: Generator
++    """
++
++    # we've got objects, so for each we need to recurse...
++    parent = parent
++    for ob in d:
++
++        if "META_" in ob:
++            continue
++
++        # keep moving if this happens (shouldn't ever happen?)!
++        if "EXTRACT_" in ob:
++            for res in walk(d=d[ob], job=job, parent=parent, generated_by=ob):
++                yield res
++
++        if "Object" in ob:
++            obj = template(parent=parent, job=job, objectid=objectid(salt=d[ob], scanid=job),
++                           generated_by=generated_by)
++
++        # we can't leave this hanging, so execute each mining task in its own for loop
++            for module in d[ob]:
++                # mine all the meta, ignore any extracted subobjects, yield the goodies
++                if "EXTRACT_" not in module:
++                    obj[module] = d[ob][module]
++            yield obj
++
++            for module in d[ob]:
++                if "EXTRACT_" in module:
++                    # we've got file babies, so its time to assign parentage
++                    parent = obj['meta']['objectid']
++                    for res in walk(d=d[ob][module], job=job, parent=parent, generated_by=module):
++                        yield res
++
++
++def rockout(d):
++    objs = []
++
++    # generate the root object
++    job = "scan-%s" % hashlib.md5("%s-%s" % (d["Scan Time"], d["Filename"])).hexdigest()
++    rootdoc = template(job=job, objectid=objectid(salt=d.items(), scanid=job), generated_by="submission")
++    count = 0
++    for key in d:
++
++        if key != "Object":
++            rootdoc[key] = d[key]
++
++    # now process "The Object..." it has to be there as it was the file that was submitted to FSF
++
++    obj = template(parent=False, job=job, objectid=objectid(salt=d["Object"].items(), scanid=job),
++                   generated_by="submission")
++    for module in d["Object"]:
++        if "EXTRACT_" not in module:
++            obj[module] = d["Object"][module]
++    objs.append(obj)
++
++    for module in d["Object"]:
++        if "EXTRACT_" in module:
++        # we have extraction, so start the walkin'
++
++            for res in walk(d=d["Object"][module], parent=obj['meta']['objectid'], job=job, generated_by=module):
++                objs.append(res)
++
++    rootdoc["objects"] = objs
++    return rootdoc
++
++if __name__ == "__main__":
++    print rockout(d=sys.stdin())
+diff --git a/fsf-server/logging_modules/scan_log.py b/fsf-server/logging_modules/scan_log.py
+new file mode 100644
+index 0000000..3f594b8
+--- /dev/null
++++ b/fsf-server/logging_modules/scan_log.py
+@@ -0,0 +1,22 @@
++#! /usr/bin/env python
++#
++"""
++@author: Adam Kniffen
++@contact: adamkniffen@gmail.com
++@copyright: Copyright 2017
++@organization: MOCYBER
++@status: Development
++"""
++
++import sys
++
++def scan_log(raw_report):
++    """
++    This just returns the raw_report--it acts like the default FSF logger
++    :param raw_report: type:dict, the FSF Scan report
++    :return: type:dict, an unmolested FSF Scan report
++    """
++    return raw_report
++
++if __name__ == "__main__":
++    print scan_log(raw_report=sys.stdin.read())
+diff --git a/fsf-server/main.py b/fsf-server/main.py
+index 17ce563..afe5d86 100755
+--- a/fsf-server/main.py
++++ b/fsf-server/main.py
+@@ -29,6 +29,7 @@ import json
+ from daemon import Daemon
+ from conf import config
+ from datetime import datetime as dt
++from logging_modules import *
+ 
+ class ScannerDaemon(Daemon):
+ 
+@@ -53,7 +54,7 @@ class ForkingTCPRequestHandler(SocketServer.BaseRequestHandler):
+ 
+       s = Scanner()
+       s.check_directories()
+-      s.initialize_logger()
++      s.initialize_logger(fsf_loggers=config.SCANNER_CONFIG['ACTIVE_LOGGING_MODULES'])
+       s.check_yara_file()
+ 
+       # Check in case client terminates connection mid xfer
+@@ -84,24 +85,66 @@ class ForkingTCPRequestHandler(SocketServer.BaseRequestHandler):
+          self.request.close()
+ 
+    def process_data(self, data, s):
++      """
++
++      Process data initiates or directly performs the following significant tasks:
++         * splits up the input object received from the the TCP Server
++         * submits it for analysis
++         * logs the results
++         * if the submitting client asks for the report back, returns pretty printed json of the raw_results
++      There are some options for your logging: Namely that logging modules can return the following object types:
++         * Nonetype: skips the "write to logfile" business. This is particularly useful if you're
++                     publishing directly to a messaging pipeline
++         * Exception: Something went wrong with the logging module so log that error to the dbg log and continue
++         * List: call the logger per object on the list
++         * Dict: call the logger once after dumping to json
++      Additionally, if you really, really, really don't want to log in JSON you can return a non dict object
++      either as the results, or within a list.
++
++      :param data: the data received from the TCP Server
++      :param s: the scanner instance
++      """
+       # Get data for initial report generation
+       try:
+          s.filename, s.source, s.archive, s.suppress_report, s.full, s.file = data.split('FSF_RPC')
+-         results = s.scan_file()
++         raw_results = s.scan_file()
+ 
+-         if s.suppress_report == 'True':
+-            s.scan_h.info(json.dumps(results, sort_keys=False))
+-         else:
+-            s.scan_h.info(json.dumps(results, sort_keys=False))
+-            msg = json.dumps(results, indent=4, sort_keys=False)
++         # handle logging
++
++         for fsf_logger in s.scan_h:
++            results = getattr(s.scan_h[fsf_logger]['module'], fsf_logger)(raw_results)
++
++            if isinstance(results, Exception):
++               s.dbg_h.error("There was an error logging the scanner results. Error: %s" % results)
++               continue
++
++            if results is None:
++               continue
++
++            if isinstance(results, list):
++               for x in results:
++                  if isinstance(x, dict):
++                     s.scan_h[fsf_logger]['logger'].info(json.dumps(results, sort_keys=False))
++                  else:
++                     s.scan_h[fsf_logger]["logger"].info(x)
++
++            if isinstance(results, dict):
++               s.scan_h[fsf_logger]['logger'].info(json.dumps(results, sort_keys=False))
++
++            else:
++               s.scan_h[fsf_logger]["logger"].info(results)
++
++         # send the report if it's not suppressed todo: structure the report with one or more specified logging formats
++         if s.suppress_report == 'False':
++            msg = json.dumps(raw_results, indent=4, sort_keys=False)
+             buffer = struct.pack('>I', len(msg)) + msg
+             self.request.sendall(buffer)
+             if s.full == 'True':
+                self.process_subobjects(s)
+ 
+-      except:
+-         e = sys.exc_info()[0]
+-         s.dbg_h.error('%s There was an error generating scanner results. Error: %s' % (dt.now(), e))
++      except Exception, err:
++         #e = sys.exc_info()
++         s.dbg_h.error('%s There was an error generating scanner results. Error: %s' % (dt.now(), err))
+ 
+    def process_subobjects(self, s):
+       # If client requests full dump of subobjects, we should have them ready here
+diff --git a/fsf-server/modules/EXTRACT_GZIP.py b/fsf-server/modules/EXTRACT_GZIP.py
+index 42b0507..88bb3f1 100644
+--- a/fsf-server/modules/EXTRACT_GZIP.py
++++ b/fsf-server/modules/EXTRACT_GZIP.py
+@@ -24,12 +24,12 @@ import gzip
+ from StringIO import StringIO
+ 
+ def EXTRACT_GZIP(s, buff):
+-   EXTRACT_GZIP = {}
+ 
+    # Only one file within a GZIP, you'll never have multiple ones
+    # For that, you'll likely see something like GZ+TAR
+    gzf = gzip.GzipFile(fileobj=StringIO(buff), mode='rb')
+-   EXTRACT_GZIP['Buffer'] = gzf.read()
++
++   EXTRACT_GZIP = {'Object': {'Buffer': gzf.read()}}
+ 
+    return EXTRACT_GZIP
+ 
+diff --git a/fsf-server/modules/EXTRACT_SWF.py b/fsf-server/modules/EXTRACT_SWF.py
+index 5d209b3..bd9ce11 100644
+--- a/fsf-server/modules/EXTRACT_SWF.py
++++ b/fsf-server/modules/EXTRACT_SWF.py
+@@ -29,7 +29,6 @@ def EXTRACT_SWF(s, buff):
+ 
+    magic = buff[:3]
+    data = ''
+-
+    if magic == 'CWS':
+       SWF['Buffer'] = 'FWS' + buff[3:8] + zlib.decompress(buff[8:])
+    elif magic == 'ZWS':
+@@ -37,7 +36,7 @@ def EXTRACT_SWF(s, buff):
+    elif magic == 'FWS':
+       SWF['Version'] = ord(buff[3])
+ 
+-   return SWF
++   return {"Object": SWF}
+ 
+ if __name__ == '__main__':
+    # For testing, s object can be None type if unused in function
+diff --git a/fsf-server/scanner.py b/fsf-server/scanner.py
+index 800c588..7a09252 100755
+--- a/fsf-server/scanner.py
++++ b/fsf-server/scanner.py
+@@ -43,7 +43,7 @@ class Scanner:
+       self.log_path = config.SCANNER_CONFIG['LOG_PATH']
+       self.max_depth = config.SCANNER_CONFIG['MAX_DEPTH']
+       self.dbg_h = ""
+-      self.scan_h = ""
++      self.scan_h = {}
+       self.timeout = config.SCANNER_CONFIG['TIMEOUT']
+       self.alert = False
+       self.full = ""
+@@ -70,21 +70,38 @@ class Scanner:
+             % self.export_path
+             sys.exit(2)
+ 
+-   def initialize_logger(self):
++   def initialize_logger(self, fsf_loggers):
++      """
++      Invoke logging with a concurrent logging module since many of these
++      processes will likely be writing to the scan logs at the same time
++      scan_h is a dict with the following structure:
++         {
++         "<logger_name>": {
++            "logger": <logger instance>,
++            "module":<sys.modules value of module>,
++            "path": string, path to logfile output
++            }
++         }
++      :param fsf_loggers: type:list, the filenames (less extensions) of all active loggers in fsf-server.logging_modules
++      """
+ 
+-      # Invoke logging with a concurrent logging module since many of these
+-      # processes will likely be writing to scan.log at the same time
+       self.dbg_h = logging.getLogger('dbg_log')
+       dbglog = '%s/%s' % (self.log_path, 'dbg.log')
+       dbg_rotateHandler = ConcurrentRotatingFileHandler(dbglog, "a")
+       self.dbg_h.addHandler(dbg_rotateHandler)
+       self.dbg_h.setLevel(logging.ERROR)
+ 
+-      self.scan_h = logging.getLogger('scan_log')
+-      scanlog = '%s/%s' % (self.log_path, 'scan.log')
+-      scan_rotateHandler = ConcurrentRotatingFileHandler(scanlog, "a")
+-      self.scan_h.addHandler(scan_rotateHandler)
+-      self.scan_h.setLevel(logging.INFO)
++      # For each loaded logger create its apprpriate entries
++      for fsf_logger in fsf_loggers:
++         self.scan_h[fsf_logger] = {
++            'logger': logging.getLogger(fsf_logger),
++            'module': sys.modules["logging_modules.%s" % fsf_logger],
++            'path': '%s/%s.log' % (self.log_path, fsf_logger)
++         }
++         scan_rotateHandler = ConcurrentRotatingFileHandler(self.scan_h[fsf_logger]['path'], "a")
++         self.scan_h[fsf_logger]['logger'].addHandler(scan_rotateHandler)
++         self.scan_h[fsf_logger]['logger'].setLevel(logging.INFO)
++
+ 
+    def check_yara_file(self):
+ 
+diff --git a/fsf-server/yara/misc_hexascii_pe_in_html.yara b/fsf-server/yara/misc_hexascii_pe_in_html.yara
+index 0e274bc..9fbdb27 100644
+--- a/fsf-server/yara/misc_hexascii_pe_in_html.yara
++++ b/fsf-server/yara/misc_hexascii_pe_in_html.yara
+@@ -6,7 +6,6 @@ Example target...
+ 
+ ...
+ 
+-<iframe src="hxxp://NtKrnlpa[.]cn/rc/" width=1 height=1 style="border:0"></iframe>
+ </body></html><SCRIPT Language=VBScript><!--
+ DropFileName = "svchost.exe"
+ WriteData = "4D5A90000300000004000000FFFF0000B800000000000000400000000000000..
+@@ -43,13 +42,3 @@ rule misc_hexascii_pe_in_html : encoding html suspicious
+     condition:
+         all of ($html*) and $pe in (@mz[1] .. filesize)
+ }
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-- 
+2.14.3
+

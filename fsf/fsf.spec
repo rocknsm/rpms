@@ -6,10 +6,11 @@
 Name:     fsf
 Summary:  File Scanning Framework is a recursive file scanning solution that provides a service for static file analysis.
 Version:  1.1
-Release:  3.git.%{shortcommit0}%{?dist}
+Release:  5.git.%{shortcommit0}%{?dist}
 License:  Apache License, Version 2.0
 Source0:  https://github.com/EmersonElectricCo/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{version}-%{shortcommit0}.tar.gz
-Patch0:   https://raw.githubusercontent.com/akniffe1/fsf_rpm/master/SOURCES/0001-Adds-service-file-for-managing-fsf-server-daemon.patch
+Patch0:   0001-add-service-file.patch
+Patch1:   0002-modular-logging-framework.patch
 URL:      https://github.com/EmersonElectricCo/%{name}
 Prefix:   %{_prefix}
 
@@ -20,10 +21,6 @@ BuildRequires: systemd
 BuildRequires: git
 
 Requires: cabextract
-Requires: libffi-devel
-Requires: libtool
-Requires: net-tools
-Requires: openssl
 Requires: python-concurrentloghandler
 Requires: python-ctypescrypto
 Requires: python-czipfile
@@ -45,11 +42,11 @@ Requires: python-ssdeep
 Requires: python-xmltodict
 Requires: python2-pyasn1
 Requires: python2-pyasn1-modules
+Requires: python2-yara
 Requires: ssdeep
 Requires: unrar
 Requires: unzip
 Requires: upx
-Requires: yara
 
 %description
 The File Scanning Framework Server provides a daemonized python socket server and recursive file analysis capability.
@@ -102,6 +99,8 @@ ln -sf %{_prefix}/fsf-server/main.py %{buildroot}/usr/bin/fsfserver
 %attr(0755, fsf, fsf) %{_prefix}/fsf-server/modules/*.py
 %attr(0755, fsf, fsf) %{_prefix}/fsf-server/*.py[oc]
 %attr(0755, fsf, fsf) %{_prefix}/fsf-server/*.py
+%attr(0755, fsf, fsf) %{_prefix}/fsf-server/logging_modules/*.py
+%attr(0755, fsf, fsf) %{_prefix}/fsf-server/logging_modules/*.py[oc]
 
 %attr(0664, fsf, fsf) %{_prefix}/fsf-server/jq/*.jq
 %attr(0664, fsf, fsf) %{_sharedstatedir}/yara-rules/*.yara
@@ -129,6 +128,12 @@ fi
 %systemd_postun %{name}.service
 
 %changelog
+* Fri Mar 9 2018 Derek Ditch <derek@rocknsm.io> 1.1-5.git7c5b201
+- Added patch for modular logging support to make Kibana friendly
+
+* Tue Jan 9 2018 Derek Ditch <derek@rocknsm.io> 1.1-4.git7c5b201
+- Removed more devel deps that weren't needed. Now without gcc!
+
 * Sun Dec 17 2017 Derek Ditch <derek@rocknsm.io> 1.1-3.git7c5b201
 - Removed BuildRequires that weren't needed
 
