@@ -9,7 +9,7 @@ Summary: High-performance coordination service for distributed applications
 Name: zookeeper
 #Version: %{version}
 #Release: %{release}%{?dist}
-Version: 3.4.11
+Version: 3.4.12
 Release: 1%{?dist}
 License: ASL 2.0 and BSD
 Group: Applications/Databases
@@ -23,6 +23,7 @@ Source5: zoo.cfg
 Source6: log4j.properties
 Source7: log4j-cli.properties
 %{?systemd_requires}
+Requires: java-headless
 BuildRequires: systemd
 BuildArch: noarch
 
