@@ -1,5 +1,5 @@
 Name:             bro
-Version:          2.5.3
+Version:          2.5.4
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
