@@ -4,8 +4,8 @@
 %global     commitdate 20171122
 
 Name:       bro-plugin-af_packet
-Version:    1
-Release:    3.%{commitdate}git%{shortcommit0}%{?dist}
+Version:    1.3
+Release:    2.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    Native AF_Packet support plugin for Bro.
 
@@ -17,8 +17,9 @@ BuildRequires:  cmake
 BuildRequires:  kernel-devel
 BuildRequires:  libpcap-devel
 BuildRequires:  zlib-devel
-BuildRequires:  bro-devel >= 2.5.0
-Requires:       bro-core  >= 2.5.0
+BuildRequires:  bro-devel == 2.5.5
+BuildRequires:  gcc-c++
+Requires:       bro-core  == 2.5.5
 Requires:       libpcap
 Requires:       zlib
 
@@ -57,5 +58,9 @@ make %{?_smp_mflags}
 
 
 %changelog
-* Mon Aug 13 2108 Derek Ditch <derek@rocknsm.io> 1.3-1
-- Rebuilding to lock against librdkafka 0.11.4
+* Wed Oct 24 2018 Derek Ditch <derek@rocknsm.io> 1.3-2
+- Rebuilding to lock against bro 2.5.5
+- Added gcc-c++ as build dependency
+
+* Mon Aug 13 2018 Derek Ditch <derek@rocknsm.io> 1.3-1
+- Rebuilding to lock against bro 2.5.4
