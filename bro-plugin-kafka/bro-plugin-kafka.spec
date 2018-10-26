@@ -5,7 +5,7 @@
 
 Name:       bro-plugin-kafka
 Version:    0.3
-Release:    1.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    2.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Bro log writer plugin that sends logging output to Kafka.
 
