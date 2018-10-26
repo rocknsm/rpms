@@ -1,11 +1,11 @@
 %global     distname metron-bro-plugin-kafka
-%global     commit0 1dfc5239fae31a64026188109d1e346ce93d5c02
+%global     commit0 d1a09b6a50f20e5fa6cf5c758eea8b0d39ce65be
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global     commitdate 20180317
+%global     commitdate 20181011
 
 Name:       bro-plugin-kafka
-Version:    0.2
-Release:    2.%{commitdate}git%{shortcommit0}%{?dist}
+Version:    0.3
+Release:    1.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Bro log writer plugin that sends logging output to Kafka.
 
@@ -17,9 +17,10 @@ BuildRequires:  cmake
 BuildRequires:  librdkafka-devel
 BuildRequires:  openssl-devel
 BuildRequires:  libpcap-devel
-BuildRequires:  bro-devel = 2.5.4
-Requires:       bro-core  = 2.5.4
-Requires:       librdkafka = 0.11.4
+BuildRequires:  bro-devel = 2.5.5
+BuildRequires:  gcc-c++
+Requires:       bro-core  = 2.5.5
+Requires:       librdkafka = 0.11.5
 Requires:       openssl
 
 %description
@@ -58,7 +59,14 @@ make %{?_smp_mflags}
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
 %changelog
-* Mon Aug 13 2108 Derek Ditch <derek@rocknsm.io> 0.2-3
+* Fri Oct 26 2018 Derek Ditch <derek@rocknsm.io> 0.3-2
+- Update librdkafka requirement to 0.11.5
+
+* Wed Oct 24 2018 Derek Ditch <derek@rocknsm.io> 0.3-1
+- Updating to upstream version
+- Update to link against Bro 2.5.5
+
+* Mon Aug 13 2018 Derek Ditch <derek@rocknsm.io> 0.2-3
 - Rebuilding to lock against librdkafka 0.11.4
 
 * Thu Apr 05 2018 Derek Ditch <derek@rocknsm.io> 0.2-2

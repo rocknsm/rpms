@@ -13,8 +13,8 @@
 # limitations under the License.
 
 Name:           rock-release
-Version:        2.1
-Release:        2
+Version:        2.2
+Release:        1
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
@@ -28,11 +28,11 @@ Source0:        http://rocknsm.io/RPM-GPG-KEY-RockNSM-2
 Source1:        LICENSE
 Source2:        rocknsm.repo
 Source3:        rocknsm-testing.repo
-Source4:        https://packagecloud.io/rocknsm/2_1/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_1
-Source5:        https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/pubkey.gpg#/RPM-GPG-KEY-RockNSM-2.1-Testing
+Source4:        https://packagecloud.io/rocknsm/2_2/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_2
+Source5:	https://copr-be.cloud.fedoraproject.org/results/@rocknsm/testing/pubkey.gpg#/RPM-GPG-KEY-RockNSM-Testing
 
 BuildArch:     noarch
-Requires:      redhat-release >=  %{version}
+Requires:      redhat-release >= 7
 # epel-release is only for enterprise linux, not fedora
 Conflicts:     fedora-release
 
@@ -56,9 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 install -Dpm 644 %{SOURCE0} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
 install -Dpm 644 %{SOURCE4} \
-    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_1
+    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_2
 install -Dpm 644 %{SOURCE5} \
-    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2.1-Testing
+    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-Testing
 
 
 # yum
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Fri Oct 26 2018 Derek Ditch <derek@rocknsm.io> - 2.2-1
+- Bumped version to 2.2
+
 * Sun Mar 4 2018 Derek Ditch <derek@rocknsm.io> - 2.1-2
 - Added GPG pub key for testing repo
 
