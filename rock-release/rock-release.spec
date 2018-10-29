@@ -14,7 +14,7 @@
 
 Name:           rock-release
 Version:        2.2
-Release:        1
+Release:        2
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Mon Oct 29 2018 Derek Ditch <derek@rocknsm.io> - 2.2-2
+- Fixed typo in GPG keyname
+
 * Fri Oct 26 2018 Derek Ditch <derek@rocknsm.io> - 2.2-1
 - Bumped version to 2.2
 
