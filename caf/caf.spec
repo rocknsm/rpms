@@ -16,21 +16,19 @@
 %define supportsOpenCL 1
 %endif
 
-%define		dist_name actor-framework
+%define         dist_name actor-framework
 
 Name:           caf
 Version:        0.16.3
 Release:        1%{?dist}
 Summary:        C++ actor framework
-Group:          Development/Libraries/C and C++
 License:        BSD
 URL:            http://actor-framework.org
 Source0:        https://github.com/actor-framework/%{dist_name}/archive/%{version}.tar.gz#/%{dist_name}-%{version}.tar.gz
 Patch0:         https://github.com/actor-framework/actor-framework/compare/master...dcode:dcode/lib_install_dir.patch#/0-enable-LIB_INSTALL_DIR-for-lib64.patch
-Source99:       caf-rpmlintrc
 Requires:       libcaf_core == %{version}
 Requires:       libcaf_io   == %{version}
-Requires:	libcaf_openssl == %{version}
+Requires:       libcaf_openssl == %{version}
 BuildRequires:  cmake       >= 2.8
 BuildRequires:  gcc-c++     >= 4.8
 BuildRequires:  openssl-devel
@@ -46,7 +44,7 @@ lightweight & fast actor implementations, pattern matching for messages,
 network transparent messaging, and more.
 
 %prep
-%setup -n %{dist_name}-%{version}
+%setup -q -n %{dist_name}-%{version}
 %patch0 -p1
 
 %build
@@ -62,7 +60,7 @@ ctest -V %{?_smp_mflags}
 # By default CAF installs itself into /usr/lib, but some distros may use
 # directories like /usr/lib64 or even /usr/lib32, the right location is
 # expected to be held by "_libdir" macro. Unfortunately, there is no way
-# for %file directive to specify another target directory name, so we have
+# for file directive to specify another target directory name, so we have
 # to move library files into appropriate directory manually right after
 # installation complete. Note that we run unit tests after that as we really
 # do not want to ship broken package. 
@@ -78,7 +76,6 @@ ctest -V %{?_smp_mflags}
 # ---- libcaf_core ----
 %package -n libcaf_core
 Summary:  C++ actor framework: core library
-Group:    Development/Libraries/C and C++ 
 License:  BSD
 
 %description -n libcaf_core
@@ -102,7 +99,6 @@ compiled library.
 # ---- libcaf_io ----
 %package -n libcaf_io
 Summary:  C++ actor framework: IO library
-Group:    Development/Libraries/C and C++ 
 License:  BSD 
 Requires: libcaf_core == %{version}
 
@@ -123,7 +119,6 @@ compiled library.
 # ---- libcaf_openssl ----
 %package -n libcaf_openssl
 Summary:  C++ actor framework: OpenSSL library
-Group:    Development/Libraries/C and C++ 
 License:  BSD
 Requires: libcaf_core == %{version}
 
@@ -148,7 +143,6 @@ compiled library.
 %if 0%{?supportsOpenCL}
 %package -n libcaf_opencl
 Summary:  C++ actor framework: OpenCL support library
-Group:    Development/Libraries/C and C++ 
 License:  BSD
 Requires: libcaf_core == %{version}
 
@@ -173,7 +167,6 @@ compiled library.
 # ---- caf-devel ----
 %package  devel
 Summary:  C++ actor framework: header files
-Group:    Development/Libraries/C and C++ 
 License:  BSD
 Requires: caf == %{version}
 
@@ -190,7 +183,6 @@ CAF. This package will also install all of them.
 # ---- caf-doc ----
 %package doc
 Summary:  C++ actor framework: documentation in HTML format
-Group:    Development/Libraries/C and C++ 
 License:  BSD
 Requires: caf == %{version}
 BuildRequires: doxygen
