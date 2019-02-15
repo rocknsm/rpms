@@ -13,8 +13,8 @@
 # limitations under the License.
 
 Name:           rock-release
-Version:        2.2.0
-Release:        3
+Version:        2.3
+Release:        1
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Fri Feb 15 2019 Derek Ditch <derek@rocknsm.io> - 2.3-1
+- Updated package to 2.3-1
+
 * Mon Oct 29 2018 Derek Ditch <derek@rocknsm.io> - 2.2-3
 - Fixed typo in GPG keyname
 - Disable repo_gpgcheck, not supported by copr
