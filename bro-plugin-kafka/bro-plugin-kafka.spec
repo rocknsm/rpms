@@ -1,11 +1,11 @@
 %global     distname metron-bro-plugin-kafka
-%global     commit0 d1a09b6a50f20e5fa6cf5c758eea8b0d39ce65be
+%global     commit0 bfc9cbbdc97c3a12c59e9d9786bd7e3996a196f5
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global     commitdate 20181011
+%global     commitdate 20190214
 
 Name:       bro-plugin-kafka
 Version:    0.3
-Release:    2.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    3.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Bro log writer plugin that sends logging output to Kafka.
 
@@ -17,9 +17,12 @@ BuildRequires:  cmake
 BuildRequires:  librdkafka-devel
 BuildRequires:  openssl-devel
 BuildRequires:  libpcap-devel
-BuildRequires:  bro-devel = 2.5.5
+BuildRequires:  bro-devel = 2.6.1
+BuildRequires:  bifcl = 1:1.1
+BuildRequires:  binpac-devel = 1:0.51
+BuildRequires:  binpac = 1:0.51
 BuildRequires:  gcc-c++
-Requires:       bro-core  = 2.5.5
+Requires:       bro-core  = 2.6.1
 Requires:       librdkafka = 0.11.5
 Requires:       openssl
 
@@ -31,10 +34,15 @@ A Bro log writer plugin that sends logging output to Kafka.
 
 %build
 # ./configure --build=x86_64-redhat-linux-gnu --host=x86_64-redhat-linux-gnu --program-prefix= --disable-dependency-tracking --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/var/lib --mandir=/usr/share/man --infodir=/usr/share/info --bro-dist=/usr/src/bro-2.5.1
-BRO_DIST=$(find /usr/src -name bro-config -exec /bin/sh {} --bro_dist \;)
-./configure --bro-dist=${BRO_DIST} 
-make %{?_smp_mflags}
-
+mkdir build; cd build
+%cmake \
+  -DCMAKE_MODULE_PATH=/usr/share/bro/cmake \
+  -DBRO_CONFIG_CMAKE_DIR=/usr/share/bro/cmake \
+  -DBRO_CONFIG_PLUGIN_DIR=/usr/lib64/bro/plugins \
+  -DBRO_CONFIG_PREFIX=/usr \
+  -DBRO_CONFIG_INCLUDE_DIR=/usr/include/bro \
+  ..
+%make_build
 
 %install
 %make_install
@@ -59,6 +67,11 @@ make %{?_smp_mflags}
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
 %changelog
+* Thu Feb 14 2019 Derek Ditch <derek@rocknsm.io> 0.3-3
+- Updated to latest commit upstream (technically pre-0.3)
+- Fix segfault on plugin exit
+- Allow sending log to multiple topics
+
 * Fri Oct 26 2018 Derek Ditch <derek@rocknsm.io> 0.3-2
 - Update librdkafka requirement to 0.11.5
 
