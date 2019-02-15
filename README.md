@@ -9,12 +9,23 @@ These packages are currently built over at [RockNSM Copr](https://copr.fedorainf
 The Makefile will make this easier. It's not perfect, but do something like:
 
 ~~~
+make srpm spec=suricata/suricata.spec
+~~~
+
+This will use `spectool` to download the sources, copy them all to the `output/`
+dir, and use `mock` to build the SRPM.
+
+## Building the RPMs locally
+
+~~~
 make rpm spec=suricata/suricata.spec
 ~~~
 
 This will download all the sources, copy them to `output/` and build the SRPM. It will then create the RPM. Both of these are done using `mock`, so you need to ensure you have that setup first.
 
-There's also a shortcut for submitting to `copr` build service. You need to have `copr-cli` installed and configured with your auth token. Then just run 
+There's also a shortcut for submitting to `copr` build service. You need to have `copr-cli` installed and configured with your auth token. Then just run
+
+## Building the SRPM and submit to copr
 
 ~~~
 make copr spec=suricata/suricata.spec

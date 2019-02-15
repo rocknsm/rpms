@@ -7,3 +7,4 @@ RPMS/
 *.tar.bz2
 *RPM-GPG-KEY-*
 .vagrant
+output/
