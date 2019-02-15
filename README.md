@@ -6,11 +6,18 @@ These packages are currently built over at [RockNSM Copr](https://copr.fedorainf
 
 ## Building the SRPMs
 
-Go into each directory and run:
+The Makefile will make this easier. It's not perfect, but do something like:
 
-```
-spectool -a -g <pkgname>.spec
-mock -r epel-7-x86_64 --buildsrpm --spec=<pkgname>.spec --sources=. --resultdir=SRPMS/
-```
+~~~
+make rpm spec=suricata/suricata.spec
+~~~
 
-The first command will download all the sources needed for the package. The second will actually build the SRPM and place the package into the `SRPMS/` directory. From there you can upload to a service like Copr, build with `mock`, or use the classical way of building RPMs with `rpmbuild`.
+This will download all the sources, copy them to `output/` and build the SRPM. It will then create the RPM. Both of these are done using `mock`, so you need to ensure you have that setup first.
+
+There's also a shortcut for submitting to `copr` build service. You need to have `copr-cli` installed and configured with your auth token. Then just run 
+
+~~~
+make copr spec=suricata/suricata.spec
+~~~
+
+This will build the SRPM locally with `mock` as before, but it will not locally build the RPM. It will instead upload it to `copr` repo for @rocknsm/testing.
