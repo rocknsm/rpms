@@ -9,7 +9,9 @@ sources: $(SOURCES)
 $(SOURCES): $(spec)
 	mkdir -p $(outdir)
 	spectool -A -g -C $(outdir) $(spec)
-	cp $(shell dirname $(spec))/$(shell spectool -l $(spec) | awk '$$0 !~ /http/ { print $$2}') $(outdir)
+	for item in $(shell spectool -l $(spec) | awk '$$0 !~ /http/ { print $$2}'); do \
+            cp $(shell dirname $(spec))/$${item} $(outdir); \
+	done
 
 $(outdir)/$(SRPM): $(SOURCES)
 	mock --buildsrpm --sources=$(outdir) --spec $(spec) --resultdir=$(outdir)
