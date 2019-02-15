@@ -23,6 +23,8 @@ Requires:       bro-core >= 2.6.1
 Requires:       libpcap
 Requires:       python2
 Requires:       bash
+Requires:       capstats
+Requires:       trace-summary
 
 Requires(pre):    /usr/bin/getent
 Requires(pre):    /usr/sbin/groupadd
