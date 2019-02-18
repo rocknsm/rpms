@@ -14,7 +14,7 @@
 
 Name:           rock-release
 Version:        2.3
-Release:        1
+Release:        2
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
@@ -28,7 +28,7 @@ Source0:        http://rocknsm.io/RPM-GPG-KEY-RockNSM-2
 Source1:        LICENSE
 Source2:        rocknsm.repo
 Source3:        rocknsm-testing.repo
-Source4:        https://packagecloud.io/rocknsm/2_2/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_2
+Source4:        https://packagecloud.io/rocknsm/2_3/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_3
 Source5:	https://copr-be.cloud.fedoraproject.org/results/@rocknsm/testing/pubkey.gpg#/RPM-GPG-KEY-RockNSM-Testing
 
 BuildArch:     noarch
@@ -56,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 install -Dpm 644 %{SOURCE0} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
 install -Dpm 644 %{SOURCE4} \
-    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_2
+    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_3
 install -Dpm 644 %{SOURCE5} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-Testing
 
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Sun Feb 17 2019 Jeff Geiger <jeff@rocknsm.io> - 2.3-2
+- Updated packagecloud GPG key download
+
 * Fri Feb 15 2019 Derek Ditch <derek@rocknsm.io> - 2.3-1
 - Updated package to 2.3-1
 
