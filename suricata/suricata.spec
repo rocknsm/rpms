@@ -31,6 +31,9 @@ BuildRequires: libevent-devel
 BuildRequires: libprelude-devel
 BuildRequires: pkgconfig(gnutls)
 
+# Needed pyyaml for suricata-update
+
+Requires:  python2-pyyaml
 %if 0%{?fedora} >= 25
 %ifarch x86_64
 BuildRequires: hyperscan-devel
@@ -166,6 +169,7 @@ getent passwd suricata >/dev/null || \
 - Bump to 4.1.3 released on Mar 7
 - Change homedir for suricata user to /var/lib/suricata
 - Create suricata system group to match user
+- Added python2-pyyaml as install dependency
 
 * Thu Dec 20 2018 Steve Grubb <sgrubb@redhat.com> 4.1.1-4
 - Adjust permissions on /run/suricata and /var/lib/suricata to group writable
