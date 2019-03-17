@@ -1,6 +1,6 @@
 Summary: Intrusion Detection System
 Name: suricata
-Version: 4.1.2
+Version: 4.1.3
 Release: 1%{?dist}
 License: GPLv2
 Group: Applications/Internet
@@ -116,7 +116,11 @@ cp suricata-update/README.rst doc/suricata-update-README.rst
 make check
 
 %pre
-getent passwd suricata >/dev/null || useradd -r -M -s /sbin/nologin suricata
+getent group suricata >/dev/null || groupadd --system suricata
+getent passwd suricata >/dev/null || \
+    useradd --system --gid suricata \
+      -d %{_localstatedir}/lib/suricata/ -s /sbin/nologin \
+      -c "System account for Suricata service" suricata
 
 %post
 /sbin/ldconfig
@@ -158,6 +162,11 @@ getent passwd suricata >/dev/null || useradd -r -M -s /sbin/nologin suricata
 %{_datadir}/%{name}/rules
 
 %changelog
+* Sun Mar 17 2019 Derek Ditch <derek@rocknsm.io> 4.1.3-1
+- Bump to 4.1.3 released on Mar 7
+- Change homedir for suricata user to /var/lib/suricata
+- Create suricata system group to match user
+
 * Thu Dec 20 2018 Steve Grubb <sgrubb@redhat.com> 4.1.1-4
 - Adjust permissions on /run/suricata and /var/lib/suricata to group writable
 
