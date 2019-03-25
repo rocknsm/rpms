@@ -37,7 +37,7 @@ go get -u github.com/kardianos/govendor
 go install github.com/kardianos/govendor
 
 # Build the yq binary
-govendor sync
+${GOPATH}/bin/govendor sync
 go build -o %{name} -ldflags=-linkmode=external
 
 %install
@@ -55,4 +55,3 @@ install -p -m 755 gopath/src/github.com/%{git_org}/%{name}/%{name} %{buildroot}%
 %changelog
 * Mon Mar 25 2019 Bradford Dabbs <brad@perched.io>
  - Initial creation of spec file
-
