@@ -5,7 +5,7 @@ Summary:        Process YAML documents from the CLI
 
 License:        MIT
 URL:            https://github.com/mikefarah/yq
-Source0:        https://github.com/mikefarah/%{name}/archive/v%{version}.tar.gz
+Source0:        https://github.com/mikefarah/%{name}/archive/%{version}.tar.gz
 
 BuildRequires:  golang
 
@@ -17,7 +17,7 @@ The aim of the project is to be the jq or sed of yaml files.
 
 
 %prep
-%autosetup -n %{name}
+%autosetup -n %{name}-%{version}
 
 %build
 
@@ -44,7 +44,5 @@ install -p -m 755 %{name} %{buildroot}%{_bindir}
 %{_bindir}/%{name}
 
 
-* Wed Jun 7 2017 Derek Ditch <derek@rocknsm.io>
-- Added datestamp to allow for proper RPM progression
-- Minor cleanups in SPEC file
-- Added systemd as build-time dependency
+* Mon Mar 25 2019 Bradford Dabbs <brad@perched.io>
+ - Initial creation of spec file
