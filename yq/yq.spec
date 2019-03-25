@@ -43,6 +43,6 @@ install -p -m 755 %{name} %{buildroot}%{_bindir}
 
 %{_bindir}/%{name}
 
-
+%changelog
 * Mon Mar 25 2019 Bradford Dabbs <brad@perched.io>
  - Initial creation of spec file
