@@ -1,27 +1,14 @@
 Name:           upx
-Version:        3.94
+Version:        3.95
 Release:        1%{?dist}
 Summary:        Ultimate Packer for eXecutables
 
 Group:          Applications/Archiving
 License:        GPLv2+ and Public Domain
-URL:            http://upx.sourceforge.net/
-Source0:        http://upx.sourceforge.net/download/%{name}-%{version}-src.tar.xz
-#Patch0:		upx-3.03-pefile-strictproto.patch
-#Patch1:		upx-3.07-use-lzma-sdk-lib.patch
-#Patch2:		upx-fallthrough.patch
-Patch3:		upx-whitespace.patch
-Patch4:		ef336dbcc6dc8344482f8cf6c909ae96c3286317.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:            https://upx.github.io/
+ExclusiveArch:  x86_64
+Source0:        https://github.com/%{name}/%{name}/releases/download/v%{version}/%{name}-%{version}-amd64_linux.tar.xz
 
-
-BuildRequires:  ucl-devel >= 1.01
-BuildRequires:  zlib-devel
-%if 0%{?fedora} >= 26
-BuildRequires:	lzma-sdk-devel
-%else
-BuildRequires: lzma-sdk457-devel
-%endif
 
 %description
 UPX is a free, portable, extendable, high-performance executable
@@ -31,26 +18,14 @@ executables suffer no memory overhead or other drawbacks.
 
 
 %prep
-%setup -q -n %{name}-%{version}-src
-sed -i -e 's/ -O2/ /' -e 's/ -Werror//' src/Makefile
-
-#%patch0 -p0
-#%patch1 -p1 -b .use-lib
-#%patch2 -p0
-%patch3 -p0
-%patch4 -p1
+%autosetup -n %{name}-%{version}-amd64_linux
 
 %build
-export CXX="g++"
-export CXXFLAGS="$RPM_OPT_FLAGS" # export, not to make so it won't trump all
-UPX_LZMA_VERSION=0x465 UPX_LZMADIR=%{_includedir}/lzma465 make %{?_smp_mflags} -C src
-make -C doc
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -Dpm 644 doc/upx.1   $RPM_BUILD_ROOT%{_mandir}/man1/upx.1
-install -Dpm 755 src/upx.out $RPM_BUILD_ROOT%{_bindir}/upx
+install -Dpm 644 upx.1   $RPM_BUILD_ROOT%{_mandir}/man1/upx.1
+install -Dpm 755 upx $RPM_BUILD_ROOT%{_bindir}/upx
 
 
 %clean
@@ -59,12 +34,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc BUGS COPYING LICENSE NEWS PROJECTS README README.1ST THANKS
+%doc BUGS COPYING LICENSE NEWS README README.1ST THANKS upx.doc upx.html
 %{_bindir}/upx
 %{_mandir}/man1/upx.1*
 
+%license LICENSE
 
 %changelog
+* Tue Mar 26 2019 Bradford Dabbs <brad@perched.io> - 3.95-1
+- Update source and URL to GitHub vs. Sourceforge
+- Use precompiled release instead of compiling at install
+
 * Tue Oct 10 2017 Gwyn Ciesla <limburgher@gmail.com> - 3.94-1
 - 3.94, plus patch for CVE-2017-15056.
 
@@ -199,3 +179,4 @@ rm -rf $RPM_BUILD_ROOT
 
 * Sat Jul 26 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:1.24-0.fdr.1
 - First build.
+
