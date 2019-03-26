@@ -9,7 +9,7 @@ Summary: High-performance coordination service for distributed applications
 Name: zookeeper
 #Version: %{version}
 #Release: %{release}%{?dist}
-Version: 3.4.12
+Version: 3.4.13
 Release: 1%{?dist}
 License: ASL 2.0 and BSD
 Group: Applications/Databases
@@ -94,6 +94,10 @@ fi
 %attr(0700,zookeeper,zookeeper) %dir %{zk_datadir}/
 
 %changelog
+* Tue Mar 26 2019 Derek Ditch <derek@perched.io> 3.4.13-1
+- Bump version
+- Now requires java-headless
+
 * Wed Jan 10 2018 Bradford Dabbs <bndabbs@gmail.com> 3.4.11-1
 - Change zookeeper version from 3.4.9 to 3.4.11
 - Add install command for zookeeper.service
