@@ -1,15 +1,15 @@
 # I'd rather use `jq -r '.sha' to parse this out, but can't get it into mock
-%global commit0 0e212aeb95ceb3b0c737d6ea7d72d881e11c710a
+%global commit0 d678531a3e5a87b321e9247ba60d0019768681de
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global builddate 20180223
+%global builddate 20190326
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=995136#c12
 %global _dwz_low_mem_die_limit 0
 
 Name:           stenographer
 Version:        0
-Release:        1.%{builddate}git%{shortcommit0}%{?dist}
-Epoch:          1
+Release:        2.%{builddate}git%{shortcommit0}%{?dist}
+Epoch:          2
 Summary:        A high-speed packet capture solution that provides indexed access
 
 License:        Apache License, 2.0
@@ -41,22 +41,17 @@ packets quickly and easily.
 %build
 # Build stenographer
 
-export GOPATH=$(pwd):%{gopath}
+mkdir -p src/github.com/google/%{name}
+export GOPATH=${PWD}
+export PATH=${GOPATH}:${PATH}
+rsync -az --exclude=src/ ./ src/github.com/google/%{name}
 
 #Get go deps
-go get golang.org/x/text/encoding
-#go get golang.org/x/text/encoding/unicode
-go get golang.org/x/text/transform
+go get -u golang.org/x/text/encoding
+go get -u golang.org/x/text/transform
+go get github.com/google/%{name}
 
-# I don't understand go enough to figure out how to do this cleanly
-# It complains that it can't install the project subdirs into GOPATH
-# But `go build` works below regardless
-set +e
-go get ./...
-set -e
-
-# *** ERROR: No build ID note found in /.../BUILDROOT/etcd-2.0.0-1.rc1.fc22.x86_64/usr/bin/etcd
-go build -o %{name} -a -ldflags "-B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n')" -v -x "$@"; 
+go build -o %{name} -a -ldflags "-B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n') -linkmode=external" -v -x "$@";
 
 # Build stenotype
 (cd stenotype; make %{?_smp_mflags} )
@@ -115,7 +110,12 @@ exit 0
 
 %changelog
 
+* Tue Mar 26 2019 Bradford Dabbs <brad@perched.io> 0-2
+- Update to latest git revision
+- Cleanup go dependency imports
+
 * Wed Jun 7 2017 Derek Ditch <derek@rocknsm.io>
 - Added datestamp to allow for proper RPM progression
 - Minor cleanups in SPEC file
 - Added systemd as build-time dependency
+
