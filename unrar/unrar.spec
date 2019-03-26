@@ -1,5 +1,5 @@
 Name:           unrar
-Version:        5.5.8
+Version:        5.7.3
 Release:        1%{?dist}
 Summary:        Utility for extracting, testing and viewing RAR archives
 License:        Freeware with further limitations
@@ -43,7 +43,7 @@ developing applications that use libunrar.
 
 
 %prep
-%setup -q -n %{name}
+%autosetup -n %{name}
 cp -p %SOURCE1 .
 
 
@@ -117,6 +117,10 @@ fi
 
 
 %changelog
+* Tue Mar 26 2019 Bradford Dabbs <brad@perched.io> - 5.7.3-1
+- Update to 5.7.3
+- Change to autosetup macro
+
 * Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 5.5.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
