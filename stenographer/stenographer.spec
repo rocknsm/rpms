@@ -9,7 +9,7 @@
 Name:           stenographer
 Version:        0
 Release:        2.%{builddate}git%{shortcommit0}%{?dist}
-Epoch:          2
+Epoch:          1
 Summary:        A high-speed packet capture solution that provides indexed access
 
 License:        Apache License, 2.0
@@ -118,4 +118,3 @@ exit 0
 - Added datestamp to allow for proper RPM progression
 - Minor cleanups in SPEC file
 - Added systemd as build-time dependency
-
