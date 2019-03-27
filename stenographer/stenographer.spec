@@ -19,6 +19,7 @@ Source0:        https://github.com/google/%{name}/archive/%{commit0}.tar.gz#/%{n
 BuildRequires:  libaio-devel, leveldb-devel, snappy-devel, gcc-c++, make
 BuildRequires:  libpcap-devel, libseccomp-devel, git
 BuildRequires:  golang
+BuildRequires:  rsync
 
 
 Requires:       libaio, leveldb, snappy, libpcap, libseccomp
