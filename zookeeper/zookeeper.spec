@@ -10,7 +10,7 @@ Name: zookeeper
 #Version: %{version}
 #Release: %{release}%{?dist}
 Version: 3.4.13
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: ASL 2.0 and BSD
 Group: Applications/Databases
 URL: https://zookeeper.apache.org/
@@ -23,7 +23,7 @@ Source5: zoo.cfg
 Source6: log4j.properties
 Source7: log4j-cli.properties
 %{?systemd_requires}
-Requires: java-headless
+Requires: java-11-openjdk-headless
 BuildRequires: systemd
 BuildArch: noarch
 
@@ -94,6 +94,9 @@ fi
 %attr(0700,zookeeper,zookeeper) %dir %{zk_datadir}/
 
 %changelog
+* Tue Apr 9 2019 Bradford Dabbs <brad@perched.io> 3.4.13-2
+- Explicitly specify Java 11
+
 * Tue Mar 26 2019 Derek Ditch <derek@perched.io> 3.4.13-1
 - Bump version
 - Now requires java-headless
