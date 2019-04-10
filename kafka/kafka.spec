@@ -18,8 +18,6 @@ Source0: https://www-us.apache.org/dist/%{name}/%{version}/%{name}_%{scala_versi
 Provides: kafka = %{version}
 Provides: kafka-server = %{version}
 
-Prefix:  %{_prefix}
-
 BuildRequires: systemd
 Requires(post): systemd
 Requires(preun): systemd
