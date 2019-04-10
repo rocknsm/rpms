@@ -9,12 +9,12 @@ Summary: High-performance coordination service for distributed applications
 Name: zookeeper
 #Version: %{version}
 #Release: %{release}%{?dist}
-Version: 3.4.13
-Release: 2%{?dist}
+Version: 3.4.14
+Release: 1%{?dist}
 License: ASL 2.0 and BSD
 Group: Applications/Databases
 URL: https://zookeeper.apache.org/
-Source0: http://www-us.apache.org/dist/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
+Source0: https://www-us.apache.org/dist/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
 Source1: zookeeper.service
 Source2: zkcli
 Source3: zookeeper.logrotate
@@ -94,6 +94,10 @@ fi
 %attr(0700,zookeeper,zookeeper) %dir %{zk_datadir}/
 
 %changelog
+* Wed Apr 10 2019 Bradford Dabbs <brad@perched.io> 3.4.14-1
+- Bump version to 3.4.14
+- Update source0 to https
+
 * Tue Apr 9 2019 Bradford Dabbs <brad@perched.io> 3.4.13-2
 - Explicitly specify Java 11
 
