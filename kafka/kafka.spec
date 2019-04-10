@@ -1,10 +1,9 @@
-%define __jar_repack 0
-%define debug_package %{nil}
-%define scala_version 2.12
-%define _prefix      %{_datadir}/kafka
-%define _conf_dir    %{_sysconfdir}/kafka
-%define _log_dir     %{_var}/log/kafka
-%define _data_dir    %{_sharedstatedir}/kafka
+%global __jar_repack 0
+%global debug_package %{nil}
+%global scala_version 2.12
+%global _kafkadir    /usr/share/kafka
+%global _conf_dir    %{_sysconfdir}/kafka
+%global _log_dir     %{_localstatedir}/log/kafka
 
 Name:    kafka
 Version: 2.2.0
@@ -14,6 +13,10 @@ Summary: Apache Kafka is publish-subscribe messaging rethought as a distributed 
 License: Apache License, Version 2.0
 URL:     http://kafka.apache.org/
 Source0: https://www-us.apache.org/dist/%{name}/%{version}/%{name}_%{scala_version}-%{version}.tgz
+Source1: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/kafka.service
+Source2: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/kafka.logrotate
+Source3: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/kafka.sysconfig
+Source4: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/log4j.properties
 
 Provides: kafka = %{version}
 Provides: kafka-server = %{version}
@@ -34,19 +37,19 @@ Kafka is designed to allow a single cluster to serve as the central data backbon
 rm -f libs/{*-javadoc.jar,*-scaladoc.jar,*-sources.jar,*-test.jar}
 
 %install
-mkdir -p %{buildroot}%{_prefix}/{libs,bin,config}
+mkdir -p %{buildroot}%{_kafkadir}/{libs,bin,config}
 mkdir -p %{buildroot}%{_log_dir}
-mkdir -p %{buildroot}%{_data_dir}
 mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}%{_conf_dir}/
-install -p -D -m 755 bin/*.sh %{buildroot}%{_prefix}/bin
-install -p -D -m 644 config/* %{buildroot}%{_prefix}/config
+mkdir -p %{buildroot}%{_sharedstatedir}/kafka
+install -p -D -m 755 bin/*.sh %{buildroot}%{_kafkadir}/bin
+install -p -D -m 644 config/* %{buildroot}%{_kafkadir}/config
 install -p -D -m 644 config/server.properties %{buildroot}%{_conf_dir}/
-sed -i "s:^log.dirs=.*:log.dirs=%{_data_dir}:" %{buildroot}%{_conf_dir}/server.properties
-install -p -D -m 755 kafka.service %{buildroot}%{_unitdir}/kafka.service
-install -p -D -m 644 kafka.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/kafka
-install -p -D -m 644 log4j.properties %{buildroot}%{_conf_dir}/log4j.properties
-install -p -D -m 644 kafka.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/kafka
+sed -i "s:^log.dirs=.*:log.dirs=%{_log_dir}:" %{buildroot}%{_conf_dir}/server.properties
+install -p -D -m 755 %{S:1} %{buildroot}%{_unitdir}/kafka.service
+install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/logrotate.d/kafka
+install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/sysconfig/kafka
+install -p -D -m 644 %{S:4} %{buildroot}%{_conf_dir}/log4j.properties
 install -p -D -m 644 libs/* %{buildroot}%{_sharedstatedir}/kafka
 
 %clean
@@ -76,6 +79,9 @@ fi
 %config(noreplace) %{_sysconfdir}/logrotate.d/kafka
 %config(noreplace) %{_sysconfdir}/sysconfig/kafka
 %config(noreplace) %{_conf_dir}/*
-%{_prefix}
+%{_sharedstatedir}/kafka
+%{_kafkadir}/bin
+%{_kafkadir}/config
 %attr(0755,kafka,kafka) %dir %{_log_dir}
-%attr(0700,kafka,kafka) %dir %{_data_dir}
+%attr(0700,kafka,kafka) %dir %{_kafkadir}
+
