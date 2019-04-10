@@ -85,3 +85,6 @@ fi
 %attr(0755,kafka,kafka) %dir %{_log_dir}
 %attr(0700,kafka,kafka) %dir %{_kafkadir}
 
+%changelog
+* Wed Apr 10 2019 Bradford Dabbs <brad@perched.io> 2.2.0-1
+- Initial build for ROCK NSM
