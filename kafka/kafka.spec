@@ -13,10 +13,10 @@ Summary: Apache Kafka is publish-subscribe messaging rethought as a distributed 
 License: Apache License, Version 2.0
 URL:     http://kafka.apache.org/
 Source0: https://www-us.apache.org/dist/%{name}/%{version}/%{name}_%{scala_version}-%{version}.tgz
-Source1: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/kafka.service
-Source2: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/kafka.logrotate
-Source3: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/kafka.sysconfig
-Source4: https://raw.githubusercontent.com/rocknsm/rpms/kafka/kafka/log4j.properties
+Source1: https://raw.githubusercontent.com/rocknsm/rpms/master/kafka/kafka.service
+Source2: https://raw.githubusercontent.com/rocknsm/rpms/master/kafka/kafka.logrotate
+Source3: https://raw.githubusercontent.com/rocknsm/rpms/master/kafka/kafka.sysconfig
+Source4: https://raw.githubusercontent.com/rocknsm/rpms/master/kafka/log4j.properties
 
 Provides: kafka = %{version}
 Provides: kafka-server = %{version}
