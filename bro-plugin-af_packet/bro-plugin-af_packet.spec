@@ -61,7 +61,7 @@ make %{?_smp_mflags}
 %dir %{_libdir}/bro/plugins/Bro_AF_Packet/scripts
 
 %{_libdir}/bro/plugins/Bro_AF_Packet/__bro_plugin__
-%{_libdir}/bro/plugins/Bro_AF_Packet/broctl/af_packet.py
+%{_libdir}/bro/plugins/Bro_AF_Packet/broctl/af_packet.p*
 %{_libdir}/bro/plugins/Bro_AF_Packet/lib/Bro-AF_Packet.linux-x86_64.so
 %{_libdir}/bro/plugins/Bro_AF_Packet/lib/bif/*.bro
 %{_libdir}/bro/plugins/Bro_AF_Packet/scripts/*.bro

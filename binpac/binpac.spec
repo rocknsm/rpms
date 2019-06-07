@@ -7,7 +7,7 @@ Summary:        High level language for describing protocol parsers.
 License:        BSD
 URL:            https://github.com/zeek/binpac
 Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
-Patch0:         https://github.com/zeek/binpac/compare/master...dcode:dcode/multiarch.patch#/patch0-use-cmake-std-install-vars.patch
+Patch0:         https://github.com/dcode/binpac/commit/5ffea9d9ba2f1b04b3cdc11225eea71ee41894a5.patch#/patch0-use-cmake-std-install-vars.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  cmake >= 2.8.3

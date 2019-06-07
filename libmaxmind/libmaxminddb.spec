@@ -27,7 +27,7 @@ Source:         https://github.com/maxmind/libmaxminddb/releases/download/%{vers
 Url:            http://dev.maxmind.com/
 BuildRequires:  fdupes
 BuildRequires:  gcc-c++
-BuildRequires:  pkg-config
+BuildRequires:  pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description

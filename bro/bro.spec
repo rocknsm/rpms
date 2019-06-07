@@ -12,6 +12,7 @@ Provides:         zeek
 Requires:         bro-core = %{version}-%{release}
 
 Requires:         broctl = 1:1.9
+Requires:         bro-aux = 1:0.42
 BuildRequires:    cmake >= 2.8.12
 
 %description
@@ -33,7 +34,7 @@ Requires:         caf
 BuildRequires:    caf-devel
 Requires:         bind-libs
 BuildRequires:    bind-devel
-Requires:         libmaxminddb
+Requires:         libmaxminddb0
 BuildRequires:    libmaxminddb-devel
 %ifnarch s390 s390x
 Requires:         gperftools-libs
