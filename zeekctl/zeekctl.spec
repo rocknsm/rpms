@@ -17,7 +17,7 @@ BuildRequires:  trace-summary >= 0.88
 BuildRequires:  systemd
 BuildRequires:  swig
 BuildRequires:  libpcap-devel
-BuildRequires:  bro-core >= 2.6.3
+BuildRequires:  bro-core >= 2.6.1
 
 Requires:       bro-core >= 2.6.3
 Requires:       libpcap
