@@ -1,5 +1,5 @@
 Name:           trace-summary
-Version:        0.88
+Version:        0.89
 Release:        1%{?dist}
 Summary:        Generates network traffic summaries.
 
@@ -30,5 +30,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/trace-summary
 
 %changelog
+* Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.89-1
+- Version bump
+
 * Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 0.88-1
 - Initial RPM package
