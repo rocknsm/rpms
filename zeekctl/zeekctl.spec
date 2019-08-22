@@ -86,6 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 
 # Fix zeekctl python location
 mv %{buildroot}/usr/lib/zeekctl/ZeekControl/ %{buildroot}%{python2_sitelib}/ZeekControl/
+mv %{buildroot}/usr/lib/zeekctl/BroControl/ %{buildroot}%{python2_sitelib}/BroControl/
 mv %{buildroot}/usr/lib/zeekctl/plugins %{buildroot}%{python2_sitelib}/ZeekControl/plugins
 
 # Remove capstats, trace-summary, and pysubnettree
@@ -131,7 +132,9 @@ exit 0
 %{_unitdir}/zeek.service
 %dir %{_datadir}/zeekctl
 %{_datadir}/zeek/zeekctl/*.zeek
+%{_bindir}/broctl
 %{_bindir}/zeekctl
+%{python2_sitelib}/BroControl
 %{python2_sitelib}/ZeekControl
 %{_mandir}/man8/zeekctl.8*
 %{_mandir}/man1/trace-summary.1*
