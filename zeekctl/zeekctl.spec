@@ -132,6 +132,7 @@ exit 0
 %{_unitdir}/zeek.service
 %dir %{_datadir}/zeekctl
 %{_datadir}/zeek/zeekctl/*.zeek
+%{_libdir}/broctl
 %{_bindir}/broctl
 %{_bindir}/zeekctl
 %{python2_sitelib}/BroControl
