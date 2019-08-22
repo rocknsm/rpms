@@ -53,13 +53,13 @@ sed -i -e '1i#! /usr/bin/bash' bin/set-zeek-path bin/helpers/to-bytes.awk
 %build
 mkdir build; cd build
 %cmake \
-  -DBRO_ROOT_DIR=%{_prefix} \
-  -DBRO_ETC_INSTALL_DIR=%{_sysconfdir}/zeek \
-  -DBRO_SCRIPT_INSTALL_PATH=%{_datadir}/zeek \
+  -DZEEK_ROOT_DIR=%{_prefix} \
+  -DZEEK_ETC_INSTALL_DIR=%{_sysconfdir}/zeek \
+  -DZEEK_SCRIPT_INSTALL_PATH=%{_datadir}/zeek \
   -DPY_MOD_INSTALL_DIR=%{python2_sitelib} \
-  -DBRO_LOCAL_STATE_DIR:PATH=%{_localstatedir} \
-  -DBRO_SPOOL_DIR:PATH=%{_localstatedir}/spool/zeek \
-  -DBRO_LOG_DIR:PATH=%{_localstatedir}/log/zeek \
+  -DZEEK_LOCAL_STATE_DIR:PATH=%{_localstatedir} \
+  -DZEEK_SPOOL_DIR:PATH=%{_localstatedir}/spool/zeek \
+  -DZEEK_LOG_DIR:PATH=%{_localstatedir}/log/zeek \
 ..
 make %{?_smp_mflags}
 
