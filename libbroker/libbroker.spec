@@ -1,7 +1,7 @@
 %global distname broker
 Name:           libbroker
-Version:        1.2.0
-Release:        1%{?dist}
+Version:        1.1.2
+Release:        2%{?dist}
 Summary:        Zeek’s messaging library.
 
 License:        BSD
@@ -9,14 +9,14 @@ URL:            https://docs.zeek.org/projects/broker/en/stable/
 Source0:        https://www.zeek.org/downloads/%{distname}-%{version}.tar.gz
 
 BuildRequires:  sqlite-devel
-BuildRequires:  caf-devel
+BuildRequires:  caf-devel = 0.16.3
 BuildRequires:  openssl-devel
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
 BuildRequires:  python2-devel
-Requires:       libcaf_core
-Requires:       libcaf_io
-Requires:       libcaf_openssl
+Requires:       libcaf_core = 0.16.3
+Requires:       libcaf_io = 0.16.3
+Requires:       libcaf_openssl = 0.16.3
 Requires:       openssl
 
 %description
@@ -33,12 +33,12 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 ################################################################################
-%package        python
-Summary:        Pything bindings for %{name}
+%package     -n python2-%{distname}
+Summary:        Python bindings for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description    python
-The %{name}-python package contains Python bindings for
+%description -n python2-%{distname}
+The python2-%{distname} package contains Python bindings for
 developing applications that use %{name}.
 
 Requires:       python2
@@ -81,15 +81,16 @@ ctest -V %{?_smp_mflags}
 %{_includedir}/*
 %{_libdir}/*.so
 
-%files python
+%files -n python2-%{distname}
 %doc
-%dir %{python_sitearch}/broker
-%{python_sitearch}/broker/*
+%dir %{python2_sitearch}/broker
+%{python2_sitearch}/broker/*
 
 
 %changelog
-* Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.2.0-1
-- Version bump to 1.2.0
+* Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.1.2
+- Rename python package to RPM conventions
+- Pinned CAF versions
 
 * Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 1.1.2-1
 - Initial RPM packaging
