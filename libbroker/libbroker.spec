@@ -1,6 +1,6 @@
 %global distname broker
 Name:           libbroker
-Version:        1.1.2
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Zeek’s messaging library.
 
