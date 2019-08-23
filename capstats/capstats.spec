@@ -1,5 +1,5 @@
 Name:           capstats
-Version:        0.26
+Version:        0.27
 Release:        1%{?dist}
 Summary:        A tool to get some NIC statistics.
 
@@ -37,5 +37,8 @@ rm -rf $RPM_BUILD_ROOT
 %caps(cap_net_admin,cap_net_raw=pie) %{_bindir}/capstats
 
 %changelog
+* Wed Aug 21 2019 Derek Ditch <derek@rocknsm.io> 0.27-1
+- Bump to 0.27
+
 * Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 0.26-1
 - Initial RPM package
