@@ -6,7 +6,7 @@ Summary:          A Network Intrusion Detection System and Analysis Framework
 License:          BSD
 URL:              http://bro.org
 Source0:          http://www.bro.org/downloads/%{name}-%{version}-minimal.tar.gz
-Patch0:           https://github.com/zeek/zeek/compare/master...dcode:dcode/gnu-install-dirs.patch#/bro-2.6.1-cmake-gnuinstalldirs.patch
+Patch0:           https://github.com/zeek/zeek/commit/22f15b70.patch#/%{name}-%{version}-cmake-gnuinstalldirs.patch
 
 Provides:         zeek
 Requires:         bro-core = %{version}-%{release}
@@ -28,10 +28,10 @@ connecting to certain services, or patterns of failed connection attempts).
 ################################################################################
 %package core
 Summary:          The core bro installation without broctl
-Requires:         libbroker = 1.2.0
-BuildRequires:    libbroker-devel = 1.2.0
-Requires:         caf
-BuildRequires:    caf-devel
+Requires:         libbroker = 1.1.2
+BuildRequires:    libbroker-devel = 1.1.2
+Requires:         caf = 0.16.3
+BuildRequires:    caf-devel = 0.16.3
 Requires:         bind-libs
 BuildRequires:    bind-devel
 Requires:         libmaxminddb0
@@ -46,9 +46,9 @@ Requires:         openssl
 BuildRequires:    openssl-devel
 Requires:         zlib
 
-BuildRequires:    binpac = 1:0.54
-BuildRequires:    binpac-devel = 1:0.54
-BuildRequires:    bifcl = 1:1.2
+BuildRequires:    binpac = 1:0.53
+BuildRequires:    binpac-devel = 1:0.53
+BuildRequires:    bifcl = 1:1.1
 BuildRequires:    gcc-c++
 BuildRequires:    openssl-devel
 BuildRequires:    flex
@@ -70,11 +70,11 @@ and open-science communities.
 
 %package devel
 Summary:    The development headers for bro
-Requires:   bro-core
-Requires:   binpac-devel
-Requires:   libpcap-devel
-Requires:   libbroker-devel
-Requires:   caf-devel
+Requires:   bro-core = %{version}-%{release}
+Requires:   binpac-devel = 1:0.53
+Requires:   libpcap-devel 
+Requires:   libbroker-devel = 1.1.2
+Requires:   caf-devel = 0.16.3
 Requires:   bind-devel
 Requires:   gperftools-devel
 Requires:   openssl-devel
@@ -179,6 +179,10 @@ ctest -V %{?_smp_mflags}
 
 ################################################################################
 %changelog
+* Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 2.6.3-1
+- Bump to version 2.6.3 upstream
+- Version locked lib dependencies
+
 * Thu Feb 14 2019 Derek Ditch <derek@rocknsm.io> 2.6.1-1
 - Bumped version to upstream 2.6.1
 - Split out all non-core and non-devel packages to their own RPMs
