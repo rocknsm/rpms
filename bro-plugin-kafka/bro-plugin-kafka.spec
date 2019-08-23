@@ -1,11 +1,11 @@
 %global     distname metron-bro-plugin-kafka
-%global     commit0 bfc9cbbdc97c3a12c59e9d9786bd7e3996a196f5
+%global     commit0 43c9166787649e4ac2ab295a1baba94d54903651
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global     commitdate 20190214
+%global     commitdate 20190429
 
 Name:       bro-plugin-kafka
-Version:    0.4
-Release:    3.%{commitdate}git%{shortcommit0}%{?dist}
+Version:    0.3
+Release:    4.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Bro log writer plugin that sends logging output to Kafka.
 
@@ -33,7 +33,6 @@ A Bro log writer plugin that sends logging output to Kafka.
 %setup -n %{distname}-%{commit0}
 
 %build
-# ./configure --build=x86_64-redhat-linux-gnu --host=x86_64-redhat-linux-gnu --program-prefix= --disable-dependency-tracking --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/var/lib --mandir=/usr/share/man --infodir=/usr/share/info --bro-dist=/usr/src/bro-2.5.1
 mkdir build; cd build
 %cmake \
   -DCMAKE_MODULE_PATH=/usr/share/bro/cmake \
