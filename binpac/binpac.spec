@@ -36,7 +36,7 @@ This package contains the development headers and static library.
 
 %build
 mkdir build; cd build
-%cmake ..
+%cmake .. -DENABLE_STATIC=true
 make %{?_smp_mflags}
 
 %install
@@ -55,6 +55,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %{_includedir}/binpac*
+%{_libdir}/libbinpac.a
 %{_libdir}/libbinpac.so*
 
 %changelog
