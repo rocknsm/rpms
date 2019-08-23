@@ -55,7 +55,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %{_includedir}/binpac*
-%{_libdir}/libbinpac.a
+%{_libdir}/libbinpac.so*
 
 %changelog
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 1.1-2
