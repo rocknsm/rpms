@@ -9,6 +9,8 @@ URL:            https://github.com/zeek/zeekctl
 Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
 Source1:        zeek.service
 
+Provides:       broctl
+
 BuildRequires:  cmake >= 2.6.3
 BuildRequires:  gcc-c++
 BuildRequires:  python2-devel
@@ -153,3 +155,5 @@ exit 0
 
 
 %changelog
+* Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 2.0.0-1
+- Bumped version to upstream 2.0
