@@ -59,7 +59,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libbinpac.so*
 
 %changelog
-* Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 1.1-2
+* Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.54-1
 - Bump version to 0.54
 
 * Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 1.1-1
