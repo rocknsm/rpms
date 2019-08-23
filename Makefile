@@ -20,6 +20,7 @@ srpm: $(outdir)/$(SRPM)
 
 rpm: $(outdir)/$(SRPM)
 	mock -r rock-7-x86_64.cfg --resultdir=$(outdir) $(outdir)/$(SRPM) --no-cleanup-after
+	createrepo_c --update $(outdir)
 
 copr: $(outdir)/$(SRPM)
 	copr-cli build -r epel-7-x86_64 @rocknsm/testing $(outdir)/$(SRPM)
