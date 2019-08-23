@@ -1,5 +1,5 @@
 Name:           bifcl
-Version:        1.2
+Version:        1.1
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Built-In-Function (BIF) Compiler/Generator for Zeek
@@ -44,8 +44,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/bifcl
 
 %changelog
-* Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 1.1-2
-- Bump version to 1.2
-
 * Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 1.1-1
 - Initial RPM packaging
