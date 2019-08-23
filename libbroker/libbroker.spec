@@ -88,6 +88,8 @@ ctest -V %{?_smp_mflags}
 
 
 %changelog
+* Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.2.0-1
+- Version bump to 1.2.0
 
-* Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 1.1.2
+* Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 1.1.2-1
 - Initial RPM packaging
