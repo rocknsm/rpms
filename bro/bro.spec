@@ -11,7 +11,7 @@ Patch0:           https://github.com/zeek/zeek/commit/22f15b70.patch#/%{name}-%{
 Provides:         zeek
 Requires:         bro-core = %{version}-%{release}
 
-Requires:         broctl = 1:2.0
+Requires:         broctl = 1:1.9
 Requires:         bro-aux = 1:0.43
 BuildRequires:    cmake >= 2.8.12
 
