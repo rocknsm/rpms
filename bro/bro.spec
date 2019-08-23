@@ -1,5 +1,5 @@
 Name:             bro
-Version:          2.6.1
+Version:          2.6.3
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
@@ -11,8 +11,8 @@ Patch0:           https://github.com/zeek/zeek/compare/master...dcode:dcode/gnu-
 Provides:         zeek
 Requires:         bro-core = %{version}-%{release}
 
-Requires:         broctl = 1:1.9
-Requires:         bro-aux = 1:0.42
+Requires:         broctl = 1:2.0
+Requires:         bro-aux = 1:0.43
 BuildRequires:    cmake >= 2.8.12
 
 %description
@@ -28,8 +28,8 @@ connecting to certain services, or patterns of failed connection attempts).
 ################################################################################
 %package core
 Summary:          The core bro installation without broctl
-Requires:         libbroker = 1.1.2
-BuildRequires:    libbroker-devel = 1.1.2
+Requires:         libbroker = 1.2.0
+BuildRequires:    libbroker-devel = 1.2.0
 Requires:         caf
 BuildRequires:    caf-devel
 Requires:         bind-libs
@@ -46,9 +46,9 @@ Requires:         openssl
 BuildRequires:    openssl-devel
 Requires:         zlib
 
-BuildRequires:    binpac = 1:0.51
-BuildRequires:    binpac-devel = 1:0.51
-BuildRequires:    bifcl = 1:1.1
+BuildRequires:    binpac = 1:0.54
+BuildRequires:    binpac-devel = 1:0.54
+BuildRequires:    bifcl = 1:1.2
 BuildRequires:    gcc-c++
 BuildRequires:    openssl-devel
 BuildRequires:    flex
