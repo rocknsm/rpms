@@ -19,7 +19,7 @@
 %define         dist_name actor-framework
 
 Name:           caf
-Version:        0.17.0
+Version:        0.16.3
 Release:        1%{?dist}
 Summary:        C++ actor framework
 License:        BSD
