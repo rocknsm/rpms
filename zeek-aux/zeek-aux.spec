@@ -8,6 +8,8 @@ License:        BSD
 URL:            https://github.com/zeek/zeek-aux
 Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
 
+Provides:       bro-aux
+
 BuildRequires:  bind-devel
 BuildRequires:  libpcap-devel
 BuildRequires:  openssl-devel
