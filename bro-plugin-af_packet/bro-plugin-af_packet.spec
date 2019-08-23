@@ -7,7 +7,7 @@ Name:       bro-plugin-af_packet
 Version:    1.4.0
 #Release:    2.%{commitdate}git%{shortcommit0}%{?dist}
 Release:    1%{?dist}
-Epoch:      1
+Epoch:      2
 Summary:    Native AF_Packet support plugin for Bro.
 
 License:    BSD
@@ -19,12 +19,12 @@ BuildRequires:  cmake
 BuildRequires:  kernel-devel
 BuildRequires:  libpcap-devel
 BuildRequires:  zlib-devel
-BuildRequires:  bro-devel = 2.6.1
+BuildRequires:  bro-devel = 2.6.3
 BuildRequires:  bifcl = 1:1.1
-BuildRequires:  binpac-devel = 1:0.51
-BuildRequires:  binpac = 1:0.51
+BuildRequires:  binpac-devel = 1:0.53
+BuildRequires:  binpac = 1:0.53
 BuildRequires:  gcc-c++
-Requires:       bro-core  == 2.6.1
+Requires:       bro-core  == 2.6.3
 Requires:       libpcap
 Requires:       zlib
 
@@ -75,6 +75,9 @@ make %{?_smp_mflags}
 
 
 %changelog
+* Fri Aug 23 2019 Bradford Dabbs <brad@dabbs.io> 1.4.0-2
+- Change requirements to build against Bro 2.6.3
+
 * Thu Feb 14 2019 Derek Ditch <derek@rocknsm.io> 1.4.0-1
 - Version bump to 1.4.0
 - Move to cmake build process against 2.6.1
