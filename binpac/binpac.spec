@@ -1,5 +1,5 @@
 Name:           binpac
-Version:        0.51
+Version:        0.54
 Release:        1%{?dist}
 Epoch:          1
 Summary:        High level language for describing protocol parsers.
@@ -60,6 +60,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libbinpac.a
 
 %changelog
+* Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 1.1-2
+- Bump version to 0.54
 
 * Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 1.1-1
 - Initial RPM packaging
