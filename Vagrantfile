@@ -14,7 +14,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     yum update
-    yum install -y @development mock fedpkg rpmdevtools copr-cli
+    yum install -y epel-release
+    yum install -y @development mock fedpkg rpmdevtools copr-cli distribution-gpg-keys
     usermod -a -G mock vagrant
   SHELL
 end
