@@ -1,6 +1,6 @@
 Name:           zeek-aux
 Version:        0.43
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          1
 Summary:        Zeek Auxiliary Programs
 
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 26 2019 Derek Ditch <derek@rocknsm.io> 0.43-2
+- Obsoletes bro-aux
+
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.43-1
 - Packaging zeek-aux vs bro-aux
-- Obsoletes bro-aux
+
