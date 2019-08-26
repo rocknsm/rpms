@@ -1,6 +1,6 @@
 Name:           zeek-aux
 Version:        0.43
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          1
 Summary:        Zeek Auxiliary Programs
 
@@ -10,7 +10,6 @@ Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
 
 Provides:       bro-aux >= 0.43
 Obsoletes:      bro-aux < 0.43
-Conflicts:      bro-aux
 
 BuildRequires:  bind-devel
 BuildRequires:  libpcap-devel
@@ -50,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Aug 26 2019 Derek Ditch <derek@rocknsm.io> 0.43-2
+* Mon Aug 26 2019 Derek Ditch <derek@rocknsm.io> 0.43-3
 - Obsoletes bro-aux
 
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.43-1
