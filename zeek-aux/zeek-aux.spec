@@ -8,7 +8,9 @@ License:        BSD
 URL:            https://github.com/zeek/zeek-aux
 Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
 
-Provides:       bro-aux
+Provides:       bro-aux >= 0.43
+Obsoletes:      bro-aux < 0.43
+Conflicts:      bro-aux
 
 BuildRequires:  bind-devel
 BuildRequires:  libpcap-devel
@@ -16,6 +18,7 @@ BuildRequires:  openssl-devel
 BuildRequires:  flex
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
+
 Requires:       libpcap
 
 %description
@@ -48,4 +51,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.43-1
-- Initial RPM creation
+- Packaging zeek-aux vs bro-aux
+- Obsoletes bro-aux
