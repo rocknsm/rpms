@@ -5,7 +5,7 @@
 
 Name:       bro-plugin-gquic
 Version:    1.0
-Release:    1.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    2.%{commitdate}git%{shortcommit0}%{?dist}
 Summary:    Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic
 
 License:    BSD
@@ -13,12 +13,12 @@ URL:        https://github.com/salesforce/%{distname}
 Source0:    https://github.com/salesforce/%{distname}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 
 BuildRequires:  cmake >= 2.8
-BuildRequires:  bro-devel = 2.6.3
+BuildRequires:  bro-devel = 2.6.4
 BuildRequires:  bifcl = 1:1.1
 BuildRequires:  binpac-devel = 1:0.53
 BuildRequires:  binpac = 1:0.53
 BuildRequires:  gcc-c++
-Requires:       bro-core  = 2.6.3
+Requires:       bro-core  = 2.6.4
 
 %description
 Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic.
@@ -49,5 +49,8 @@ mkdir build; cd build
 %license LICENSE.txt
 
 %changelog
+* Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 1.0-2
+- Recompile against Bro 2.6.4
+
 * Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.0-1
 - Initial RPM packaging.

@@ -5,7 +5,7 @@
 
 Name:       bro-plugin-kafka
 Version:    0.3
-Release:    4.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    5.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Bro log writer plugin that sends logging output to Kafka.
 
@@ -17,12 +17,12 @@ BuildRequires:  cmake
 BuildRequires:  librdkafka-devel
 BuildRequires:  openssl-devel
 BuildRequires:  libpcap-devel
-BuildRequires:  bro-devel = 2.6.3
+BuildRequires:  bro-devel = 2.6.4
 BuildRequires:  bifcl = 1:1.1
 BuildRequires:  binpac-devel = 1:0.53
 BuildRequires:  binpac = 1:0.53
 BuildRequires:  gcc-c++
-Requires:       bro-core  = 2.6.3
+Requires:       bro-core  = 2.6.4
 Requires:       librdkafka = 0.11.5
 Requires:       openssl
 
@@ -66,6 +66,9 @@ mkdir build; cd build
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
 %changelog
+* Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 0.3-5
+- Recompile against Bro 2.6.4
+
 * Fri Aug 23 2019 Bradford Dabbs <brad@dabbs.io> 0.3-4
 - Updated to latest commit upstream
 - Updated Bro requirement to 2.6.3

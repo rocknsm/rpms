@@ -2,7 +2,7 @@
 
 Name:       bro-plugin-communityid
 Version:    1.2
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    Zeek support for "community ID" flow hashing
 
 License:    BSD
@@ -10,13 +10,13 @@ URL:        https://github.com/corelight/%{distname}
 Source0:    https://github.com/corelight/%{distname}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 BuildRequires:  cmake >= 2.8
-BuildRequires:  bro-devel = 2.6.3
+BuildRequires:  bro-devel = 2.6.4
 BuildRequires:  bifcl = 1:1.1
 BuildRequires:  binpac-devel = 1:0.53
 BuildRequires:  binpac = 1:0.53
 BuildRequires:  gcc-c++
 BuildRequires:  openssl-devel
-Requires:       bro-core  = 2.6.3
+Requires:       bro-core  = 2.6.4
 
 %description
 Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic.
@@ -48,5 +48,8 @@ mkdir build; cd build
 %license COPYING
 
 %changelog
+* Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 1.2-2
+- Recompile against Bro 2.6.4
+
 * Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.2-1
 - Initial RPM packaging.
