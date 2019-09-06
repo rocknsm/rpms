@@ -1,6 +1,6 @@
 Name:           broctl
 Version:        1.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          1
 Summary:        Tool for managing Zeek deployments.
 
@@ -17,10 +17,10 @@ BuildRequires:  trace-summary >= 0.88
 BuildRequires:  systemd
 BuildRequires:  swig
 BuildRequires:  libpcap-devel
-BuildRequires:  bro-core = 2.6.3
+BuildRequires:  bro-core = 2.6.4
 BuildRequires:  python2-broker = 1.1.2
 
-Requires:       bro-core = 2.6.3
+Requires:       bro-core = 2.6.4
 Requires:       python2-broker = 1.1.2
 Requires:       libpcap
 Requires:       python2
@@ -151,6 +151,9 @@ exit 0
 
 
 %changelog
+
+* Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 1.9-3
+- Update requirement to Bro 2.6.4
 
 * Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.9-2
 - Set hard dependences to align with bro versions
