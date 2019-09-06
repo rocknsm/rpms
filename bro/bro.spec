@@ -1,5 +1,5 @@
 Name:             bro
-Version:          2.6.3
+Version:          2.6.4
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
@@ -72,7 +72,7 @@ and open-science communities.
 Summary:    The development headers for bro
 Requires:   bro-core = %{version}-%{release}
 Requires:   binpac-devel = 1:0.53
-Requires:   libpcap-devel 
+Requires:   libpcap-devel
 Requires:   libbroker-devel = 1.1.2
 Requires:   caf-devel = 0.16.3
 Requires:   bind-devel
@@ -179,6 +179,9 @@ ctest -V %{?_smp_mflags}
 
 ################################################################################
 %changelog
+* Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 2.6.4-1
+- Bump to version 2.6.4 to fix NTLM bug
+
 * Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 2.6.3-1
 - Bump to version 2.6.3 upstream
 - Version locked lib dependencies
