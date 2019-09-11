@@ -42,8 +42,7 @@ sed -i '/^base_dir=.*/a \\n## Load system classpath for RPM install\nCLASSPATH=$
 # Change default log paths
 sed -i 's:^log.dirs=.*:log.dirs=%{_log_dir}:' config/server.properties
 
-# Remove bundled zookeeper
-rm -f libs/zookeeper*.jar
+# Remove bundled zookeeper scripts (keep jar for library)
 rm -f config/zookeeper.properties
 rm -f bin/zookeeper*.sh
 
