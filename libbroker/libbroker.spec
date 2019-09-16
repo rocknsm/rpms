@@ -1,7 +1,7 @@
 %global distname broker
 Name:           libbroker
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        Zeek’s messaging library.
 
 License:        BSD
@@ -9,14 +9,14 @@ URL:            https://docs.zeek.org/projects/broker/en/stable/
 Source0:        https://www.zeek.org/downloads/%{distname}-%{version}.tar.gz
 
 BuildRequires:  sqlite-devel
-BuildRequires:  caf-devel = 0.16.3
+BuildRequires:  caf-devel >= 0.17.0
 BuildRequires:  openssl-devel
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
 BuildRequires:  python2-devel
-Requires:       libcaf_core = 0.16.3
-Requires:       libcaf_io = 0.16.3
-Requires:       libcaf_openssl = 0.16.3
+Requires:       libcaf_core >= 0.17.0
+Requires:       libcaf_io >= 0.17.0
+Requires:       libcaf_openssl >= 0.17.0
 Requires:       openssl
 
 %description
@@ -44,7 +44,7 @@ developing applications that use %{name}.
 Requires:       python2
 
 %prep
-%setup -q -n %{distname}-%{version}
+%autosetup -n %{distname}-%{version}
 
 %build
 mkdir build; cd build
@@ -59,9 +59,9 @@ mkdir build; cd build
 %make_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 %make_install
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+find %{buildroot} -name '*.la' -delete
 
 %check
 ctest -V %{?_smp_mflags}
@@ -88,7 +88,11 @@ ctest -V %{?_smp_mflags}
 
 
 %changelog
-* Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.1.2
+* Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 1.2.0-1
+- Version bump to 1.2.0 for Zeek 3.x
+- Pin to CAF 0.17.x
+
+* Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 1.1.2-2
 - Rename python package to RPM conventions
 - Pinned CAF versions
 

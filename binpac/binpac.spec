@@ -1,5 +1,5 @@
 Name:           binpac
-Version:        0.53
+Version:        0.54
 Release:        1%{?dist}
 Epoch:          1
 Summary:        High level language for describing protocol parsers.
@@ -7,7 +7,6 @@ Summary:        High level language for describing protocol parsers.
 License:        BSD
 URL:            https://github.com/zeek/binpac
 Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
-Patch0:         https://github.com/zeek/binpac/commit/5ffea9d9ba2f1b04b3cdc11225eea71ee41894a5.patch#/fix-gnu-install-dirs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  cmake >= 2.8.12
@@ -33,8 +32,7 @@ may be used with other programs besides Bro.
 This package contains the development headers and static library.
 
 %prep
-%setup -q
-%patch0 -p1
+%autosetup -p1
 
 %build
 mkdir build; cd build
@@ -58,8 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %{_includedir}/binpac*
 %{_libdir}/libbinpac.a
+%{_libdir}/libbinpac.so*
 
 %changelog
+* Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 0.54-1
+- Bump version to 0.54 for Zeek 3.0
+
 * Fri Aug 23 2019 Derek Ditch <derek@rocknsm.io> 0.53-1
 - Bump version to 0.53
 

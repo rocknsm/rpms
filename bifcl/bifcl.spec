@@ -1,5 +1,5 @@
 Name:           bifcl
-Version:        1.1
+Version:        1.2
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Built-In-Function (BIF) Compiler/Generator for Zeek
@@ -22,19 +22,19 @@ Built-In-Functions (BIFs), which can then be compiled and shipped
 as part of a Bro plugin.
 
 %prep
-%setup -q
+%autosetup
 
 %build
 mkdir build; cd build
 %cmake ..
-make %{?_smp_mflags}
+%make_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+rm -rf %{buildroot}
+%make_install --directory=build
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
@@ -44,5 +44,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/bifcl
 
 %changelog
+* Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 1.2-1
+- Bump version to 1.2 for Zeek 3.0
+
 * Wed Feb 13 2019 Derek Ditch <derek@rocknsm.io> 1.1-1
 - Initial RPM packaging
