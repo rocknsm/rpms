@@ -19,13 +19,13 @@
 %define         dist_name actor-framework
 
 Name:           caf
-Version:        0.16.3
+Version:        0.17.1
 Release:        1%{?dist}
 Summary:        C++ actor framework
 License:        BSD
 URL:            http://actor-framework.org
 Source0:        https://github.com/actor-framework/%{dist_name}/archive/%{version}.tar.gz#/%{dist_name}-%{version}.tar.gz
-Patch0:         https://github.com/actor-framework/actor-framework/compare/master...dcode:dcode/lib_install_dir.patch#/0-enable-LIB_INSTALL_DIR-for-lib64.patch
+Patch0:         https://patch-diff.githubusercontent.com/raw/actor-framework/actor-framework/pull/917.patch#/0-%{name}-GNUInstallDirs.patch
 Requires:       libcaf_core == %{version}
 Requires:       libcaf_io   == %{version}
 Requires:       libcaf_openssl == %{version}
@@ -44,8 +44,7 @@ lightweight & fast actor implementations, pattern matching for messages,
 network transparent messaging, and more.
 
 %prep
-%setup -q -n %{dist_name}-%{version}
-%patch0 -p1
+%autosetup -n %{dist_name}-%{version} -p1
 
 %build
 mkdir build; cd build
@@ -67,7 +66,11 @@ ctest -V %{?_smp_mflags}
 # Also note that we completely clean up old buildroot before installing, in
 # order not to accidentaly pack old files left since previous build.
 %install
+rm -rf %{buildroot}
 %make_install --directory=build
+
+%clean
+rm -rf %{buildroot}
 
 # This section is empty as the master package does not really hold any files,
 # leaving them to the subpackages.
@@ -199,8 +202,12 @@ manual.
 %doc build/doc/html
 
 %changelog
+* Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 0.17.1-1
+- Version bump to latest build
+- Patch install dirs to use CMAKE_INSTALL_* vars
+
 * Wed Feb 6 2019 Derek Ditch <derek@rocksnm.io> 0.16.3-1
-Package for EL7 and RockNSM
+- Package for EL7 and RockNSM
 
 * Mon Jun 1 2015 Pavel Kretov <firegurafiku@gmail.com> 0.13.2
-First packaged version.
+- First packaged version.

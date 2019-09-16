@@ -1,18 +1,32 @@
-Name:             bro
-Version:          2.6.4
-Release:          1%{?dist}
+%global BIFCL_VER 1:1.2
+%global BINPAC_VER 1:0.54
+%global BROKER_VER 1.2.0
+%global CAF_VER 0.17.0
+%global ZEEKAUX_VER 1:0.43
+%global ZEEKCTL_VER 2.0.0
+
+Name:             zeek
+Version:          3.0.0
+Release:          0rc2%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
 License:          BSD
 URL:              http://bro.org
 Source0:          http://www.bro.org/downloads/%{name}-%{version}-minimal.tar.gz
 Patch0:           https://github.com/zeek/zeek/commit/22f15b70.patch#/%{name}-%{version}-cmake-gnuinstalldirs.patch
+Patch1:           https://github.com/zeek/zeek/commit/b20cd599a025e45de4346c978be47a69f8d8782a.patch
+Patch2:           https://github.com/zeek/zeek/commit/7584bf65e297f38e9391e724bd780915e708fa8f.patch
+Patch3:           https://github.com/zeek/zeek/commit/6db576195c4417bac663a05a12bd4b712c47ff2a.patch
+Patch4:           https://github.com/zeek/zeek/commit/32473b85b0ce84246cccf516627a0e2d8c6b200b.patch
+Patch5:           https://github.com/zeek/zeek/commit/99c89d55d64729494c4599b646bdf7a1261ba644.patch
 
-Provides:         zeek
-Requires:         bro-core = %{version}-%{release}
+Provides:         bro
+Obsoletes:        bro < 3.0.0
 
-Requires:         broctl = 1:1.9
-Requires:         bro-aux = 1:0.43
+Requires:         zeek-core = %{version}-%{release}
+Requires:         zeekctl >= 1:%{ZEEKCTL_VER}
+Requires:         zeek-aux >= 1:%{ZEEKAUX_VER}
+
 BuildRequires:    cmake >= 2.8.12
 
 %description
@@ -28,10 +42,10 @@ connecting to certain services, or patterns of failed connection attempts).
 ################################################################################
 %package core
 Summary:          The core bro installation without broctl
-Requires:         libbroker = 1.1.2
-BuildRequires:    libbroker-devel = 1.1.2
-Requires:         caf = 0.16.3
-BuildRequires:    caf-devel = 0.16.3
+Requires:         libbroker = %{BROKER_VER}
+BuildRequires:    libbroker-devel = %{BROKER_VER}
+Requires:         caf >= %{CAF_VER}
+BuildRequires:    caf-devel >= %{CAF_VER}
 Requires:         bind-libs
 BuildRequires:    bind-devel
 Requires:         libmaxminddb
@@ -46,9 +60,9 @@ Requires:         openssl
 BuildRequires:    openssl-devel
 Requires:         zlib
 
-BuildRequires:    binpac = 1:0.53
-BuildRequires:    binpac-devel = 1:0.53
-BuildRequires:    bifcl = 1:1.1
+BuildRequires:    binpac = 1:%{BINPAC_VER}
+BuildRequires:    binpac-devel = 1:%{BINPAC_VER}
+BuildRequires:    bifcl = 1:%{BIFCL_VER}
 BuildRequires:    gcc-c++
 BuildRequires:    openssl-devel
 BuildRequires:    flex
@@ -71,10 +85,10 @@ and open-science communities.
 %package devel
 Summary:    The development headers for bro
 Requires:   bro-core = %{version}-%{release}
-Requires:   binpac-devel = 1:0.53
+Requires:   binpac-devel = 1:%{BINPAC_VER}
 Requires:   libpcap-devel
-Requires:   libbroker-devel = 1.1.2
-Requires:   caf-devel = 0.16.3
+Requires:   libbroker-devel = %{BROKER_VER}
+Requires:   caf-devel >= %{CAF_VER}
 Requires:   bind-devel
 Requires:   gperftools-devel
 Requires:   openssl-devel
@@ -83,22 +97,21 @@ Requires:   openssl-devel
 This package contains the development headers needed to build new Bro plugins.
 
 %prep
-%setup -q -n %{name}-%{version}-minimal
-%patch0 -p1
+%autosetup -n %{name}-%{version}-minimal -p1
 
 %build
 mkdir build; cd build
 %cmake \
-  -DBRO_ROOT_DIR:PATH=%{_prefix} \
+  -DZEEK_ROOT_DIR:PATH=%{_prefix} \
   -DPY_MOD_INSTALL_DIR:PATH=%{python2_sitelib} \
-  -DBRO_SCRIPT_INSTALL_PATH:PATH=%{_datadir}/bro \
-  -DBRO_ETC_INSTALL_DIR:PATH=%{_sysconfdir}/bro \
+  -DZEEK_SCRIPT_INSTALL_PATH:PATH=%{_datadir}/%{name} \
+  -DZEEK_ETC_INSTALL_DIR:PATH=%{_sysconfdir}/%{name} \
   -DENABLE_MOBILE_IPV6:BOOL=ON \
-  -DBRO_DIST:PATH=%{_usrsrc}/%{name}-%{version}  \
+  -DZEEK_DIST:PATH=%{_usrsrc}/%{name}-%{version}  \
   -DCMAKE_SKIP_RPATH:BOOL=ON \
   -DCAF_ROOT_DIR:PATH=%{_prefix} \
   -DINSTALL_AUX_TOOLS:BOOL=OFF \
-  -DINSTALL_BROCTL:BOOL=OFF \
+  -DINSTALL_ZEEKCTL:BOOL=OFF \
   -DBUILD_SHARED_LIBS:BOOL=ON \
   -DBinPAC_INCLUDE_DIR:PATH=%{_includedir} \
   -DBIFCL_EXE_PATH:PATH=%{_bindir}/bifcl \
@@ -109,42 +122,10 @@ mkdir build; cd build
 
 %make_build
 
-# # Gets the broker library on the ld path, needed to generate docs
-# export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:%{buildroot}/build/aux/broker/lib/"
-# make doc
-# # Fix doc related rpmlint issues
-# rm -rf %{_builddir}/%{name}-%{version}/build/doc/sphinx_output/html/.tmp
-# rm -rf %{_builddir}/%{name}-%{version}/build/doc/sphinx_output/html/.buildinfo
-# rm -rf %{_builddir}/%{name}-%{version}/build/doc/sphinx_output/html/_static/broxygen-extra.js
-# find %{_builddir}/%{name}-%{version}/build/doc/ -size 0 -delete
-# sed -i "s|\r||g" %{_builddir}/%{name}-%{version}/build/doc/sphinx_output/html/objects.inv
-# f="%{_builddir}/%{name}-%{version}/build/doc/sphinx_output/html/objects.inv"
-# iconv --from=ISO-8859-1 --to=UTF-8 $f > $f.new && \
-# touch -r $f $f.new && \
-# mv $f.new $f
-
 ################################################################################
 %install
 cd build
 %make_install
-#
-# # Install scripts
-# pushd scripts
-# %{__install} -d -m 755 %{buildroot}%{_datadir}/bro/scripts
-# popd
-#
-# # The signature samples should go into a seperate sub-package if possible
-# # Install example signatures, site policy
-# %{__install} -D -d -m 755 %{buildroot}%{_localstatedir}/lib/bro/site
-# %{__install} -D -d -m 755 %{buildroot}%{_localstatedir}/lib/bro/host
-
-
-#
-# # Remove devel, junk, and zero length files
-# find "%{buildroot}%{_prefix}" -iname "*.la" -delete;
-# find "%{buildroot}" -iname "*.log" -delete;
-# rm -rf %{buildroot}%{_includedir}/binpac.h.in
-
 
 ################################################################################
 %check
@@ -160,25 +141,28 @@ ctest -V %{?_smp_mflags}
 %files core
 %doc CHANGES NEWS README VERSION
 %license COPYING
-%caps(cap_net_admin,cap_net_raw=pie) %{_bindir}/bro
-%{_bindir}/bro-config
-%{_mandir}/man8/bro.8*
-%dir %{_datadir}/bro/
-%{_datadir}/bro/base/
-%{_datadir}/bro/broxygen/
-%{_datadir}/bro/policy/
-%config(noreplace) %{_datadir}/bro/site/local.bro
+%caps(cap_net_admin,cap_net_raw=pie) %{_bindir}/%{name}
+%{_bindir}/%{name}-config
+%{_mandir}/man8/%{name}.8*
+%dir %{_datadir}/%{zeek}/
+%{_datadir}/%{name}/base/
+%{_datadir}/%{name}/broxygen/
+%{_datadir}/%{name}/policy/
+%config(noreplace) %{_datadir}/%{name}/site/local.zeek
 
 %files devel
 %doc CHANGES NEWS README VERSION
 %license COPYING
-%dir %{_includedir}/bro
-%{_includedir}/bro/*
-%dir %{_datadir}/bro/cmake
-%{_datadir}/bro/cmake/*
+%dir %{_includedir}/%{name}
+%{_includedir}/%{name}/*
+%dir %{_datadir}/%{name}/cmake
+%{_datadir}/%{name}/cmake/*
 
 ################################################################################
 %changelog
+* Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 3.0.0-0rc2
+- Bump to version 3.0.0 RC2
+
 * Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 2.6.4-1
 - Bump to version 2.6.4 to fix NTLM bug
 

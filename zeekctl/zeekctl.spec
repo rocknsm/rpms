@@ -1,7 +1,6 @@
 Name:           zeekctl
 Version:        2.0.0
 Release:        1%{?dist}
-Epoch:          1
 Summary:        Tool for managing Zeek deployments.
 
 License:        BSD
