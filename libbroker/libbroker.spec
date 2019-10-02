@@ -2,7 +2,7 @@
 Name:           libbroker
 Version:        1.2.0
 Release:        1%{?dist}
-Summary:        Zeek’s messaging library.
+Summary:        Zeek's messaging library.
 
 License:        BSD
 URL:            https://docs.zeek.org/projects/broker/en/stable/
@@ -20,7 +20,7 @@ Requires:       libcaf_openssl >= 0.17.0
 Requires:       openssl
 
 %description
-Broker is a library for type-rich publish/subscribe communication in Bro’s data
+Broker is a library for type-rich publish/subscribe communication in Zeek's data
 model.
 
 ################################################################################

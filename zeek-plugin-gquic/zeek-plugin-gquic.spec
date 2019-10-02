@@ -3,9 +3,9 @@
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global     commitdate 20190816
 
-Name:       bro-plugin-gquic
+Name:       zeek-plugin-gquic
 Version:    1.0
-Release:    2.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    3.%{commitdate}git%{shortcommit0}%{?dist}
 Summary:    Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic
 
 License:    BSD
@@ -13,27 +13,30 @@ URL:        https://github.com/salesforce/%{distname}
 Source0:    https://github.com/salesforce/%{distname}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 
 BuildRequires:  cmake >= 2.8
-BuildRequires:  bro-devel = 2.6.4
-BuildRequires:  bifcl = 1:1.1
-BuildRequires:  binpac-devel = 1:0.53
-BuildRequires:  binpac = 1:0.53
+BuildRequires:  zeek-devel = 3.0.0
+BuildRequires:  bifcl = 1:1.2
+BuildRequires:  binpac-devel = 1:0.54
+BuildRequires:  binpac = 1:0.54
 BuildRequires:  gcc-c++
-Requires:       bro-core  = 2.6.4
+Requires:       zeek-core  = 3.0.0
+
+Obsoletes:      bro-plugin-gquic < 1.0-3
+Provides:       bro-plugin-gquic = %{version}-%{release}
 
 %description
 Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic.
 
 %prep
-%setup -n %{distname}-%{commit0}
+%autosetup -n %{distname}-%{commit0}
 
 %build
 mkdir build; cd build
 %cmake \
-  -DCMAKE_MODULE_PATH=/usr/share/bro/cmake \
-  -DBRO_CONFIG_CMAKE_DIR=/usr/share/bro/cmake \
-  -DBRO_CONFIG_PLUGIN_DIR=/usr/lib64/bro/plugins \
-  -DBRO_CONFIG_PREFIX=/usr \
-  -DBRO_CONFIG_INCLUDE_DIR=/usr/include/bro \
+  -DCMAKE_MODULE_PATH=%{_datadir}/zeek/cmake \
+  -DBRO_CONFIG_CMAKE_DIR=%{_datadir}/zeek/cmake \
+  -DBRO_CONFIG_PLUGIN_DIR=%{_libdir}/zeek/plugins \
+  -DBRO_CONFIG_PREFIX=%{_prefix} \
+  -DBRO_CONFIG_INCLUDE_DIR=%{_includedir}/zeek \
   ..
 %make_build
 
@@ -42,13 +45,16 @@ mkdir build; cd build
 
 %files
 
-%dir %{_libdir}/bro/plugins/Salesforce_GQUIC
-%{_libdir}/bro/plugins/Salesforce_GQUIC/*
+%dir %{_libdir}/zeek/plugins/Salesforce_GQUIC
+%{_libdir}/zeek/plugins/Salesforce_GQUIC/*
 
 %doc README.md VERSION
 %license LICENSE.txt
 
 %changelog
+* Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 1.0-3
+- Recompile against Zeek 3.0.0
+
 * Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 1.0-2
 - Recompile against Bro 2.6.4
 

@@ -2,37 +2,33 @@
 %global BINPAC_VER 1:0.54
 %global BROKER_VER 1.2.0
 %global CAF_VER 0.17.0
-%global ZEEKAUX_VER 1:0.43
+%global ZEEKAUX_VER 0.43
 %global ZEEKCTL_VER 2.0.0
 
 Name:             zeek
 Version:          3.0.0
-Release:          0rc2%{?dist}
+Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
 License:          BSD
 URL:              http://bro.org
 Source0:          http://www.bro.org/downloads/%{name}-%{version}-minimal.tar.gz
-Patch0:           https://github.com/zeek/zeek/commit/22f15b70.patch#/%{name}-%{version}-cmake-gnuinstalldirs.patch
-Patch1:           https://github.com/zeek/zeek/commit/b20cd599a025e45de4346c978be47a69f8d8782a.patch
-Patch2:           https://github.com/zeek/zeek/commit/7584bf65e297f38e9391e724bd780915e708fa8f.patch
-Patch3:           https://github.com/zeek/zeek/commit/6db576195c4417bac663a05a12bd4b712c47ff2a.patch
-Patch4:           https://github.com/zeek/zeek/commit/32473b85b0ce84246cccf516627a0e2d8c6b200b.patch
-Patch5:           https://github.com/zeek/zeek/commit/99c89d55d64729494c4599b646bdf7a1261ba644.patch
+Source1:          https://github.com/zeek/paraglob/archive/b9b834c8d1ec3f2621ca504eaf60e0361fd607a2.tar.gz#/paraglob-b9b834.tar.gz
+Patch0:           https://github.com/zeek/zeek/compare/release/3.0...dcode:dcode/gnu-install-dirs.patch#/%{name}-gnu-install-dirs.patch
 
-Provides:         bro
-Obsoletes:        bro < 3.0.0
+Provides:         bro = %{version}
+Obsoletes:        bro < %{version}
 
 Requires:         zeek-core = %{version}-%{release}
-Requires:         zeekctl >= 1:%{ZEEKCTL_VER}
-Requires:         zeek-aux >= 1:%{ZEEKAUX_VER}
+Requires:         zeekctl >= %{ZEEKCTL_VER}
+Requires:         zeek-aux >= %{ZEEKAUX_VER}
 
 BuildRequires:    cmake >= 2.8.12
 
 %description
-Bro is an open-source, Unix-based Network Intrusion Detection System (NIDS)
+Zeek is an open-source, Unix-based Network Intrusion Detection System (NIDS)
 that passively monitors network traffic and looks for suspicious activity.
-Bro detects intrusions by first parsing network traffic to extract is
+Zeek detects intrusions by first parsing network traffic to extract its
 application-level semantics and then executing event-oriented analyzers that
 compare the activity with patterns deemed troublesome. Its analysis includes
 detection of specific attacks (including those defined by signatures, but also
@@ -40,8 +36,9 @@ those defined in terms of events) and unusual activities (e.g., certain hosts
 connecting to certain services, or patterns of failed connection attempts).
 
 ################################################################################
+
 %package core
-Summary:          The core bro installation without broctl
+Summary:          The core zeek installation (without zeekctl, zeek-aux, or develpment files).
 Requires:         libbroker = %{BROKER_VER}
 BuildRequires:    libbroker-devel = %{BROKER_VER}
 Requires:         caf >= %{CAF_VER}
@@ -60,32 +57,36 @@ Requires:         openssl
 BuildRequires:    openssl-devel
 Requires:         zlib
 
-BuildRequires:    binpac = 1:%{BINPAC_VER}
-BuildRequires:    binpac-devel = 1:%{BINPAC_VER}
-BuildRequires:    bifcl = 1:%{BIFCL_VER}
+BuildRequires:    binpac = %{BINPAC_VER}
+BuildRequires:    binpac-devel = %{BINPAC_VER}
+BuildRequires:    bifcl = %{BIFCL_VER}
 BuildRequires:    gcc-c++
 BuildRequires:    openssl-devel
 BuildRequires:    flex
 BuildRequires:    bison >= 2.5
 BuildRequires:    python2
 BuildRequires:    sed
+BuildRequires:    git
+
+Provides:         bro-core = %{version}
+Obsoletes:        bro-core < %{version}
 
 %description core
-Bro is a powerful network analysis framework that is much different from the
-typical IDS you may know.  While focusing on network security monitoring, Bro
+Zeek is a powerful network analysis framework that is much different from the
+typical IDS you may know.  While focusing on network security monitoring, Zeek
 provides a comprehensive platform for more general network traffic analysis as
-well. Well grounded in more than 15 years of research, Bro has successfully
+well. Well grounded in more than 15 years of research, Zeek has successfully
 bridged the traditional gap between academia and operations since its
 inception. Today, it is relied upon operationally in particular by many
-scientific environments for securing their cyberinfrastructure. Bros user
+scientific environments for securing their cyberinfrastructure. Zeek's user
 community includes major universities, research labs, supercomputing centers,
 and open-science communities.
 
 
 %package devel
-Summary:    The development headers for bro
-Requires:   bro-core = %{version}-%{release}
-Requires:   binpac-devel = 1:%{BINPAC_VER}
+Summary:    The development headers for Zeek
+Requires:   zeek-core = %{version}-%{release}
+Requires:   binpac-devel = %{BINPAC_VER}
 Requires:   libpcap-devel
 Requires:   libbroker-devel = %{BROKER_VER}
 Requires:   caf-devel >= %{CAF_VER}
@@ -93,12 +94,26 @@ Requires:   bind-devel
 Requires:   gperftools-devel
 Requires:   openssl-devel
 
+Provides:   bro-devel = %{version}
+Obsoletes:  bro-devel < %{version}
+
 %description devel
-This package contains the development headers needed to build new Bro plugins.
+This package contains the development headers needed to build new Zeek plugins.
 
+################################################################################
 %prep
-%autosetup -n %{name}-%{version}-minimal -p1
+%autosetup -n %{name}-%{version}-minimal -S git
 
+cd aux/paraglob
+tar zxf %{SOURCE1} --strip-components 1
+
+# This is a temp work around until I can build a proper patch
+sed -i '/RequireCXX11/a  include(GNUInstallDirs)' CMakeLists.txt
+sed -i 's/DESTINATION lib/DESTINATION ${CMAKE_INSTALL_LIBDIR}/' src/CMakeLists.txt
+sed -i 's/DESTINATION include/DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/' src/CMakeLists.txt
+sed -i 's/DESTINATION bin/DESTINATION ${CMAKE_INSTALL_BINDIR}/' tools/CMakeLists.txt
+
+################################################################################
 %build
 mkdir build; cd build
 %cmake \
@@ -131,7 +146,6 @@ cd build
 %check
 ctest -V %{?_smp_mflags}
 
-
 ################################################################################
 %files
 %doc CHANGES NEWS README VERSION
@@ -143,10 +157,12 @@ ctest -V %{?_smp_mflags}
 %license COPYING
 %caps(cap_net_admin,cap_net_raw=pie) %{_bindir}/%{name}
 %{_bindir}/%{name}-config
+%{_bindir}/paraglob-test
+%{_bindir}/%{name}-wrapper
 %{_mandir}/man8/%{name}.8*
-%dir %{_datadir}/%{zeek}/
+%dir %{_datadir}/%{name}/
 %{_datadir}/%{name}/base/
-%{_datadir}/%{name}/broxygen/
+%{_datadir}/%{name}/zeekygen/
 %{_datadir}/%{name}/policy/
 %config(noreplace) %{_datadir}/%{name}/site/local.zeek
 
@@ -157,9 +173,19 @@ ctest -V %{?_smp_mflags}
 %{_includedir}/%{name}/*
 %dir %{_datadir}/%{name}/cmake
 %{_datadir}/%{name}/cmake/*
+%{_includedir}/paraglob.h
+%{_libdir}/libparaglob.a
 
 ################################################################################
 %changelog
+* Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 3.0.0-1
+- New analzers for NTP and MQTT
+- Extended analyzers for DNS, RDP, SMB, and TLS
+- Support for logging in UTF-8
+- Extensions to scripting language, for example closures
+- Renames to transition from bro to zeek
+- See https://blog.zeek.org/2019/09/zeek-300.html for more details
+
 * Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 3.0.0-0rc2
 - Bump to version 3.0.0 RC2
 
