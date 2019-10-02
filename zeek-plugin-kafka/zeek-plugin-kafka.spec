@@ -3,11 +3,11 @@
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global     commitdate 20190429
 
-Name:       bro-plugin-kafka
+Name:       zeek-plugin-kafka
 Version:    0.3
 Release:    5.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
-Summary:    A Bro log writer plugin that sends logging output to Kafka.
+Summary:    A Zeek log writer plugin that sends logging output to Kafka.
 
 License:    ASL 2.0
 URL:        https://github.com/apache/%{distname}
@@ -17,29 +17,32 @@ BuildRequires:  cmake
 BuildRequires:  librdkafka-devel
 BuildRequires:  openssl-devel
 BuildRequires:  libpcap-devel
-BuildRequires:  bro-devel = 2.6.4
-BuildRequires:  bifcl = 1:1.1
-BuildRequires:  binpac-devel = 1:0.53
-BuildRequires:  binpac = 1:0.53
+BuildRequires:  zeek-devel = 3.0.0
+BuildRequires:  bifcl = 1:1.2
+BuildRequires:  binpac-devel = 1:0.54
+BuildRequires:  binpac = 1:0.54
 BuildRequires:  gcc-c++
-Requires:       bro-core  = 2.6.4
+Requires:       zeek-core  = 3.0.0
 Requires:       librdkafka = 0.11.5
 Requires:       openssl
+
+Obsoletes:      bro-plugin-kafka < 0.3-5
+Provides:       bro-plugin-kafka = %{version}-%{release}
 
 %description
 A Bro log writer plugin that sends logging output to Kafka.
 
 %prep
-%setup -n %{distname}-%{commit0}
+%autosetup -n %{distname}-%{commit0}
 
 %build
 mkdir build; cd build
 %cmake \
-  -DCMAKE_MODULE_PATH=/usr/share/bro/cmake \
-  -DBRO_CONFIG_CMAKE_DIR=/usr/share/bro/cmake \
-  -DBRO_CONFIG_PLUGIN_DIR=/usr/lib64/bro/plugins \
-  -DBRO_CONFIG_PREFIX=/usr \
-  -DBRO_CONFIG_INCLUDE_DIR=/usr/include/bro \
+  -DCMAKE_MODULE_PATH=%{_datadir}/zeek/cmake \
+  -DBRO_CONFIG_CMAKE_DIR=%{_datadir}/zeek/cmake \
+  -DBRO_CONFIG_PLUGIN_DIR=%{_libdir}/zeek/plugins \
+  -DBRO_CONFIG_PREFIX=%{_prefix} \
+  -DBRO_CONFIG_INCLUDE_DIR=%{_includedir}/zeek \
   ..
 %make_build
 
@@ -47,25 +50,28 @@ mkdir build; cd build
 %make_install
 
 %files
-%dir %{_libdir}/bro/plugins/APACHE_KAFKA/
-%dir %{_libdir}/bro/plugins/APACHE_KAFKA/lib
-%dir %{_libdir}/bro/plugins/APACHE_KAFKA/lib/bif
-%dir %{_libdir}/bro/plugins/APACHE_KAFKA/scripts
-%dir %{_libdir}/bro/plugins/APACHE_KAFKA/scripts/Apache
-%dir %{_libdir}/bro/plugins/APACHE_KAFKA/scripts/Apache/Kafka
+%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/
+%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/lib
+%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/lib/bif
+%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/scripts
+%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/Apache
+%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/Apache/Kafka
 
-%{_libdir}/bro/plugins/APACHE_KAFKA/CHANGES
-%{_libdir}/bro/plugins/APACHE_KAFKA/COPYING
-%{_libdir}/bro/plugins/APACHE_KAFKA/VERSION
-%{_libdir}/bro/plugins/APACHE_KAFKA/__bro_plugin__
-%{_libdir}/bro/plugins/APACHE_KAFKA/lib/APACHE-KAFKA.linux-x86_64.so
-%{_libdir}/bro/plugins/APACHE_KAFKA/lib/bif/*.bro
-%{_libdir}/bro/plugins/APACHE_KAFKA/scripts/Apache/Kafka/*.bro
-%{_libdir}/bro/plugins/APACHE_KAFKA/scripts/*.bro
+%{_libdir}/zeek/plugins/APACHE_KAFKA/CHANGES
+%{_libdir}/zeek/plugins/APACHE_KAFKA/COPYING
+%{_libdir}/zeek/plugins/APACHE_KAFKA/VERSION
+%{_libdir}/zeek/plugins/APACHE_KAFKA/__bro_plugin__
+%{_libdir}/zeek/plugins/APACHE_KAFKA/lib/APACHE-KAFKA.linux-x86_64.so
+%{_libdir}/zeek/plugins/APACHE_KAFKA/lib/bif/*.zeek
+%{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/Apache/Kafka/*.bro
+%{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/*.bro
 
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
 %changelog
+* Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 0.3-6
+- Recompile against Zeek 3.0.0
+
 * Thu Sep 5 2019 Derek Ditch <derek@rocknsm.io> 0.3-5
 - Recompile against Bro 2.6.4
 

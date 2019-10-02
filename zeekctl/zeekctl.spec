@@ -1,6 +1,6 @@
 Name:           zeekctl
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tool for managing Zeek deployments.
 
 License:        BSD
@@ -9,6 +9,7 @@ Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
 Source1:        zeek.service
 
 Provides:       broctl
+Obsoletes:      broctl < 2.0.0
 
 BuildRequires:  cmake >= 2.6.3
 BuildRequires:  gcc-c++
@@ -18,14 +19,19 @@ BuildRequires:  trace-summary >= 0.88
 BuildRequires:  systemd
 BuildRequires:  swig
 BuildRequires:  libpcap-devel
-BuildRequires:  bro-core >= 2.6.3
+BuildRequires:  zeek-core >= 3.0.0
+BuildRequires:  /usr/sbin/sendmail
 
-Requires:       bro-core >= 2.6.3
+
+Requires:       zeek-core >= 3.0.0
 Requires:       libpcap
 Requires:       python2
 Requires:       bash
 Requires:       capstats
 Requires:       trace-summary
+Requires:       /usr/sbin/sendmail
+Requires:       python2-broker
+
 
 Requires(pre):    /usr/bin/getent
 Requires(pre):    /usr/sbin/groupadd
@@ -63,7 +69,6 @@ mkdir build; cd build
   -DZEEK_LOG_DIR:PATH=%{_localstatedir}/log/zeek \
 ..
 make %{?_smp_mflags}
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -122,7 +127,6 @@ exit 0
 %postun
 %systemd_postun zeek.service
 
-
 %files
 %doc
 
@@ -148,11 +152,12 @@ exit 0
 
 %dir %{_datadir}/zeek/zeekctl
 
-
 # Needed if user moves the /var/spool/zeek directory elsewhere
 %attr(-, zeek, zeek) %{_datadir}/zeekctl/scripts/
 
-
 %changelog
+* Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 2.0.0-2
+- Updated for Zeek 3.0.0
+
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 2.0.0-1
 - Bumped version to upstream 2.0
