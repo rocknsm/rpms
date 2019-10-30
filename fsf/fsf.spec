@@ -35,6 +35,7 @@ Requires: python-oletools
 Requires: python-pefile
 Requires: python-pyelftools
 Requires: python-pylzma
+Requires: python-pyparsing
 Requires: python-PyPDF2
 Requires: python-rarfile
 Requires: python-requests
