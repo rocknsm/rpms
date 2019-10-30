@@ -24,6 +24,7 @@ BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 
 %if %{with doc}
+BuildRequires:  python-sphinx
 BuildRequires:  python3-sphinx
 %endif
 
