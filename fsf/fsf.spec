@@ -35,7 +35,6 @@ Requires: python-oletools
 Requires: python-pefile
 Requires: python-pyelftools
 Requires: python-pylzma
-Requires: python-pyparsing
 Requires: python-PyPDF2
 Requires: python-rarfile
 Requires: python-requests
@@ -43,6 +42,7 @@ Requires: python-ssdeep
 Requires: python-xmltodict
 Requires: python2-pyasn1
 Requires: python2-pyasn1-modules
+Requires: python2-pyparsing
 Requires: python2-yara
 Requires: ssdeep
 Requires: unrar
