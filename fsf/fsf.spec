@@ -6,7 +6,7 @@
 Name:     fsf
 Summary:  File Scanning Framework is a recursive file scanning solution that provides a service for static file analysis.
 Version:  1.1
-Release:  5.git.%{shortcommit0}%{?dist}
+Release:  6.git.%{shortcommit0}%{?dist}
 License:  Apache License, Version 2.0
 Source0:  https://github.com/EmersonElectricCo/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{version}-%{shortcommit0}.tar.gz
 Patch0:   0001-add-service-file.patch
