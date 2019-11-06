@@ -12,6 +12,7 @@ Source1:        bro.service
 BuildRequires:  cmake >= 2.6.3
 BuildRequires:  gcc-c++
 BuildRequires:  python2-devel
+BuildRequires:  python-rpm-macros
 BuildRequires:  capstats >= 0.26
 BuildRequires:  trace-summary >= 0.88
 BuildRequires:  systemd

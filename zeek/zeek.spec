@@ -45,7 +45,7 @@ Requires:         caf >= %{CAF_VER}
 BuildRequires:    caf-devel >= %{CAF_VER}
 Requires:         bind-libs
 BuildRequires:    bind-devel
-Requires:         libmaxminddb
+Requires:         libmaxminddb0
 BuildRequires:    libmaxminddb-devel
 %ifnarch s390 s390x
 Requires:         gperftools-libs
