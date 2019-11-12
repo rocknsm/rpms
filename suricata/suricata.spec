@@ -1,6 +1,6 @@
 Summary: Intrusion Detection System
 Name: suricata
-Version: 4.1.3
+Version: 5.0.0
 Release: 1%{?dist}
 License: GPLv2
 Group: Applications/Internet
@@ -23,16 +23,24 @@ BuildRequires: libnfnetlink-devel libnetfilter_queue-devel libnet-devel
 BuildRequires: zlib-devel pcre-devel libcap-ng-devel
 BuildRequires: lz4-devel libpcap-devel
 BuildRequires: nspr-devel nss-devel nss-softokn-devel file-devel
-BuildRequires: jansson-devel GeoIP-devel python2-devel lua-devel
+BuildRequires: jansson-devel python2-devel lua-devel libmaxminddb-devel
 BuildRequires: autoconf automake libtool
 BuildRequires: systemd
-BuildRequires: hiredis-devel
-BuildRequires: libevent-devel
-BuildRequires: libprelude-devel
+BuildRequires: hiredis-devel hiredis
+BuildRequires: libevent-devel libevent
+BuildRequires: libprelude-devel libprelude
 BuildRequires: pkgconfig(gnutls)
 
-# Needed pyyaml for suricata-update
+Requires: libmaxminddb
+Requires: lua
+Requires: libpcap
+Requires: libcap-ng
+Requires: lz4
+Requires: zlib
+Requires: pcre
+Requires: libnfnetlink libnetfilter_queue libnet
 
+# Needed pyyaml for suricata-update
 Requires:  python2-pyyaml
 %if 0%{?fedora} >= 25
 %ifarch x86_64
@@ -75,7 +83,22 @@ autoreconf -fv --install
 %if 0%{?centos} == 7
 export LIBS="-lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc"
 %endif
-%configure --enable-gccprotect --enable-pie --disable-gccmarch-native --disable-coccinelle --enable-nfqueue --enable-af-packet --with-libnspr-includes=/usr/include/nspr4 --with-libnss-includes=/usr/include/nss3 --enable-jansson --enable-geoip --enable-lua --enable-hiredis --enable-prelude
+%configure \
+    --enable-gccprotect \
+    --enable-pie \
+    --disable-gccmarch-native \
+    --disable-coccinelle \
+    --enable-profiling \
+    --enable-nfqueue \
+    --enable-af-packet \
+    --with-libnspr-includes=/usr/include/nspr4 \
+    --with-libnss-includes=/usr/include/nss3 \
+    --enable-jansson \
+    --enable-geoip \
+    --enable-lua \
+    --enable-hiredis \
+    --enable-prelude \
+    --enable-rust-strict
 
 %make_build
 
@@ -162,9 +185,14 @@ getent passwd suricata >/dev/null || \
 %attr(2770,suricata,suricata) %dir %{_var}/lib/%{name}
 %attr(2770,suricata,suricata) %dir /run/%{name}/
 %{_tmpfilesdir}/%{name}.conf
-%{_datadir}/%{name}/rules
+%{_datadir}/%{name}/*
 
 %changelog
+* Mon Nov 11 2019 Derek Ditch <derek@rocknsm.io> 5.0.0-1
+- Bump to upstream version 5.0.0
+- Change GeoIP support to GeoIP2
+- Add explicit dependencies for redis and others
+
 * Sun Mar 17 2019 Derek Ditch <derek@rocknsm.io> 4.1.3-1
 - Bump to 4.1.3 released on Mar 7
 - Change homedir for suricata user to /var/lib/suricata
@@ -455,4 +483,3 @@ getent passwd suricata >/dev/null || \
 
 * Sat Feb 27 2010 Steve Grubb <sgrubb@redhat.com> 0.8.1-1
 - Initial packaging
-
