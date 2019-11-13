@@ -14,7 +14,7 @@
 
 Name:           rock-release
 Version:        2.5
-Release:        2
+Release:        1
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
