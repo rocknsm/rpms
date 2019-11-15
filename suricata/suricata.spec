@@ -17,7 +17,7 @@ Patch2: suricata-4.1.1-service.patch
 
 BuildRequires: gcc
 BuildRequires: gcc-c++
-BuildRequires: rust cargo
+BuildRequires: rust cargo llvm7.0-libs
 BuildRequires: libyaml-devel python2-pyyaml
 BuildRequires: libnfnetlink-devel libnetfilter_queue-devel libnet-devel
 BuildRequires: zlib-devel pcre-devel libcap-ng-devel
