@@ -56,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 install -Dpm 644 %{SOURCE0} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
 install -Dpm 644 %{SOURCE4} \
-    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_4
+    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_5
 install -Dpm 644 %{SOURCE5} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-Testing
 
