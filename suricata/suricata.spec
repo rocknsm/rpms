@@ -1,7 +1,7 @@
 Summary: Intrusion Detection System
 Name: suricata
 Version: 5.0.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 Group: Applications/Internet
 URL: http://suricata-ids.org/
@@ -14,6 +14,8 @@ Source5: suricata-tmpfiles.conf
 Patch1: suricata-2.0.9-docs.patch
 # Suricata service file needs some options supplied
 Patch2: suricata-4.1.1-service.patch
+# Fix for rule negation parsing
+Patch3: https://github.com/OISF/suricata/commit/007a461d69b0e8589d0b1ba4968b17903e91ab86.patch#/fix-rule-negation.patch
 
 BuildRequires: gcc
 BuildRequires: gcc-c++
@@ -71,11 +73,9 @@ UDP, ICMP, HTTP, TLS, FTP and SMB! ), Gzip Decompression, Fast IP
 Matching, and GeoIP identification.
 
 %prep
-%setup -q
-install -m 644 %{SOURCE4} doc/
-%patch1 -p1
-%patch2 -p1
+%autosetup -p1
 
+install -m 644 %{SOURCE4} doc/
 autoreconf -fv --install
 
 %build
@@ -188,6 +188,9 @@ getent passwd suricata >/dev/null || \
 %{_datadir}/%{name}/*
 
 %changelog
+* Tue Dec 10 2019 Derek Ditch <derek@rocknsm.io> 5.0.0-2
+- Patched for Suricata issue 3389 to fix rule parsing with negations
+
 * Mon Nov 11 2019 Derek Ditch <derek@rocknsm.io> 5.0.0-1
 - Bump to upstream version 5.0.0
 - Change GeoIP support to GeoIP2
