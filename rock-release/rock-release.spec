@@ -13,8 +13,8 @@
 # limitations under the License.
 
 Name:           rock-release
-Version:        2.3
-Release:        2
+Version:        2.5
+Release:        1
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
@@ -28,7 +28,7 @@ Source0:        http://rocknsm.io/RPM-GPG-KEY-RockNSM-2
 Source1:        LICENSE
 Source2:        rocknsm.repo
 Source3:        rocknsm-testing.repo
-Source4:        https://packagecloud.io/rocknsm/2_4/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_4
+Source4:        https://packagecloud.io/rocknsm/2_5/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_5
 Source5:	https://copr-be.cloud.fedoraproject.org/results/@rocknsm/testing/pubkey.gpg#/RPM-GPG-KEY-RockNSM-Testing
 
 BuildArch:     noarch
@@ -56,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 install -Dpm 644 %{SOURCE0} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
 install -Dpm 644 %{SOURCE4} \
-    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_4
+    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_5
 install -Dpm 644 %{SOURCE5} \
     $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-Testing
 
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Wed Nov 6 2019 Johnathon Hall <johnathon@rocknsm.io> - 2.5-1
+- Update release to 2.5 repo and GPG key
+
 * Thu Apr 11 2019 Derek Ditch <derek@rocknsm.io> - 2.4-1
 - Update release to 2.4 repo and GPG key
 
