@@ -107,6 +107,7 @@ make DESTDIR="%{buildroot}" "bindir=%{_sbindir}" install
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/rules
 install -m 640 rules/*.rules %{buildroot}%{_sysconfdir}/%{name}/rules
 install -m 600 etc/*.config %{buildroot}%{_sysconfdir}/%{name}
+install -m 600 threshold.config %{buildroot}%{_sysconfdir}/%{name}
 install -m 600 suricata.yaml %{buildroot}%{_sysconfdir}/%{name}
 mkdir -p %{buildroot}%{_unitdir}
 install -m 0644 etc/%{name}.service %{buildroot}%{_unitdir}/
