@@ -1,19 +1,19 @@
 %global BIFCL_VER 1:1.2
 %global BINPAC_VER 1:0.54
 %global BROKER_VER 1.2.0
-%global CAF_VER 0.17.0
+%global CAF_VER 0.17.3
 %global ZEEKAUX_VER 0.43
 %global ZEEKCTL_VER 2.0.0
 
 Name:             zeek
-Version:          3.0.0
+Version:          3.0.1
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
 License:          BSD
 URL:              http://bro.org
 Source0:          http://www.bro.org/downloads/%{name}-%{version}-minimal.tar.gz
-Source1:          https://github.com/zeek/paraglob/archive/b9b834c8d1ec3f2621ca504eaf60e0361fd607a2.tar.gz#/paraglob-b9b834.tar.gz
+Source1:          https://github.com/zeek/paraglob/archive/7a0e8ce458f683a2772a4563ab39a02d926df5c7.tar.gz#/paraglob-7a0e8c.tar.gz
 Patch0:           https://github.com/zeek/zeek/compare/release/3.0...dcode:dcode/gnu-install-dirs.patch#/%{name}-gnu-install-dirs.patch
 
 Provides:         bro = %{version}
@@ -173,11 +173,14 @@ ctest -V %{?_smp_mflags}
 %{_includedir}/%{name}/*
 %dir %{_datadir}/%{name}/cmake
 %{_datadir}/%{name}/cmake/*
-%{_includedir}/paraglob.h
+%{_includedir}/paraglob/
 %{_libdir}/libparaglob.a
 
 ################################################################################
 %changelog
+* Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 3.0.1-1
+- Version bump for upstream bugfixes
+
 * Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 3.0.0-1
 - New analzers for NTP and MQTT
 - Extended analyzers for DNS, RDP, SMB, and TLS

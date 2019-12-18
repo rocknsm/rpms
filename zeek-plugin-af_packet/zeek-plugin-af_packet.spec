@@ -2,7 +2,7 @@
 
 Name:       zeek-plugin-af_packet
 Version:    1.4.0
-Release:    4%{?dist}
+Release:    5%{?dist}
 Epoch:      2
 Summary:    Native AF_Packet support plugin for Zeek.
 
@@ -14,12 +14,12 @@ BuildRequires:  cmake
 BuildRequires:  kernel-devel
 BuildRequires:  libpcap-devel
 BuildRequires:  zlib-devel
-BuildRequires:  zeek-devel = 3.0.0
+BuildRequires:  zeek-devel = 3.0.1
 BuildRequires:  bifcl = 1:1.2
 BuildRequires:  binpac-devel = 1:0.54
 BuildRequires:  binpac = 1:0.54
 BuildRequires:  gcc-c++
-Requires:       zeek-core = 3.0.0
+Requires:       zeek-core = 3.0.1
 Requires:       libpcap
 Requires:       zlib
 
@@ -68,6 +68,9 @@ mkdir build; cd build
 %{_libdir}/zeek/plugins/Bro_AF_Packet/COPYING
 
 %changelog
+* Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.4.0-5
+- Recompile against Zeek 3.0.1
+
 * Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 1.4.0-4
 - Recompile against Zeek 3.0.0
 

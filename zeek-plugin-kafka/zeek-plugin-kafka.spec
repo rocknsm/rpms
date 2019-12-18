@@ -5,7 +5,7 @@
 
 Name:       zeek-plugin-kafka
 Version:    0.3
-Release:    5.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    7.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Zeek log writer plugin that sends logging output to Kafka.
 
@@ -17,12 +17,12 @@ BuildRequires:  cmake
 BuildRequires:  librdkafka-devel
 BuildRequires:  openssl-devel
 BuildRequires:  libpcap-devel
-BuildRequires:  zeek-devel = 3.0.0
+BuildRequires:  zeek-devel = 3.0.1
 BuildRequires:  bifcl = 1:1.2
 BuildRequires:  binpac-devel = 1:0.54
 BuildRequires:  binpac = 1:0.54
 BuildRequires:  gcc-c++
-Requires:       zeek-core  = 3.0.0
+Requires:       zeek-core  = 3.0.1
 Requires:       librdkafka = 0.11.5
 Requires:       openssl
 
@@ -69,6 +69,9 @@ mkdir build; cd build
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
 %changelog
+* Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 0.3-7
+- Recompile against Zeek 3.0.1
+
 * Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 0.3-6
 - Recompile against Zeek 3.0.0
 

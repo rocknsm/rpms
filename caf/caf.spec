@@ -19,19 +19,19 @@
 %define         dist_name actor-framework
 
 Name:           caf
-Version:        0.17.1
+Version:        0.17.3
 Release:        1%{?dist}
 Summary:        C++ actor framework
 License:        BSD
 URL:            http://actor-framework.org
 Source0:        https://github.com/actor-framework/%{dist_name}/archive/%{version}.tar.gz#/%{dist_name}-%{version}.tar.gz
-Patch0:         https://patch-diff.githubusercontent.com/raw/actor-framework/actor-framework/pull/917.patch#/0-%{name}-GNUInstallDirs.patch
 Requires:       libcaf_core == %{version}
 Requires:       libcaf_io   == %{version}
 Requires:       libcaf_openssl == %{version}
 BuildRequires:  cmake       >= 2.8
 BuildRequires:  gcc-c++     >= 4.8
 BuildRequires:  openssl-devel
+BuildRequires:  python-devel
 %if 0%{?supportsOpenCL}
 Requires:       libcaf_opencl == %{version}
 BuildRequires:  opencl-headers
@@ -53,7 +53,7 @@ mkdir build; cd build
 make doc
 
 %check
-#make --directory=build test 
+#make --directory=build test
 ctest -V %{?_smp_mflags}
 
 # By default CAF installs itself into /usr/lib, but some distros may use
@@ -62,7 +62,7 @@ ctest -V %{?_smp_mflags}
 # for file directive to specify another target directory name, so we have
 # to move library files into appropriate directory manually right after
 # installation complete. Note that we run unit tests after that as we really
-# do not want to ship broken package. 
+# do not want to ship broken package.
 # Also note that we completely clean up old buildroot before installing, in
 # order not to accidentaly pack old files left since previous build.
 %install
@@ -102,7 +102,7 @@ compiled library.
 # ---- libcaf_io ----
 %package -n libcaf_io
 Summary:  C++ actor framework: IO library
-License:  BSD 
+License:  BSD
 Requires: libcaf_core == %{version}
 
 %description -n libcaf_io
@@ -202,6 +202,9 @@ manual.
 %doc build/doc/html
 
 %changelog
+* Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 0.17.3-1
+- Version bump to latest upstream release
+
 * Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 0.17.1-1
 - Version bump to latest build
 - Patch install dirs to use CMAKE_INSTALL_* vars

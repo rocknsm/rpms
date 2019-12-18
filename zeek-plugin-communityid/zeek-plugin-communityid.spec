@@ -2,7 +2,7 @@
 
 Name:       zeek-plugin-communityid
 Version:    1.2
-Release:    3%{?dist}
+Release:    4%{?dist}
 Summary:    Zeek support for "community ID" flow hashing
 
 License:    BSD
@@ -10,19 +10,19 @@ URL:        https://github.com/corelight/%{distname}
 Source0:    https://github.com/corelight/%{distname}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 BuildRequires:  cmake >= 2.8
-BuildRequires:  zeek-devel = 3.0.0 
+BuildRequires:  zeek-devel = 3.0.1
 BuildRequires:  bifcl = 1:1.2
 BuildRequires:  binpac-devel = 1:0.54
 BuildRequires:  binpac = 1:0.54
 BuildRequires:  gcc-c++
 BuildRequires:  openssl-devel
-Requires:       zeek-core  = 3.0.0
+Requires:       zeek-core  = 3.0.1
 
 Obsoletes:      bro-plugin-communityid < 2:1.2-3
 Provides:       bro-plugin-communityid = %{version}-%{release}
 
 %description
-Extends Zeek to support for "community ID" flow hashing, a standardized way of 
+Extends Zeek to support for "community ID" flow hashing, a standardized way of
 labeling traffic flows in network monitors
 
 %prep
@@ -51,6 +51,9 @@ mkdir build; cd build
 %license COPYING
 
 %changelog
+* Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.2-4
+- Recompile against Zeek 3.0.1
+
 * Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 1.2-3
 - Recompile against Zeek 3.0.0
 

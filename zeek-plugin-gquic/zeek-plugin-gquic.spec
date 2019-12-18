@@ -5,7 +5,7 @@
 
 Name:       zeek-plugin-gquic
 Version:    1.0
-Release:    3.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    4.%{commitdate}git%{shortcommit0}%{?dist}
 Summary:    Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic
 
 License:    BSD
@@ -13,12 +13,12 @@ URL:        https://github.com/salesforce/%{distname}
 Source0:    https://github.com/salesforce/%{distname}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 
 BuildRequires:  cmake >= 2.8
-BuildRequires:  zeek-devel = 3.0.0
+BuildRequires:  zeek-devel = 3.0.1
 BuildRequires:  bifcl = 1:1.2
 BuildRequires:  binpac-devel = 1:0.54
 BuildRequires:  binpac = 1:0.54
 BuildRequires:  gcc-c++
-Requires:       zeek-core  = 3.0.0
+Requires:       zeek-core  = 3.0.1
 
 Obsoletes:      bro-plugin-gquic < 1.0-3
 Provides:       bro-plugin-gquic = %{version}-%{release}
@@ -52,6 +52,9 @@ mkdir build; cd build
 %license LICENSE.txt
 
 %changelog
+* Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.0-4
+- Recompile against Zeek 3.0.1
+
 * Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 1.0-3
 - Recompile against Zeek 3.0.0
 
