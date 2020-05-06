@@ -1,12 +1,17 @@
-%global BIFCL_VER 1:1.2
-%global BINPAC_VER 1:0.54
-%global BROKER_VER 1.2.0
+%global BIFCL_VER 1:1.3.0
+%global BINPAC_VER 1:0.55.1
+%global BROKER_VER 1.3.3
 %global CAF_VER 0.17.3
-%global ZEEKAUX_VER 0.43
-%global ZEEKCTL_VER 2.0.0
+%global ZEEKAUX_VER 0.44
+%global ZEEKCTL_VER 2.1.0
+
+%if 0%{?epel}
+%define scl devtoolset-8
+%define scl_prefix devtoolset-8-
+%endif
 
 Name:             zeek
-Version:          3.0.1
+Version:          3.1.2
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
@@ -23,7 +28,11 @@ Requires:         zeek-core = %{version}-%{release}
 Requires:         zeekctl >= %{ZEEKCTL_VER}
 Requires:         zeek-aux >= %{ZEEKAUX_VER}
 
-BuildRequires:    cmake >= 2.8.12
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3
+%else
+BuildRequires:    cmake
+%endif 
 
 %description
 Zeek is an open-source, Unix-based Network Intrusion Detection System (NIDS)
@@ -60,11 +69,11 @@ Requires:         zlib
 BuildRequires:    binpac = %{BINPAC_VER}
 BuildRequires:    binpac-devel = %{BINPAC_VER}
 BuildRequires:    bifcl = %{BIFCL_VER}
-BuildRequires:    gcc-c++
+BuildRequires:    %{?scl_prefix}gcc-c++ >= 5
 BuildRequires:    openssl-devel
 BuildRequires:    flex
 BuildRequires:    bison >= 2.5
-BuildRequires:    python2
+BuildRequires:    python3
 BuildRequires:    sed
 BuildRequires:    git
 
@@ -118,7 +127,8 @@ sed -i 's/DESTINATION bin/DESTINATION ${CMAKE_INSTALL_BINDIR}/' tools/CMakeLists
 mkdir build; cd build
 %cmake \
   -DZEEK_ROOT_DIR:PATH=%{_prefix} \
-  -DPY_MOD_INSTALL_DIR:PATH=%{python2_sitelib} \
+  -DPY_MOD_INSTALL_DIR:PATH=%{python3_sitelib} \
+  -DPYTHON_EXECUTABLE:PATH=%{_bindir}/python3 \
   -DZEEK_SCRIPT_INSTALL_PATH:PATH=%{_datadir}/%{name} \
   -DZEEK_ETC_INSTALL_DIR:PATH=%{_sysconfdir}/%{name} \
   -DENABLE_MOBILE_IPV6:BOOL=ON \

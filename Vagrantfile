@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
   config.ssh.forward_agent = true
 
-  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+#  config.vm.synced_folder ".", "/vagrant", type: "nfs"
 
   config.vm.provider "vmware_desktop" do |v|
     v.vmx["memsize"] = "8192"
