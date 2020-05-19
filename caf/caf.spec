@@ -33,6 +33,7 @@ BuildRequires:  gcc-c++     >= 4.8
 BuildRequires:  openssl-devel
 BuildRequires:  python3-devel
 BuildRequires:  python3-sphinx
+BuildRequires:  python3-GitPython
 %if 0%{?supportsOpenCL}
 Requires:       libcaf_opencl == %{version}
 BuildRequires:  opencl-headers
@@ -45,15 +46,16 @@ lightweight & fast actor implementations, pattern matching for messages,
 network transparent messaging, and more.
 
 %prep
-%autosetup -n %{dist_name}-%{version} -p1
+%autosetup -S git -n %{dist_name}-%{version}
 
 %build
 mkdir build; cd build
 %cmake -DCAF_NO_EXAMPLES:BOOL=yes ..
 %make_build
 
-cd ../manual
-sphinx-build . html
+# Disable docs for now
+# cd ../manual
+# sphinx-build . html
 
 %check
 #make --directory=build test
