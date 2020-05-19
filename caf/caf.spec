@@ -52,7 +52,6 @@ mkdir build; cd build
 %cmake -DCAF_NO_EXAMPLES:BOOL=yes ..
 %make_build
 
-# Disable docs for now
 cd ../manual
 sphinx-build . html
 
@@ -72,6 +71,9 @@ ctest -V %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 %make_install --directory=build
+
+mkdir -p %{buildroot}/%{_docdir}/caf-doc/
+cp -a manual/html %{buildroot}/%{_docdir}/caf-doc/
 
 %clean
 rm -rf %{buildroot}
@@ -93,7 +95,8 @@ compiled library.
 
 %files -n libcaf_core
 %doc README*
-%doc %{_datadir}/caf/tools/
+%{_datadir}/caf/tools/
+
 %license LICENSE*
 %{_libdir}/libcaf_core.so.*
 
@@ -203,7 +206,7 @@ manual.
 %files doc
 %doc README*
 %license LICENSE*
-%doc build/manual/html
+%{_docdir}/caf-doc/
 
 %changelog
 * Tue May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.5-1
