@@ -20,7 +20,7 @@
 
 Name:           caf
 Version:        0.17.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        C++ actor framework
 License:        BSD
 URL:            http://actor-framework.org
@@ -31,7 +31,7 @@ Requires:       libcaf_openssl == %{version}
 BuildRequires:  cmake       >= 2.8
 BuildRequires:  gcc-c++     >= 4.8
 BuildRequires:  openssl-devel
-BuildRequires:  python-devel
+BuildRequires:  python3-devel
 %if 0%{?supportsOpenCL}
 Requires:       libcaf_opencl == %{version}
 BuildRequires:  opencl-headers
@@ -202,6 +202,9 @@ manual.
 %doc build/doc/html
 
 %changelog
+* Mon May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.3-2
+- Explicitly build with python3-devel
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 0.17.3-1
 - Version bump to latest upstream release
 
