@@ -19,8 +19,8 @@
 %define         dist_name actor-framework
 
 Name:           caf
-Version:        0.17.3
-Release:        2%{?dist}
+Version:        0.17.5
+Release:        1%{?dist}
 Summary:        C++ actor framework
 License:        BSD
 URL:            http://actor-framework.org
@@ -32,6 +32,7 @@ BuildRequires:  cmake       >= 2.8
 BuildRequires:  gcc-c++     >= 4.8
 BuildRequires:  openssl-devel
 BuildRequires:  python3-devel
+BuildRequires:  python3-sphinx
 %if 0%{?supportsOpenCL}
 Requires:       libcaf_opencl == %{version}
 BuildRequires:  opencl-headers
@@ -50,7 +51,9 @@ network transparent messaging, and more.
 mkdir build; cd build
 %cmake -DCAF_NO_EXAMPLES:BOOL=yes ..
 %make_build
-make doc
+
+cd ../manual
+sphinx-build . html
 
 %check
 #make --directory=build test
@@ -202,7 +205,8 @@ manual.
 %doc build/doc/html
 
 %changelog
-* Mon May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.3-2
+* Mon May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.5-1
+- Bump version to 0.17.5 to fix doc builds w/ python3
 - Explicitly build with python3-devel
 
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 0.17.3-1

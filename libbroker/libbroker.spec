@@ -1,12 +1,18 @@
 %global distname broker
+
+%if 0%{?rhel} < 8
+%define scl devtoolset-8
+%define scl_prefix devtoolset-8-
+%endif
+
 Name:           libbroker
 Version:        1.3.3
 Release:        1%{?dist}
 Summary:        Zeek's messaging library.
 
 License:        BSD
-URL:            https://docs.zeek.org/projects/broker/en/stable/
-Source0:        https://www.zeek.org/downloads/%{distname}-%{version}.tar.gz
+URL:            https://docs.zeek.org/projects/%{distname}/
+Source0:        https://download.zeek.org/%{distname}-%{version}.tar.gz
 
 %if 0%{?rhel} < 8
 BuildRequires:    cmake3
@@ -16,7 +22,7 @@ BuildRequires:    cmake
 BuildRequires:  sqlite-devel
 BuildRequires:  caf-devel >= 0.17.3
 BuildRequires:  openssl-devel
-BuildRequires:  %{?scl_prefix}gcc-c++
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
 BuildRequires:  python3-devel
 Requires:       libcaf_core >= 0.17.3
 Requires:       libcaf_io >= 0.17.3
@@ -52,15 +58,18 @@ Requires:       python3
 
 %build
 mkdir build; cd build
+%{?scl:scl enable %{scl} "}
 %cmake \
   -DCAF_ROOT_DIR=%{_prefix} \
   -DBROKER_ROOT_DIR=%{_prefix} \
-  -DPY_MOD_INSTALL_DIR=%{python_sitearch} \
+  -DPY_MOD_INSTALL_DIR=%{python3_sitearch} \
   -DPYTHON_INCLUDE_DIR=%{_includedir} \
   -DPYTHON_LIBRARIES=%{_libdir} \
   -DINSTALL_LIB_DIR=%{_libdir} \
   ..
+
 %make_build
+%{?scl: "}
 
 %install
 rm -rf %{buildroot}
@@ -91,6 +100,10 @@ ctest -V %{?_smp_mflags}
 %{python3_sitearch}/broker/*
 
 %changelog
+* Tue May 19 2020 Derek Ditch <derek@rocknsm.io> 1.3.3-1
+- Version bump to 1.3.3
+- Update download and docs links
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.2.0-2
 - Recompile against CAF 0.17.3
 

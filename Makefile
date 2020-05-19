@@ -19,7 +19,7 @@ $(outdir)/$(SRPM): $(SOURCES)
 srpm: $(outdir)/$(SRPM)
 
 rpm: $(outdir)/$(SRPM)
-	mock -r rock-7-x86_64.cfg --resultdir=$(outdir) $(outdir)/$(SRPM) --no-cleanup-after
+	mock -r rock-8-x86_64.cfg --resultdir=$(outdir) $(outdir)/$(SRPM) --no-cleanup-after
 	createrepo_c --update $(outdir)
 
 copr: $(outdir)/$(SRPM)
