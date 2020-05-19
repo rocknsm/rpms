@@ -31,7 +31,6 @@ Requires:       libcaf_openssl == %{version}
 BuildRequires:  cmake       >= 2.8
 BuildRequires:  gcc-c++     >= 4.8
 BuildRequires:  openssl-devel
-BuildRequires:  python3-devel
 BuildRequires:  python3-sphinx
 BuildRequires:  python3-GitPython
 %if 0%{?supportsOpenCL}
@@ -54,8 +53,8 @@ mkdir build; cd build
 %make_build
 
 # Disable docs for now
-# cd ../manual
-# sphinx-build . html
+cd ../manual
+sphinx-build . html
 
 %check
 #make --directory=build test
@@ -193,7 +192,7 @@ CAF. This package will also install all of them.
 Summary:  C++ actor framework: documentation in HTML format
 License:  BSD
 Requires: caf == %{version}
-BuildRequires: doxygen
+
 
 %description doc
 This package includes documentation for CAF developer, available in HTML or
@@ -204,10 +203,10 @@ manual.
 %files doc
 %doc README*
 %license LICENSE*
-%doc build/doc/html
+%doc build/manual/html
 
 %changelog
-* Mon May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.5-1
+* Tue May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.5-1
 - Bump version to 0.17.5 to fix doc builds w/ python3
 - Explicitly build with python3-devel
 
