@@ -17,8 +17,8 @@
 %endif
 
 %if 0%{?rhel} < 8
-%define scl devtoolset-8
-%define scl_prefix devtoolset-8-
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
 %endif
 
 %define         dist_name actor-framework
@@ -35,7 +35,7 @@ Requires:       libcaf_io   == %{version}
 Requires:       libcaf_openssl == %{version}
 %if 0%{?rhel} < 8
 BuildRequires:    cmake3
-%define cmake %cmake3
+%global cmake %cmake3
 %else
 BuildRequires:    cmake
 %endif
