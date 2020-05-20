@@ -80,7 +80,7 @@ mkdir build; cd build
 %{?scl_disable}
 
 cd ../manual
-sphinx-build . html
+%sphinx_build . html
 
 %check
 #make --directory=build test
