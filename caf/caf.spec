@@ -63,15 +63,19 @@ network transparent messaging, and more.
 
 %build
 mkdir build; cd build
+%{?scl:scl enable %{scl} "}
 %cmake -DCAF_NO_EXAMPLES:BOOL=yes ..
 %make_build
+%{?scl: "}
 
 cd ../manual
 sphinx-build . html
 
 %check
+%{?scl:scl enable %{scl} "}
 #make --directory=build test
 ctest -V %{?_smp_mflags}
+%{?scl: "}
 
 # By default CAF installs itself into /usr/lib, but some distros may use
 # directories like /usr/lib64 or even /usr/lib32, the right location is
