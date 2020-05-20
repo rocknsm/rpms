@@ -76,7 +76,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 0.55.1-1
-- Bump version to 0.55.1f or Zeek 3.1.x
+- Bump version to 0.55.1 or Zeek 3.1.x
 - Use cmake3 and g++>8
 
 * Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 0.54-1
