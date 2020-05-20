@@ -13,7 +13,7 @@ Summary:        High level language for describing protocol parsers.
 
 License:        BSD
 URL:            https://github.com/zeek/binpac
-Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
+Source0:        https://download.zeek.org/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?rhel} < 8
@@ -24,7 +24,7 @@ BuildRequires:    cmake   >= 3.0.0
 %endif 
 BuildRequires:  flex
 BuildRequires:  bison
-BuildRequires:  gcc-c++
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
 
 %description
 BinPAC is a high level language for describing protocol parsers and
