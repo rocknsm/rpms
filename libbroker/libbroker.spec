@@ -1,8 +1,10 @@
 %global distname broker
 
 %if 0%{?rhel} < 8
-%define scl devtoolset-8
-%define scl_prefix devtoolset-8-
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
 %endif
 
 Name:           libbroker
@@ -16,6 +18,7 @@ Source0:        https://download.zeek.org/%{distname}-%{version}.tar.gz
 
 %if 0%{?rhel} < 8
 BuildRequires:    cmake3
+%global cmake %cmake3
 %else
 BuildRequires:    cmake
 %endif
@@ -58,7 +61,8 @@ Requires:       python3
 
 %build
 mkdir build; cd build
-%{?scl:scl enable %{scl} "}
+
+%{?scl_enable} 
 %cmake \
   -DCAF_ROOT_DIR=%{_prefix} \
   -DBROKER_ROOT_DIR=%{_prefix} \
@@ -67,17 +71,25 @@ mkdir build; cd build
   -DPYTHON_LIBRARIES=%{_libdir} \
   -DINSTALL_LIB_DIR=%{_libdir} \
   ..
+%{?scl_disable}
 
+%{?scl_enable}
 %make_build
-%{?scl: "}
+%{?scl_disable}
 
 %install
 rm -rf %{buildroot}
+
+%{?scl_enable} 
 %make_install
+%{?scl_disable}
+
 find %{buildroot} -name '*.la' -delete
 
 %check
+%{?scl_enable}
 ctest -V %{?_smp_mflags}
+%{?scl_disable}
 
 %post -p /sbin/ldconfig
 
