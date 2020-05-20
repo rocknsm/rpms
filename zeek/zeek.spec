@@ -19,9 +19,9 @@ Summary:          A Network Intrusion Detection System and Analysis Framework
 
 License:          BSD
 URL:              http://bro.org
-Source0:          http://www.bro.org/downloads/%{name}-%{version}-minimal.tar.gz
+Source0:          https://download.zeek.org/%{name}-%{version}-minimal.tar.gz
 Source1:          https://github.com/zeek/paraglob/archive/v0.4.1.tar.gz#/paraglob-0.4.1.tar.gz
-Patch0:           https://github.com/zeek/zeek/compare/release/3.0...dcode:dcode/gnu-install-dirs.patch#/%{name}-gnu-install-dirs.patch
+Patch0:           https://github.com/zeek/zeek/compare/v%{version}...dcode:dcode/gnu-install-dirs.patch#/%{name}-%{version}-gnu-install-dirs.patch
 
 Provides:         bro = %{version}
 Obsoletes:        bro < %{version}
