@@ -2,7 +2,7 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 top_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 SRPM := $(shell rpmspec --query --srpm --queryformat '%{name}-%{version}-%{release}\n' $(spec)).src.rpm
 SOURCES := $(shell spectool --list $(spec)| sed 's|^.*[ \/]||g')
-outdir:= /$(top_dir)/output
+outdir:= output
 
 sources: $(SOURCES)
 
@@ -14,7 +14,7 @@ $(SOURCES): $(spec)
 	done
 
 $(outdir)/$(SRPM): $(SOURCES)
-	mock --buildsrpm --sources=$(outdir) --spec $(spec) --resultdir=$(outdir)
+	mock -r rock-8-x86_64.cfg --buildsrpm --sources=$(outdir) --spec $(spec) --resultdir=$(outdir)
 
 srpm: $(outdir)/$(SRPM)
 
