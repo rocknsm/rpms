@@ -19,7 +19,8 @@
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
 %global scl_prefix devtoolset-8-
-%global scl_enable scl enable %{scl} --
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
 %endif
 
 %define         dist_name actor-framework
@@ -65,15 +66,19 @@ network transparent messaging, and more.
 %build
 mkdir build; cd build
 
-%{?scl_enable} %cmake -DCAF_NO_EXAMPLES:BOOL=yes ..
-%{?scl_enable} %make_build
+%{?scl_enable} 
+%cmake -DCAF_NO_EXAMPLES:BOOL=yes ..
+%make_build
+%{?scl_disable}
 
 cd ../manual
 sphinx-build . html
 
 %check
 #make --directory=build test
-%{?scl_enable} ctest -V %{?_smp_mflags}
+%{?scl_enable} 
+ctest -V %{?_smp_mflags}
+%{?scl_disable}
 
 # By default CAF installs itself into /usr/lib, but some distros may use
 # directories like /usr/lib64 or even /usr/lib32, the right location is
