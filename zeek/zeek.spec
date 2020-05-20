@@ -1,4 +1,4 @@
-%global BIFCL_VER 1:1.3.0
+%global BIFCL_VER 1:1.2
 %global BINPAC_VER 1:0.55.1
 %global BROKER_VER 1.3.3
 %global CAF_VER 0.17.5
