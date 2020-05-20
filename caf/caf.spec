@@ -16,6 +16,11 @@
 %define supportsOpenCL 1
 %endif
 
+%if 0%{?rhel} < 8
+%define scl devtoolset-8
+%define scl_prefix devtoolset-8-
+%endif
+
 %define         dist_name actor-framework
 
 Name:           caf
@@ -28,8 +33,13 @@ Source0:        https://github.com/actor-framework/%{dist_name}/archive/%{versio
 Requires:       libcaf_core == %{version}
 Requires:       libcaf_io   == %{version}
 Requires:       libcaf_openssl == %{version}
-BuildRequires:  cmake       >= 2.8
-BuildRequires:  gcc-c++     >= 4.8
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3
+%define cmake %cmake3
+%else
+BuildRequires:    cmake
+%endif
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
 BuildRequires:  openssl-devel
 BuildRequires:  python3-sphinx
 %if 0%{?rhel} < 8
@@ -216,6 +226,7 @@ manual.
 * Tue May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.5-1
 - Bump version to 0.17.5 to fix doc builds w/ python3
 - Explicitly build with python3-devel
+- Build with devtoolset 8 and cmake3
 
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 0.17.3-1
 - Version bump to latest upstream release
