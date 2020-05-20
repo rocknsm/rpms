@@ -12,7 +12,7 @@
 # published by the Open Source Initiative.
 
 %define docdir %{_datadir}/doc/%{name}-%{version}
-%if 0%{?fedora_version} == 20 || 0%{?fedora_version} == 21 || 0%{?suse_version} == 1310 || 0%{?suse_version} == 1320
+%if 0%{?fedora_version} >= 20 || 0%{?rhel} >= 7
 %define supportsOpenCL 1
 %endif
 
@@ -32,7 +32,11 @@ BuildRequires:  cmake       >= 2.8
 BuildRequires:  gcc-c++     >= 4.8
 BuildRequires:  openssl-devel
 BuildRequires:  python3-sphinx
+%if 0%{?rhel} < 8
+BuildRequires:  GitPython
+%else
 BuildRequires:  python3-GitPython
+%endif
 %if 0%{?supportsOpenCL}
 Requires:       libcaf_opencl == %{version}
 BuildRequires:  opencl-headers
