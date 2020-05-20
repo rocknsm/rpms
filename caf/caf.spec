@@ -19,7 +19,7 @@
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
 %global scl_prefix devtoolset-8-
-%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_enable cat << ∏EOSCL | scl enable %{scl} -
 %global scl_disable EOSCL
 %endif
 
@@ -43,12 +43,20 @@ BuildRequires:    cmake
 %endif
 BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
 BuildRequires:  openssl-devel
+
 BuildRequires:  python3-sphinx
+%if 0%{?rhel} < 8
+%global sphinx_build /usr/bin/sphinx-build-3
+%else
+%global sphinx_build /usr/bin/sphinx-build
+%endif
+
 %if 0%{?rhel} < 8
 BuildRequires:  GitPython
 %else
 BuildRequires:  python3-GitPython
 %endif
+
 %if 0%{?supportsOpenCL}
 Requires:       libcaf_opencl == %{version}
 BuildRequires:  opencl-headers
