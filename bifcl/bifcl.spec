@@ -6,7 +6,7 @@
 %endif
 
 Name:           bifcl
-Version:        1.3.0
+Version:        1.2
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Built-In-Function (BIF) Compiler/Generator for Zeek
@@ -60,8 +60,8 @@ rm -rf %{buildroot}
 %{_bindir}/bifcl
 
 %changelog
-* Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 1.3-1
-- Bump version to 1.3 for Zeek 3.1.x
+* Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 1.2-2
+- Build with cmake3 and gcc > 8
 
 * Mon Sep 16 2019 Derek Ditch <derek@rocknsm.io> 1.2-1
 - Bump version to 1.2 for Zeek 3.0
