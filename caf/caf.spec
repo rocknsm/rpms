@@ -19,7 +19,7 @@
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
 %global scl_prefix devtoolset-8-
-%global scl_enable cat << ∏EOSCL | scl enable %{scl} -
+%global scl_enable cat << EOSCL | scl enable %{scl} -
 %global scl_disable EOSCL
 %endif
 
