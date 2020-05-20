@@ -14,7 +14,7 @@ $(SOURCES): $(spec)
 	done
 
 $(outdir)/$(SRPM): $(SOURCES)
-	mock -r rock-8-x86_64.cfg --buildsrpm --sources=$(outdir) --spec $(spec) --resultdir=$(outdir)
+	mock --buildsrpm --sources=$(outdir) --spec $(spec) --resultdir=$(outdir)
 
 srpm: $(outdir)/$(SRPM)
 
