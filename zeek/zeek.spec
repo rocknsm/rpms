@@ -21,7 +21,7 @@ License:          BSD
 URL:              http://bro.org
 Source0:          https://download.zeek.org/%{name}-%{version}-minimal.tar.gz
 Source1:          https://github.com/zeek/paraglob/archive/v0.4.1.tar.gz#/paraglob-0.4.1.tar.gz
-Patch0:           https://github.com/zeek/zeek/compare/v%{version}...dcode:dcode/gnu-install-dirs.patch#/%{name}-%{version}-gnu-install-dirs.patch
+Patch0:           https://github.com/zeek/zeek/compare/release/3.1...dcode:topic/dcode/gnuinstalldirs.patch#/%{name}-%{version}-gnu-install-dirs.patch
 
 Provides:         bro = %{version}
 Obsoletes:        bro < %{version}
@@ -123,12 +123,6 @@ This package contains the development headers needed to build new Zeek plugins.
 
 cd aux/paraglob
 tar zxf %{SOURCE1} --strip-components 1
-
-# This is a temp work around until I can build a proper patch
-sed -i '/RequireCXX11/a  include(GNUInstallDirs)' CMakeLists.txt
-sed -i 's/DESTINATION lib/DESTINATION ${CMAKE_INSTALL_LIBDIR}/' src/CMakeLists.txt
-sed -i 's/DESTINATION include/DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/' src/CMakeLists.txt
-sed -i 's/DESTINATION bin/DESTINATION ${CMAKE_INSTALL_BINDIR}/' tools/CMakeLists.txt
 
 ################################################################################
 %build
