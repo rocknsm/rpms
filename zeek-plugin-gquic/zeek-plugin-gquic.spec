@@ -44,7 +44,7 @@ Provides:       bro-plugin-gquic = %{version}-%{release}
 Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic.
 
 %prep
-%autosetup -n %{distname}-%{commit0}
+%autosetup -n %{distname}-%{commit0} -S git
 
 %build
 mkdir build; cd build
