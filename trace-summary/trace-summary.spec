@@ -7,7 +7,7 @@ License:        BSD
 URL:            https://github.com/zeek/trace-summary
 Source0:        https://download.zeek.org/%{name}-%{version}.tar.gz
 
-Requires:       pysubnettree
+Requires:       python3-pysubnettree
 Requires:       python3
 
 %description
