@@ -18,7 +18,9 @@ BuildRequires:    cmake3  >= 3.0.0
 %global cmake %cmake3
 %else
 BuildRequires:    cmake   >= 3.0.0
-%endif 
+%endif
+%global debug_package %{nil}
+
 
 BuildRequires:  python3-devel
 BuildRequires:  python3-libs
