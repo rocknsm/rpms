@@ -52,7 +52,7 @@ BuildRequires:  python3-sphinx
 %endif
 
 %if 0%{?rhel} < 8
-BuildRequires:  GitPython
+BuildRequires:  python36-GitPython
 %else
 BuildRequires:  python3-GitPython
 %endif
