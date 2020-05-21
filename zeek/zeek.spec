@@ -192,6 +192,7 @@ ctest -V %{?_smp_mflags}
 %{_datadir}/%{name}/base/
 %{_datadir}/%{name}/zeekygen/
 %{_datadir}/%{name}/policy/
+%{_datadir}/%{name}/test-all-policy.zeek
 %config(noreplace) %{_datadir}/%{name}/site/local.zeek
 
 %files devel
