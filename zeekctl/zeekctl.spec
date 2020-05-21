@@ -27,14 +27,11 @@ BuildRequires:  python3-pysubnettree
 BuildRequires:  capstats
 BuildRequires:  trace-summary >= 0.90
 BuildRequires:  systemd
-BuildRequires:  swig
-BuildRequires:  libpcap-devel
 BuildRequires:  zeek-core >= 3.1.0
 BuildRequires:  /usr/sbin/sendmail
 
 
 Requires:       zeek-core >= 3.1.0
-Requires:       libpcap
 Requires:       python3
 Requires:       python3-libs
 Requires:       python3-pysubnettree
@@ -155,7 +152,6 @@ exit 0
 %{python3_sitelib}/BroControl
 %{python3_sitelib}/ZeekControl
 %{_mandir}/man8/zeekctl.8*
-%{_mandir}/man1/trace-summary.1*
 
 %dir %attr(-, zeek, zeek) %{_localstatedir}/log/zeek/
 %dir %attr(-, zeek, zeek) %{_localstatedir}/spool/zeek/
