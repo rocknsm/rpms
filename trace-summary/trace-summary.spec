@@ -21,6 +21,8 @@ incoming vs. outgoing traffic, per subnet, and per time-interval.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+sed -i 's|/usr/bin/env python|/usr/bin/python3|' trace-summary
 %{__install} -D trace-summary %{buildroot}%{_bindir}/trace-summary
 
 %files
