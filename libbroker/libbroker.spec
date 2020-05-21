@@ -18,9 +18,10 @@ Source0:        https://download.zeek.org/%{distname}-%{version}.tar.gz
 
 %if 0%{?rhel} < 8
 BuildRequires:    cmake3
-%global cmake %cmake3
+%global cmake  /usr/bin/cmake3
 %else
 BuildRequires:    cmake
+%global cmake  /usr/bin/cmake
 %endif
 BuildRequires:  sqlite-devel
 BuildRequires:  caf-devel >= 0.17.3
@@ -87,12 +88,12 @@ rm -rf %{buildroot}
 find %{buildroot} -name '*.la' -delete
 
 %check
+cd build
 %{?scl_enable} 
-make --directory=build test
+%ctest -V %{?_smp_mflags}
 %{?scl_disable}
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
 %files
