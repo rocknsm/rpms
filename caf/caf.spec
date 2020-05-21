@@ -53,6 +53,7 @@ BuildRequires:  python3-sphinx
 
 %if 0%{?rhel} < 8
 BuildRequires:  python36-GitPython
+BuildRequires:  python36-sphinx_rtd_theme
 %else
 BuildRequires:  python3-GitPython
 %endif
