@@ -81,7 +81,7 @@ mkdir build; cd build
   -DZEEK_SPOOL_DIR:PATH=%{_localstatedir}/spool/zeek \
   -DZEEK_LOG_DIR:PATH=%{_localstatedir}/log/zeek \
 ..
-make %{?_smp_mflags}
+%make_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
