@@ -8,11 +8,19 @@ URL:     https://www.hyperscan.io/
 Source0: https://github.com/intel/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1: https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
 
-BuildRequires:  cmake
-BuildRequires:	pcre-devel
-BuildRequires:	python
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3  >= 3.0.0
+%global cmake %cmake3
+%global ctest /usr/bin/ctest3
+%else
+BuildRequires:    cmake   >= 3.0.0
+%global ctest /usr/bin/ctest
+%endif 
+
+BuildRequires:  pcre-devel
+BuildRequires:  python3-devel
 BuildRequires:  ragel
-BuildRequires:	sqlite-devel
+BuildRequires:  sqlite-devel
 BuildRequires:  libpcap-devel
 BuildRequires:  gcc-c++
 
