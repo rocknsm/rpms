@@ -8,6 +8,13 @@
 %global ZEEK_VER 3.1.3
 %global LIBRDKAFKA_VER 1.4.0
 
+%if 0%{?rhel} < 8
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
+%endif
+
 Name:       zeek-plugin-kafka
 Version:    0.3.0
 Release:    8.%{commitdate}git%{shortcommit0}%{?dist}
