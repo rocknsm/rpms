@@ -7,7 +7,7 @@ outdir:= output
 sources: $(SOURCES)
 
 $(SOURCES): $(spec)
-	mkdir -p $(outdir)
+	mkdir -p $(outdir)/el8
 	spectool -A -g -C $(outdir) $(spec)
 	for item in $(shell spectool -l $(spec) | awk '$$0 !~ /http/ { print $$2}'); do \
             cp $(shell dirname $(spec))/$${item} $(outdir); \
@@ -19,8 +19,8 @@ $(outdir)/$(SRPM): $(SOURCES)
 srpm: $(outdir)/$(SRPM)
 
 rpm: $(outdir)/$(SRPM)
-	mock -r rock-8-x86_64.cfg --resultdir=$(outdir) $(outdir)/$(SRPM) --no-cleanup-after
-	createrepo_c --update $(outdir)
+	mock -r rock-8-x86_64.cfg --resultdir=$(outdir)/el8 $(outdir)/$(SRPM) --no-cleanup-after
+	createrepo_c --update $(outdir)/el8
 
 copr: $(outdir)/$(SRPM)
-	copr-cli build -r epel-7-x86_64 @rocknsm/testing $(outdir)/$(SRPM)
+	copr-cli build @rocknsm/testing $(outdir)/$(SRPM)
