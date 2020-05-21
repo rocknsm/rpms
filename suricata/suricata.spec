@@ -1,66 +1,60 @@
 Summary: Intrusion Detection System
 Name: suricata
-Version: 5.0.1
+Version: 5.0.3
 Release: 1%{?dist}
 License: GPLv2
-Group: Applications/Internet
-URL: http://suricata-ids.org/
-Source0:  http://downloads.suricata-ids.org/%{name}-%{version}.tar.gz
-Source2: suricata.sysconfig
-Source4: fedora.notes
-Source5: suricata-tmpfiles.conf
+URL: https://suricata-ids.org/
+Source0: https://www.openinfosecfoundation.org/download/%{name}-%{version}.tar.gz
+Source1: suricata.sysconfig
+Source2: fedora.notes
+Source3: suricata-tmpfiles.conf
 
 # Irrelevant docs are getting installed, drop them
 Patch1: suricata-2.0.9-docs.patch
 # Suricata service file needs some options supplied
 Patch2: suricata-4.1.1-service.patch
+# Linux 5.2 headers moved SIOCGSTAMP to linux/sockios.h. Glibc will
+# include it via sys/socket.h in a future release. This is temporary
+# and should not be needed on other kernel/glibc combos.
+Patch3: suricata-4.1.4-socket.patch
 
-BuildRequires: gcc
-BuildRequires: gcc-c++
-BuildRequires: rust cargo llvm7.0-libs
-BuildRequires: libyaml-devel python2-pyyaml
+BuildRequires: gcc gcc-c++
+BuildRequires: cargo rust >= 1.33
+BuildRequires: libyaml-devel python3-pyyaml
 BuildRequires: libnfnetlink-devel libnetfilter_queue-devel libnet-devel
 BuildRequires: zlib-devel pcre-devel libcap-ng-devel
 BuildRequires: lz4-devel libpcap-devel
 BuildRequires: nspr-devel nss-devel nss-softokn-devel file-devel
-BuildRequires: jansson-devel python2-devel lua-devel libmaxminddb-devel
+BuildRequires: jansson-devel libmaxminddb-devel python3-devel lua-devel
+# Next line is for eBPF support
+%if 0%{?fedora} >= 32
+%ifarch x86_64
+BuildRequires: clang llvm libbpf-devel
+%endif
+%endif
 BuildRequires: autoconf automake libtool
 BuildRequires: systemd
-BuildRequires: hiredis-devel hiredis
-BuildRequires: libevent-devel libevent
-BuildRequires: libprelude-devel libprelude
+BuildRequires: hiredis-devel
+BuildRequires: libevent-devel
+BuildRequires: libprelude-devel
 BuildRequires: pkgconfig(gnutls)
 
-Requires: libmaxminddb
-Requires: lua
-Requires: libpcap
-Requires: libcap-ng
-Requires: lz4
-Requires: zlib
-Requires: pcre
-Requires: libnfnetlink libnetfilter_queue libnet
-
-# Needed pyyaml for suricata-update
-Requires:  python2-pyyaml
 %if 0%{?fedora} >= 25
 %ifarch x86_64
 BuildRequires: hyperscan-devel
 %endif
 %endif
 
-%if 0%{?centos} == 7
-%ifarch x86_64
-BuildRequires: hyperscan-static
-BuildRequires: hyperscan-devel
-%endif
-%endif
-
+Requires: python3-pyyaml
 Requires(pre): /usr/sbin/useradd
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
-Obsoletes: suricata-update
+# Rust is not working on ppc64le systems (bz 1757548)
+ExcludeArch: ppc64le
+
+
 %description
 The Suricata Engine is an Open Source Next Generation Intrusion
 Detection and Prevention Engine. This engine is not intended to
@@ -71,32 +65,30 @@ UDP, ICMP, HTTP, TLS, FTP and SMB! ), Gzip Decompression, Fast IP
 Matching, and GeoIP identification.
 
 %prep
-%autosetup -p1
-
-install -m 644 %{SOURCE4} doc/
+%setup -q 
+install -m 644 %{SOURCE2} doc/
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+sed -i 's/(datadir)/(sysconfdir)/' etc/Makefile.am
+%ifarch x86_64
+sed -i 's/-D__KERNEL__/-D__KERNEL__ -D__x86_64__/' ebpf/Makefile.am
+%endif
 autoreconf -fv --install
 
 %build
-# Required for Hyperscan on CentOS 7.
-%if 0%{?centos} == 7
-export LIBS="-lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc"
+%configure --enable-gccprotect --enable-pie --disable-gccmarch-native \
+        --disable-coccinelle --enable-nfqueue --enable-af-packet \
+        --with-libnspr-includes=/usr/include/nspr4 \
+        --with-libnss-includes=/usr/include/nss3 \
+        --enable-jansson --enable-geoip --enable-lua --enable-hiredis \
+        --enable-prelude --enable-rust  \
+%if 0%{?fedora} >= 32
+%ifarch x86_64
+        --enable-ebpf-build --enable-ebpf \
 %endif
-%configure \
-    --enable-gccprotect \
-    --enable-pie \
-    --disable-gccmarch-native \
-    --disable-coccinelle \
-    --enable-profiling \
-    --enable-nfqueue \
-    --enable-af-packet \
-    --with-libnspr-includes=/usr/include/nspr4 \
-    --with-libnss-includes=/usr/include/nss3 \
-    --enable-jansson \
-    --enable-geoip \
-    --enable-lua \
-    --enable-hiredis \
-    --enable-prelude \
-    --enable-rust-strict
+%endif
+        --enable-python
 
 %make_build
 
@@ -112,7 +104,7 @@ install -m 600 suricata.yaml %{buildroot}%{_sysconfdir}/%{name}
 mkdir -p %{buildroot}%{_unitdir}
 install -m 0644 etc/%{name}.service %{buildroot}%{_unitdir}/
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
-install -m 0755 %{SOURCE2} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -m 0755 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
 # Set up logging
 mkdir -p %{buildroot}/%{_var}/log/%{name}
@@ -131,7 +123,7 @@ mkdir -p %{buildroot}/%{_var}/lib/%{name}
 
 # Setup tmpdirs
 mkdir -p %{buildroot}%{_tmpfilesdir}
-install -m 0644 %{SOURCE5} %{buildroot}%{_tmpfilesdir}/%{name}.conf
+install -m 0644 %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 mkdir -p %{buildroot}/run
 install -d -m 0755 %{buildroot}/run/%{name}/
 
@@ -141,21 +133,15 @@ cp suricata-update/README.rst doc/suricata-update-README.rst
 make check
 
 %pre
-getent group suricata >/dev/null || groupadd --system suricata
-getent passwd suricata >/dev/null || \
-    useradd --system --gid suricata \
-      -d %{_localstatedir}/lib/suricata/ -s /sbin/nologin \
-      -c "System account for Suricata service" suricata
+getent passwd suricata >/dev/null || useradd -r -M -s /sbin/nologin suricata
 
 %post
-/sbin/ldconfig
 %systemd_post suricata.service
 
 %preun
 %systemd_preun suricata.service
 
 %postun
-/sbin/ldconfig
 %systemd_postun_with_restart suricata.service
 
 %files
@@ -169,9 +155,9 @@ getent passwd suricata >/dev/null || \
 %{_bindir}/suricatactl
 %{_bindir}/suricata-update
 %{_libdir}/libhtp*
-%{python2_sitelib}/suricatasc/*
-%{python2_sitelib}/suricata/*
-%{python2_sitelib}/*egg-info
+%{python3_sitelib}/suricatasc/*
+%{python3_sitelib}/suricata/*
+%{python3_sitelib}/*egg-info
 %config(noreplace) %attr(0640,suricata,suricata) %{_sysconfdir}/%{name}/suricata.yaml
 %config(noreplace) %attr(0640,suricata,suricata) %{_sysconfdir}/%{name}/*.config
 %config(noreplace) %attr(0640,suricata,suricata) %{_sysconfdir}/%{name}/rules/*.rules
@@ -184,26 +170,51 @@ getent passwd suricata >/dev/null || \
 %attr(2770,suricata,suricata) %dir %{_var}/lib/%{name}
 %attr(2770,suricata,suricata) %dir /run/%{name}/
 %{_tmpfilesdir}/%{name}.conf
-%{_datadir}/%{name}/*
+%{_datadir}/%{name}/rules
 
 %changelog
-* Thu Dec 12 2019 Derek Ditch <derek@rocknsm.io> 5.0.1-1
-- Version bump for upstream 5.0.1 bugfix release
-- Adds configuration files for references and classification
+* Tue Apr 28 2020 Jason Taylor <jtfas90@gmail.com> 5.0.3-1
+- Upstream security/bugfix release
+- Updated reference, classification, threshold config file installs
 
-* Tue Dec 10 2019 Derek Ditch <derek@rocknsm.io> 5.0.0-2
-- Patched for Suricata issue 3389 to fix rule parsing with negations
+* Fri Apr 03 2020 Jason Taylor <jtfas90@gmail.com> 5.0.2-2
+- Add python3-pyyaml to resolve (#1818935)
 
-* Mon Nov 11 2019 Derek Ditch <derek@rocknsm.io> 5.0.0-1
-- Bump to upstream version 5.0.0
-- Change GeoIP support to GeoIP2
-- Add explicit dependencies for redis and others
+* Thu Feb 13 2020 Steve Grubb <sgrubb@redhat.com> 5.0.2-1
+- New bugfix release
 
-* Sun Mar 17 2019 Derek Ditch <derek@rocknsm.io> 4.1.3-1
-- Bump to 4.1.3 released on Mar 7
-- Change homedir for suricata user to /var/lib/suricata
-- Create suricata system group to match user
-- Added python2-pyyaml as install dependency
+* Fri Jan 31 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
+* Fri Dec 13 2019 Steve Grubb <sgrubb@redhat.com> 5.0.1-1
+- New bugfix release
+
+* Fri Oct 18 2019 Steve Grubb <sgrubb@redhat.com> 5.0.0-2
+- New feature release (which also fixes a security issue)
+- Enable ebpf on x86_64 only
+- Disable building on ppc64le due to rust problems
+
+* Thu Aug 01 2019 Steve Grubb <sgrubb@redhat.com> 4.1.4-4
+- Fix FTBFS bz 1736727
+
+* Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Mon Jul 22 2019 Steve Grubb <sgrubb@redhat.com> 4.1.4-2
+- Rebuild for libprelude so bump
+
+* Tue Apr 30 2019 Jason Taylor <jtfas90@gmail.com> 4.1.4-1
+- Upstream bugfix release
+
+* Thu Mar 07 2019 Steve Grubb <sgrubb@redhat.com> 4.1.3-1
+- Upstream bugfix release
+
+* Sun Feb 03 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
+* Fri Dec 21 2018 Jason Taylor <jtfas90@gmail.com> 4.1.2-1
+- Upstream bugfix release
+- Updated source to use official download site
 
 * Thu Dec 20 2018 Steve Grubb <sgrubb@redhat.com> 4.1.1-4
 - Adjust permissions on /run/suricata and /var/lib/suricata to group writable
@@ -280,12 +291,6 @@ getent passwd suricata >/dev/null || \
 * Wed Jun 07 2017 Steve Grubb <sgrubb@redhat.com> 3.2.2-1
 - Upstream bugfix update
 
-* Wed Mar 22 2017 Jason Ish <ish@unx.ca> - 3.2.1-2
-- Re-enable PID file due to selinux issues.
-
-* Tue Mar 14 2017 Jason Ish <ish@unx.ca> - 3.2.1-2
-- Use systemctl instead of a PID file for log rotation.
-
 * Wed Feb 15 2017 Steve Grubb <sgrubb@redhat.com> 3.2.1-1
 - Upstream security update
 
@@ -299,9 +304,6 @@ getent passwd suricata >/dev/null || \
 
 * Tue Nov 01 2016 Steve Grubb <sgrubb@redhat.com> 3.1.3-1
 - New upstream bug fix release
-
-* Wed Oct  5 2016 Jason Ish <ish@unx.ca> - 3.1.2-2
-- Fix ownership of /var/suricata.
 
 * Wed Sep 07 2016 Steve Grubb <sgrubb@redhat.com> 3.1.2-1
 - New upstream bug fix release
@@ -355,9 +357,6 @@ getent passwd suricata >/dev/null || \
 * Fri Dec 12 2014 Steve Grubb <sgrubb@redhat.com> 2.0.5-1
 - New upstream bug fix release
 - Use the system libhtp library
-
-* Tue Oct 28 2014 Jason Ish <ish@unx.ca> - 2.0.4-1
-- Use SIGHUP for log rotation instead of copytruncate.
 
 * Wed Sep 24 2014 Steve Grubb <sgrubb@redhat.com> 2.0.4-1
 - New upstream bug fix release
@@ -489,3 +488,4 @@ getent passwd suricata >/dev/null || \
 
 * Sat Feb 27 2010 Steve Grubb <sgrubb@redhat.com> 0.8.1-1
 - Initial packaging
+
