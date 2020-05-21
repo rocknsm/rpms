@@ -75,7 +75,7 @@ Requires:         krb5-libs
 BuildRequires:    binpac = %{BINPAC_VER}
 BuildRequires:    binpac-devel = %{BINPAC_VER}
 BuildRequires:    bifcl = %{BIFCL_VER}
-BuildRequires:    %{?scl_prefix}gcc-c++ >= 7
+BuildRequires:    %{?scl_prefix}gcc-c++ >= 8
 BuildRequires:    openssl-devel
 BuildRequires:    flex
 BuildRequires:    bison >= 2.5
