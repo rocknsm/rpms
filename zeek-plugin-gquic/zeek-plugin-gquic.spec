@@ -35,6 +35,7 @@ BuildRequires:  bifcl = %{BIFCL_VER}
 BuildRequires:  binpac-devel = %{BINPAC_VER}
 BuildRequires:  binpac = %{BINPAC_VER}
 BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
+BuildRequires:  git
 Requires:       zeek-core  = %{ZEEK_VER}
 
 Obsoletes:      bro-plugin-gquic < 1.0-3
