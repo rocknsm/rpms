@@ -58,7 +58,10 @@ ZeekControl is an interactive interface for managing a Zeek installation which
 allows you to, e.g., start/stop the monitoring or update its configuration.
 
 %prep
-%setup -q
+%autosetup
+
+# Remove aux packages to prefer rpm versions
+rm -rf aux/*
 
 # Fix the hard-coded paths in ZeekControl options
 sed -E -i.orig '
