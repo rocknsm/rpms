@@ -115,6 +115,8 @@ rm -rf %{buildroot}
 %package -n libcaf_core
 Summary:  C++ actor framework: core library
 License:  BSD
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_core
 CAF is an open source C++11 actor model implementation featuring
@@ -130,16 +132,18 @@ compiled library.
 %{_libdir}/libcaf_core.so.*
 
 %post -n libcaf_core
-/sbin/ldconfig
+%{?ldconfig}
 
 %postun -n libcaf_core
-/sbin/ldconfig
+%{?ldconfig}
 
 # ---- libcaf_io ----
 %package -n libcaf_io
 Summary:  C++ actor framework: IO library
 License:  BSD
 Requires: libcaf_core == %{version}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_io
 CAF is an open source C++11 actor model implementation featuring
@@ -153,13 +157,15 @@ compiled library.
 %{_libdir}/libcaf_io.so.*
 
 %post -n libcaf_io
-/sbin/ldconfig
+%{?ldconfig}
 
 # ---- libcaf_openssl ----
 %package -n libcaf_openssl
 Summary:  C++ actor framework: OpenSSL library
 License:  BSD
 Requires: libcaf_core == %{version}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_openssl
 CAF is an open source C++11 actor model implementation featuring
@@ -173,10 +179,10 @@ compiled library.
 %{_libdir}/libcaf_openssl.so.*
 
 %post -n libcaf_openssl
-/sbin/ldconfig
+%{?ldconfig}
 
 %postun -n libcaf_openssl
-/sbin/ldconfig
+%{?ldconfig}
 
 # ---- libcaf_opencl ----
 %if 0%{?supportsOpenCL}
@@ -184,6 +190,8 @@ compiled library.
 Summary:  C++ actor framework: OpenCL support library
 License:  BSD
 Requires: libcaf_core == %{version}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_opencl
 CAF is an open source C++11 actor model implementation featuring
@@ -197,10 +205,10 @@ compiled library.
 %{_libdir}/libcaf_opencl.so.*
 
 %post -n libcaf_opencl
-/sbin/ldconfig
+%{?ldconfig}
 
 %postun -n libcaf_opencl
-/sbin/ldconfig
+%{?ldconfig}
 %endif
 
 # ---- caf-devel ----
