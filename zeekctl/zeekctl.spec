@@ -21,7 +21,7 @@ BuildRequires:    cmake   >= 3.0.0
 %endif 
 
 BuildRequires:  python3-devel
-BuildRequires:  python3-libs #explicit for sqlite3 check
+BuildRequires:  python3-libs
 BuildRequires:  python3-pysubnettree
 
 BuildRequires:  capstats
