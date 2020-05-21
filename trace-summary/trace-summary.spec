@@ -34,7 +34,6 @@ sed -i 's|/usr/bin/env python|/usr/bin/python3|' trace-summary
 %changelog
 * Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 0.90-1
 - Bump to 0.90
-- Compile with g++ > 8 and cmake3
 
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.89-1
 - Version bump
