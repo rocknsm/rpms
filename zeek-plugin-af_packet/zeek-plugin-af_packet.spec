@@ -46,7 +46,7 @@ This plugin provides native AF_Packet support for Bro.
 
 %build
 mkdir build; cd build
-%{?scl_enable} 
+%{?scl_enable}
 %cmake \
   -DCMAKE_MODULE_PATH=%{_datadir}/zeek/cmake \
   -DBRO_CONFIG_CMAKE_DIR=%{_datadir}/zeek/cmake \
@@ -57,12 +57,12 @@ mkdir build; cd build
   ..
 %{?scl_disable}
 
-%{?scl_enable} 
+%{?scl_enable}
 %make_build
 %{?scl_disable}
 
 %install
-%{?scl_enable} 
+%{?scl_enable}
 %make_install
 %{?scl_disable}
 

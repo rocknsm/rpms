@@ -1,11 +1,16 @@
 %global     distname metron-bro-plugin-kafka
-%global     commit0 43c9166787649e4ac2ab295a1baba94d54903651
+%global     commit0 8da1637a50815d6093e482bdb7a1a0882e02df3a
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global     commitdate 20190429
+%global     commitdate 20200519
+
+%global BIFCL_VER 1:1.2
+%global BINPAC_VER 1:0.55.1
+%global ZEEK_VER 3.1.3
+%global LIBRDKAFKA_VER 1.4.0
 
 Name:       zeek-plugin-kafka
-Version:    0.3
-Release:    7.%{commitdate}git%{shortcommit0}%{?dist}
+Version:    0.3.0
+Release:    8.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Zeek log writer plugin that sends logging output to Kafka.
 
@@ -13,17 +18,21 @@ License:    ASL 2.0
 URL:        https://github.com/apache/%{distname}
 Source0:    https://github.com/apache/%{distname}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 
-BuildRequires:  cmake
-BuildRequires:  librdkafka-devel
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3  >= 3.0.0
+%global cmake %cmake3
+%else
+BuildRequires:    cmake   >= 3.0.0
+%endif 
+BuildRequires:  zeek-devel = %{ZEEK_VER}
+BuildRequires:  bifcl = %{BIFCL_VER}
+BuildRequires:  binpac-devel = %{BINPAC_VER}
+BuildRequires:  binpac = %{BINPAC_VER}
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
+BuildRequires:  librdkafka-devel = %{LIBRDKAFKA_VER}
 BuildRequires:  openssl-devel
-BuildRequires:  libpcap-devel
-BuildRequires:  zeek-devel = 3.0.1
-BuildRequires:  bifcl = 1:1.2
-BuildRequires:  binpac-devel = 1:0.54
-BuildRequires:  binpac = 1:0.54
-BuildRequires:  gcc-c++
-Requires:       zeek-core  = 3.0.1
-Requires:       librdkafka = 0.11.5
+Requires:       zeek-core  = %{ZEEK_VER}
+Requires:       librdkafka = %{LIBRDKAFKA_VER}
 Requires:       openssl
 
 Obsoletes:      bro-plugin-kafka < 0.3-5
@@ -37,6 +46,7 @@ A Bro log writer plugin that sends logging output to Kafka.
 
 %build
 mkdir build; cd build
+%{?scl_enable}
 %cmake \
   -DCMAKE_MODULE_PATH=%{_datadir}/zeek/cmake \
   -DBRO_CONFIG_CMAKE_DIR=%{_datadir}/zeek/cmake \
@@ -44,10 +54,16 @@ mkdir build; cd build
   -DBRO_CONFIG_PREFIX=%{_prefix} \
   -DBRO_CONFIG_INCLUDE_DIR=%{_includedir}/zeek \
   ..
+%{?scl_disable}
+
+%{?scl_enable}
 %make_build
+%{?scl_disable}
 
 %install
+%{?scl_enable}
 %make_install
+%{?scl_disable}
 
 %files
 %dir %{_libdir}/zeek/plugins/APACHE_KAFKA/
@@ -69,6 +85,11 @@ mkdir build; cd build
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
 %changelog
+* Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 0.3-8
+- Bump to latest upstream commit
+- Recompile against Zeek 3.1.3
+- Build with cmake 3 and g++ > 8
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 0.3-7
 - Recompile against Zeek 3.0.1
 
