@@ -21,7 +21,8 @@ License:          BSD
 URL:              http://bro.org
 Source0:          https://download.zeek.org/%{name}-%{version}-minimal.tar.gz
 Source1:          https://github.com/zeek/paraglob/archive/v0.4.1.tar.gz#/paraglob-0.4.1.tar.gz
-Patch0:           https://github.com/zeek/zeek/compare/release/3.1...dcode:topic/dcode/gnuinstalldirs.patch#/%{name}-%{version}-gnu-install-dirs.patch
+Patch0:           https://github.com/zeek/zeek/compare/release/3.1...dcode:topic/dcode/gnuinstalldirs.patch#/01-%{name}-%{version}-gnu-install-dirs.patch
+Patch1:           https://patch-diff.githubusercontent.com/raw/zeek/zeek/pull/954.patch#/02-%{name}-%{version}-bzar-dcerpc-constants.patch
 
 Provides:         bro = %{version}
 Obsoletes:        bro < %{version}
