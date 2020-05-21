@@ -22,6 +22,7 @@ Summary:    Protocol analyzer that detects, dissects, fingerprints, and logs GQU
 License:    BSD
 URL:        https://github.com/salesforce/%{distname}
 Source0:    https://github.com/salesforce/%{distname}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Patch0:     https://github.com/salesforce/GQUIC_Protocol_Analyzer/compare/master...dcode:master.patch#/01-%{name}-%{shortcommit0}-zeek3.1-fixes.patch
 
 %if 0%{?rhel} < 8
 BuildRequires:    cmake3  >= 3.0.0
