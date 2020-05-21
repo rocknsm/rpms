@@ -62,6 +62,7 @@ mkdir build; cd build
 %{?scl_disable}
 
 %install
+cd build
 %{?scl_enable}
 %make_install
 %{?scl_disable}
