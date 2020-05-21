@@ -72,7 +72,7 @@ cd build
 
 %{_libdir}/zeek/plugins/Corelight_CommunityID/*
 
-%doc README.md CHANGES VERSION
+%doc README.md VERSION
 %license COPYING
 
 %changelog

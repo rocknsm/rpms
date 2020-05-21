@@ -67,21 +67,7 @@ cd build
 %{?scl_disable}
 
 %files
-%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/
-%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/lib
-%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/lib/bif
-%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/scripts
-%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/Apache
-%dir %{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/Apache/Kafka
-
-%{_libdir}/zeek/plugins/APACHE_KAFKA/CHANGES
-%{_libdir}/zeek/plugins/APACHE_KAFKA/COPYING
-%{_libdir}/zeek/plugins/APACHE_KAFKA/VERSION
-%{_libdir}/zeek/plugins/APACHE_KAFKA/__bro_plugin__
-%{_libdir}/zeek/plugins/APACHE_KAFKA/lib/APACHE-KAFKA.linux-x86_64.so
-%{_libdir}/zeek/plugins/APACHE_KAFKA/lib/bif/*.zeek
-%{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/Apache/Kafka/*.bro
-%{_libdir}/zeek/plugins/APACHE_KAFKA/scripts/*.bro
+%{_libdir}/zeek/plugins/APACHE_KAFKA
 
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
