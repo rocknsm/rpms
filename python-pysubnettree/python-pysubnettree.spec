@@ -1,13 +1,5 @@
 %global srcname pysubnettree
 
-%bcond_without with_python3
-
-%if 0%{?fedora} < 6
-%bcond_with with_python2
-%else
-%bcond_without with_python2
-%endif
-
 Name:           python-%{srcname}
 Version:        0.33
 Release:        1%{?dist}
@@ -17,72 +9,39 @@ License:        BSD
 URL:            https://github.com/zeek/%{srcname}
 Source0:        https://download.zeek.org/%{srcname}-%{version}.tar.gz
 
-%if %{with python2}
-BuildRequires:  python2-devel
-%endif
-%if %{with python3}
-BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
-%endif
-BuildRequires:  gcc-c++
-
-%global common_desc The PySubnetTree package provides a Python data structure SubnetTree which \
-maps subnets given in CIDR notation (incl. corresponding IPv6 versions) to \
-Python objects. Lookups are performed by longest-prefix matching.
+%global _description %{expand:
+The PySubnetTree package provides a Python data structure SubnetTree which
+maps subnets given in CIDR notation (incl. corresponding IPv6 versions) to
+Python objects. Lookups are performed by longest-prefix matching. }
 
 %description
-%{common_desc}
+%{_description}
 
-%if %{with python2}
-%package -n python2-%{srcname}
-Summary:        %{summary}
-%{?python_provide:%python_provide python2-%{srcname}}
-
-%description -n python2-%{srcname}
-%{common_desc}
-%endif
-
-%if %{with python3}
 %package -n python3-%{srcname}
 Summary:        %{summary}
+BuildRequires:  python3-devel
+BuildRequires:  gcc-c++
+
 %{?python_provide:%python_provide python3-%{srcname}}
 
-%description -n python3-%{srcname}
-%{common_desc}
-%endif
+%description -n python3-%{srcname} %{_description}
 
 %prep
 %autosetup -n %{srcname}-%{version}
 
 %build
-%if %{with python2}
-%py2_build
-%endif
-%if %{with python3}
 %py3_build
-%endif
 
 %install
-%if %{with python2}
-%py2_install
-%endif
-%if %{with python3}
 %py3_install
-%endif
 
-%if %{with python2}
-%files -n python2-%{srcname}
-%doc CHANGES README
-%license COPYING
-%{python2_sitearch}/*
-%endif
+%check
+%{python3} setup.py test
 
-%if %{with python3}
 %files -n python3-%{srcname}
 %doc CHANGES README
 %license COPYING
-%{python3_sitearch}/*
-%endif
+%{python3_sitearch}/%{srcname}/
 
 %changelog
 * Thu May 21 2020 Derek Ditch <derek@rocknsm.io> - 0.34-1
