@@ -87,8 +87,8 @@ rm -rf %{buildroot}
 find %{buildroot} -name '*.la' -delete
 
 %check
-%{?scl_enable}
-ctest -V %{?_smp_mflags}
+%{?scl_enable} 
+make --directory=build test
 %{?scl_disable}
 
 %post -p /sbin/ldconfig
