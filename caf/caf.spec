@@ -84,9 +84,8 @@ cd ../manual
 %sphinx_build . html
 
 %check
-#make --directory=build test
 %{?scl_enable} 
-ctest -V %{?_smp_mflags}
+make --directory=build test
 %{?scl_disable}
 
 # By default CAF installs itself into /usr/lib, but some distros may use
