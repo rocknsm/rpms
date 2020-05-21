@@ -52,7 +52,7 @@ Summary:        %{summary}
 %endif
 
 %prep
-%autosetup
+%autosetup -n %{srcname}-%{version}
 
 %build
 %if %{with python2}
@@ -85,6 +85,9 @@ Summary:        %{summary}
 %endif
 
 %changelog
+* Thu May 21 2020 Derek Ditch <derek@rocknsm.io> - 0.34-1
+- Update to lastest upstream release 0.33
+
 * Sun Feb 09 2020 Fabian Affolter <mail@fabian-affolter.ch> - 0.33-1
 - Update to lastest upstream release 0.33
 
