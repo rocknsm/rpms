@@ -125,7 +125,9 @@ This package contains the development headers needed to build new Zeek plugins.
 # Temporary hack and patch
 cd aux/paraglob
 tar zxf %{SOURCE1} --strip-components 1
-sed -i '/INSTALL_LIB_DIR/s/${CMAKE_INSTALL_PREFIX}\/lib/${CMAKE_INSTALL_LIBDIR}/' CMakeLists.txt
+sed -i '/project(paraglob)/a include(GNUInstallDirs)' CMakeLists.txt
+sed -i 's/${CMAKE_INSTALL_PREFIX}\/lib/${CMAKE_INSTALL_LIBDIR}/' CMakeLists.txt
+sed -i 's/DESTINATION include/DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/' CMakeLists.txt
 
 ################################################################################
 %build
