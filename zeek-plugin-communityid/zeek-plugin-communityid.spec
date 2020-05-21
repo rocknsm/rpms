@@ -1,4 +1,4 @@
-%global     distname bro-community-id
+%global     distname zeek-community-id
 %global BIFCL_VER 1:1.2
 %global BINPAC_VER 1:0.55.1
 %global ZEEK_VER 3.1.3
@@ -11,7 +11,7 @@
 %endif
 
 Name:       zeek-plugin-communityid
-Version:    1.4
+Version:    1.3
 Release:    1%{?dist}
 Summary:    Zeek support for "community ID" flow hashing
 
@@ -74,8 +74,8 @@ mkdir build; cd build
 %license COPYING
 
 %changelog
-* Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 1.4-1
-- Version bump upstream to 1.4
+* Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 1.3-1
+- Version bump upstream to 1.3
 - Compile with g++ > 8 and cmake 3
 
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.2-4
