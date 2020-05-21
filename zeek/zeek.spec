@@ -34,8 +34,10 @@ Requires:         zeek-aux >= %{ZEEKAUX_VER}
 %if 0%{?rhel} < 8
 BuildRequires:    cmake3  >= 3.0.0
 %global cmake %cmake3
+%global ctest /usr/bin/ctest3
 %else
 BuildRequires:    cmake   >= 3.0.0
+%global ctest /usr/bin/ctest
 %endif 
 
 
@@ -169,8 +171,9 @@ cd build
 
 ################################################################################
 %check
+cd build
 %{?scl_enable} 
-make --directory=build test
+%ctest -V %{?_smp_mflags}
 %{?scl_disable}
 
 ################################################################################
