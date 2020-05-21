@@ -25,7 +25,7 @@ BuildRequires:  python3-libs
 BuildRequires:  python3-pysubnettree
 
 BuildRequires:  capstats
-BuildRequires:  trace-summary
+BuildRequires:  trace-summary >= 0.90
 BuildRequires:  systemd
 BuildRequires:  swig
 BuildRequires:  libpcap-devel
@@ -42,7 +42,7 @@ Requires:       python3-broker
 
 Requires:       bash
 Requires:       capstats
-Requires:       trace-summary
+Requires:       trace-summary >= 0.90
 Requires:       /usr/sbin/sendmail
 
 
