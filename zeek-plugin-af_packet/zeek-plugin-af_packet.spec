@@ -70,26 +70,13 @@ mkdir build; cd build
 %doc README MAINTAINER VERSION
 %license COPYING
 
-%dir %{_libdir}/zeek/plugins/Zeek_AF_Packet
-%dir %{_libdir}/zeek/plugins/Zeek_AF_Packet/broctl
-%dir %{_libdir}/zeek/plugins/Zeek_AF_Packet/lib
-%dir %{_libdir}/zeek/plugins/Zeek_AF_Packet/lib/bif
-%dir %{_libdir}/zeek/plugins/Zeek_AF_Packet/scripts
-
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/__zeek_plugin__
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/broctl/af_packet.p*
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/lib/Bro-AF_Packet.linux-x86_64.so
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/lib/bif/*.zeek
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/scripts/*.bro
-
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/README
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/VERSION
-%{_libdir}/zeek/plugins/Zeek_AF_Packet/COPYING
+%{_libdir}/zeek/plugins/Zeek_AF_Packet/
 
 %changelog
 * Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 2.0.0-1
 - Version bump upstream, renamed Bro to Zeek
 - Compiled with gcc > 8 and cmake3
+- Simplify files list
 
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.4.0-5
 - Recompile against Zeek 3.0.1
