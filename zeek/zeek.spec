@@ -128,6 +128,7 @@ tar zxf %{SOURCE1} --strip-components 1
 sed -i '/project(paraglob)/a include(GNUInstallDirs)' CMakeLists.txt
 sed -i 's/${CMAKE_INSTALL_PREFIX}\/lib/${CMAKE_INSTALL_LIBDIR}/' CMakeLists.txt
 sed -i 's/DESTINATION include/DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/' CMakeLists.txt
+sed -i 's/DESTINATION lib/DESTINATION ${CMAKE_INSTALL_LIBDIR}/' src/CMakeLists.txt
 
 ################################################################################
 %build
