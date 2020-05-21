@@ -41,7 +41,7 @@ BuildRequires:  gcc-c++
 %files -n python3-%{srcname}
 %doc CHANGES README
 %license COPYING
-%{python3_sitearch}/%{srcname}/
+%{python3_sitearch}/*
 
 %changelog
 * Thu May 21 2020 Derek Ditch <derek@rocknsm.io> - 0.34-1
