@@ -108,15 +108,10 @@ cd build
 %{__install} -d -m 755 %{buildroot}%{_localstatedir}/spool/zeek/tmp
 
 # Fix zeekctl python location
+mkdir -p %{buildroot}%{python3_sitelib}
 mv %{buildroot}/usr/lib/zeekctl/ZeekControl/ %{buildroot}%{python3_sitelib}/ZeekControl/
 mv %{buildroot}/usr/lib/zeekctl/BroControl/ %{buildroot}%{python3_sitelib}/BroControl/
 mv %{buildroot}/usr/lib/zeekctl/plugins %{buildroot}%{python3_sitelib}/ZeekControl/plugins
-
-# Remove capstats, trace-summary, and pysubnettree
-rm -f %{buildroot}/usr/bin/capstats
-rm -f %{buildroot}/usr/bin/trace-summary
-rm -f %{buildroot}%{python3_sitelib}/SubnetTree.*
-rm -f %{buildroot}%{python3_sitelib}/_SubnetTree.*
 
 # Python byte compile zeekctl module
 #%py_byte_compile %{python3} %{buildroot}%{py_sitedir}
