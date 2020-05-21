@@ -7,7 +7,7 @@ Summary:        Tool for managing Zeek deployments.
 
 License:        BSD
 URL:            https://github.com/zeek/zeekctl
-Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
+Source0:        https://download.zeek.org/%{name}-%{version}.tar.gz
 Source1:        zeek.service
 
 Provides:       broctl
