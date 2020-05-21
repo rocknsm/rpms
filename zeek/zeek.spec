@@ -122,8 +122,10 @@ This package contains the development headers needed to build new Zeek plugins.
 %prep
 %autosetup -n %{name}-%{version}-minimal -S git
 
+# Temporary hack and patch
 cd aux/paraglob
 tar zxf %{SOURCE1} --strip-components 1
+sed -i '/INSTALL_LIB_DIR/s/${CMAKE_INSTALL_PREFIX}\/lib/${CMAKE_INSTALL_LIBDIR}/' CMakeLists.txt
 
 ################################################################################
 %build
