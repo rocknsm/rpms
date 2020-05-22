@@ -82,9 +82,6 @@ needed for developing Hyperscan applications.
 %{_includedir}/hs/
 
 %changelog
-* Fri May 22 2020 Derek Ditch <derek@rocknsm.org> - 5.2.1-2
-- Backported to EL7 and EL8
-
 * Wed Oct 30 2019 Jason Taylor <jtfas90@gmail.com> - 5.2.1-1
 - Latest upstream release
 
