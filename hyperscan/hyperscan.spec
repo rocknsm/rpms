@@ -59,6 +59,9 @@ needed for developing Hyperscan applications.
 (cd include && tar zxf %{SOURCE1} boost_1_69_0/boost --strip-components=1)
 %endif
 
+# Force python3
+sed -i '/^find_package(PythonInterp)/ s/PythonInterp/PythonInterp 3/' CMakeLists.txt
+
 %build
 %cmake -DBUILD_SHARED_LIBS:BOOL=ON -DBUILD_STATIC_AND_SHARED:BOOL=OFF .
 %make_build
