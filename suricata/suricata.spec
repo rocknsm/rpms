@@ -20,7 +20,12 @@ Patch3: suricata-4.1.4-socket.patch
 
 BuildRequires: gcc gcc-c++
 BuildRequires: cargo rust >= 1.33
-BuildRequires: libyaml-devel python3-pyyaml
+BuildRequires: libyaml-devel 
+%if 0%{?rhel} < 8
+BuildRequires: python36-pyyaml
+%else
+BuildRequires: python3-pyyaml
+%endif
 BuildRequires: libnfnetlink-devel libnetfilter_queue-devel libnet-devel
 BuildRequires: zlib-devel pcre-devel libcap-ng-devel
 BuildRequires: lz4-devel libpcap-devel
@@ -39,13 +44,18 @@ BuildRequires: libevent-devel
 BuildRequires: libprelude-devel
 BuildRequires: pkgconfig(gnutls)
 
-%if 0%{?fedora} >= 25
+%if 0%{?fedora} >= 25 || 0{%rhel} >= 7
 %ifarch x86_64
 BuildRequires: hyperscan-devel
 %endif
 %endif
 
+%if 0%{?rhel} < 8
+Requires: python36-pyyaml
+%else
 Requires: python3-pyyaml
+%endif
+
 Requires(pre): /usr/sbin/useradd
 Requires(post): systemd
 Requires(preun): systemd
@@ -53,7 +63,6 @@ Requires(postun): systemd
 
 # Rust is not working on ppc64le systems (bz 1757548)
 ExcludeArch: ppc64le
-
 
 %description
 The Suricata Engine is an Open Source Next Generation Intrusion
