@@ -44,7 +44,7 @@ BuildRequires: libevent-devel
 BuildRequires: libprelude-devel
 BuildRequires: pkgconfig(gnutls)
 
-%if 0%{?fedora} >= 25 || 0%{rhel} >= 7
+%if 0%{?fedora} >= 25 || 0%{?rhel} >= 7
 %ifarch x86_64
 BuildRequires: hyperscan-devel
 %endif
