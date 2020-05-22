@@ -6,9 +6,12 @@ Summary: High-performance regular expression matching library
 License: BSD
 URL:     https://www.hyperscan.io/
 Source0: https://github.com/intel/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source1: https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz
 
 BuildRequires:  gcc-c++
-BuildRequires:  boost-devel
+%if 0%{?rhel} >= 8 || 0%{?fedora}
+BuildRequires:  boost-devel >= 1.57.0
+%endif
 BuildRequires:  cmake
 BuildRequires:  pcre-devel
 BuildRequires:  python3
@@ -52,6 +55,9 @@ needed for developing Hyperscan applications.
 
 %prep
 %autosetup
+%if 0%{?rhel} < 8
+(cd include && tar zxf %{SOURCE1} boost_1_69_0/boost --strip-components=1)
+%endif
 
 %build
 %cmake -DBUILD_SHARED_LIBS:BOOL=ON -DBUILD_STATIC_AND_SHARED:BOOL=OFF .
@@ -59,6 +65,8 @@ needed for developing Hyperscan applications.
 
 %install
 %make_install
+
+%ldconfig_scriptlets
 
 %files
 %doc %{_defaultdocdir}/%{name}/examples/README.md
@@ -74,6 +82,9 @@ needed for developing Hyperscan applications.
 %{_includedir}/hs/
 
 %changelog
+* Fri May 22 2020 Derek Ditch <derek@rocknsm.org> - 5.2.1-2
+- Backported to EL7 and EL8
+
 * Wed Oct 30 2019 Jason Taylor <jtfas90@gmail.com> - 5.2.1-1
 - Latest upstream release
 
