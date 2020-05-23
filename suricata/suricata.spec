@@ -22,7 +22,7 @@ BuildRequires: gcc gcc-c++
 BuildRequires: cargo rust >= 1.33
 BuildRequires: libyaml-devel 
 %if 0%{?rhel} < 8
-BuildRequires: python36-pyyaml
+BuildRequires: python36-PyYAML
 %else
 BuildRequires: python3-pyyaml
 %endif
@@ -51,7 +51,7 @@ BuildRequires: hyperscan-devel
 %endif
 
 %if 0%{?rhel} < 8
-Requires: python36-pyyaml
+Requires: python36-PyYAML
 %else
 Requires: python3-pyyaml
 %endif
