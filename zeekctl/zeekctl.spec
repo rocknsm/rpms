@@ -72,6 +72,9 @@ sed -E -i.orig '
 # Shebang
 sed -i -e '1i#! /usr/bin/bash' bin/set-zeek-path bin/helpers/to-bytes.awk
 
+# Force python3
+sed -i '/^FindRequiredPackage(PythonInterp)/i set(Python_ADDITIONAL_VERSIONS 3)' CMakeLists.txt
+
 %build
 mkdir build; cd build
 %cmake \
