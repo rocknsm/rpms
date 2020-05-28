@@ -1,8 +1,15 @@
-%global     distname bro-af_packet-plugin
+%global     distname zeek-af_packet-plugin
+
+%if 0%{?rhel} < 8
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
+%endif
 
 Name:       zeek-plugin-af_packet
-Version:    1.4.0
-Release:    5%{?dist}
+Version:    2.0.0
+Release:    1%{?dist}
 Epoch:      2
 Summary:    Native AF_Packet support plugin for Zeek.
 
@@ -10,16 +17,21 @@ License:    BSD
 URL:        https://github.com/J-Gras/%{distname}/
 Source0:    https://github.com/J-Gras/%{distname}/archive/%{version}.tar.gz#/%{distname}-%{version}.tar.gz
 
-BuildRequires:  cmake
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3  >= 3.0.0
+%global cmake %cmake3
+%else
+BuildRequires:    cmake   >= 3.0.0
+%endif 
 BuildRequires:  kernel-devel
 BuildRequires:  libpcap-devel
 BuildRequires:  zlib-devel
-BuildRequires:  zeek-devel = 3.0.1
+BuildRequires:  zeek-devel = 3.1.3
 BuildRequires:  bifcl = 1:1.2
-BuildRequires:  binpac-devel = 1:0.54
-BuildRequires:  binpac = 1:0.54
-BuildRequires:  gcc-c++
-Requires:       zeek-core = 3.0.1
+BuildRequires:  binpac-devel = 1:0.55.1
+BuildRequires:  binpac = 1:0.55.1
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
+Requires:       zeek-core = 3.1.3
 Requires:       libpcap
 Requires:       zlib
 
@@ -34,6 +46,7 @@ This plugin provides native AF_Packet support for Bro.
 
 %build
 mkdir build; cd build
+%{?scl_enable}
 %cmake \
   -DCMAKE_MODULE_PATH=%{_datadir}/zeek/cmake \
   -DBRO_CONFIG_CMAKE_DIR=%{_datadir}/zeek/cmake \
@@ -42,32 +55,30 @@ mkdir build; cd build
   -DBRO_CONFIG_INCLUDE_DIR=%{_includedir}/zeek \
   -DKERNELHEADERS_LATEST:BOOL=ON \
   ..
+%{?scl_disable}
+
+%{?scl_enable}
 %make_build
+%{?scl_disable}
 
 %install
+cd build
+%{?scl_enable}
 %make_install
+%{?scl_disable}
 
 %files
 %doc README MAINTAINER VERSION
 %license COPYING
 
-%dir %{_libdir}/zeek/plugins/Bro_AF_Packet
-%dir %{_libdir}/zeek/plugins/Bro_AF_Packet/broctl
-%dir %{_libdir}/zeek/plugins/Bro_AF_Packet/lib
-%dir %{_libdir}/zeek/plugins/Bro_AF_Packet/lib/bif
-%dir %{_libdir}/zeek/plugins/Bro_AF_Packet/scripts
-
-%{_libdir}/zeek/plugins/Bro_AF_Packet/__bro_plugin__
-%{_libdir}/zeek/plugins/Bro_AF_Packet/broctl/af_packet.p*
-%{_libdir}/zeek/plugins/Bro_AF_Packet/lib/Bro-AF_Packet.linux-x86_64.so
-%{_libdir}/zeek/plugins/Bro_AF_Packet/lib/bif/*.zeek
-%{_libdir}/zeek/plugins/Bro_AF_Packet/scripts/*.bro
-
-%{_libdir}/zeek/plugins/Bro_AF_Packet/README
-%{_libdir}/zeek/plugins/Bro_AF_Packet/VERSION
-%{_libdir}/zeek/plugins/Bro_AF_Packet/COPYING
+%{_libdir}/zeek/plugins/Zeek_AF_Packet/
 
 %changelog
+* Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 2.0.0-1
+- Version bump upstream, renamed Bro to Zeek
+- Compiled with gcc > 8 and cmake3
+- Simplify files list
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.4.0-5
 - Recompile against Zeek 3.0.1
 
