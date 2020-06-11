@@ -5,7 +5,7 @@
 
 %global BIFCL_VER 1:1.2
 %global BINPAC_VER 1:0.55.1
-%global ZEEK_VER 3.1.3
+%global ZEEK_VER 3.1.4
 %global LIBRDKAFKA_VER 1.4.0
 
 %if 0%{?rhel} < 8
@@ -17,7 +17,7 @@
 
 Name:       zeek-plugin-kafka
 Version:    0.3.0
-Release:    8.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    9.%{commitdate}git%{shortcommit0}%{?dist}
 Epoch:      1
 Summary:    A Zeek log writer plugin that sends logging output to Kafka.
 
@@ -79,6 +79,9 @@ cd build
 %doc README.md COPYING MAINTAINER VERSION CHANGES
 
 %changelog
+* Thu Jun 11 2020 Derek Ditch <derek@rocknsm.io> 0.3-8
+- Recompile against Zeek 3.1.4
+
 * Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 0.3-8
 - Bump to latest upstream commit
 - Recompile against Zeek 3.1.3

@@ -9,7 +9,7 @@
 
 Name:       zeek-plugin-af_packet
 Version:    2.0.0
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      2
 Summary:    Native AF_Packet support plugin for Zeek.
 
@@ -31,7 +31,7 @@ BuildRequires:  bifcl = 1:1.2
 BuildRequires:  binpac-devel = 1:0.55.1
 BuildRequires:  binpac = 1:0.55.1
 BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
-Requires:       zeek-core = 3.1.3
+Requires:       zeek-core = 3.1.4
 Requires:       libpcap
 Requires:       zlib
 
@@ -74,6 +74,9 @@ cd build
 %{_libdir}/zeek/plugins/Zeek_AF_Packet/
 
 %changelog
+* Thu Jun 11 2020 Derek Ditch <derek@rocknsm.io> 2.0.0-2
+- Recompile against Zeek 3.1.4
+
 * Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 2.0.0-1
 - Version bump upstream, renamed Bro to Zeek
 - Compiled with gcc > 8 and cmake3

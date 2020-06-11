@@ -1,7 +1,7 @@
 %global     distname zeek-community-id
 %global BIFCL_VER 1:1.2
 %global BINPAC_VER 1:0.55.1
-%global ZEEK_VER 3.1.3
+%global ZEEK_VER 3.1.4
 
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
@@ -12,7 +12,7 @@
 
 Name:       zeek-plugin-communityid
 Version:    1.3
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    Zeek support for "community ID" flow hashing
 
 License:    BSD
@@ -76,6 +76,9 @@ cd build
 %license COPYING
 
 %changelog
+* Thu Jun 11 2020 Derek Ditch <derek@rocknsm.io> 1.3-2
+- Recompile against Zeek 3.1.4
+
 * Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 1.3-1
 - Version bump upstream to 1.3
 - Compile with g++ > 8 and cmake 3

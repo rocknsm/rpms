@@ -5,7 +5,7 @@
 
 %global BIFCL_VER 1:1.2
 %global BINPAC_VER 1:0.55.1
-%global ZEEK_VER 3.1.3
+%global ZEEK_VER 3.1.4
 
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
@@ -16,7 +16,7 @@
 
 Name:       zeek-plugin-gquic
 Version:    1.0
-Release:    5.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    6.%{commitdate}git%{shortcommit0}%{?dist}
 Summary:    Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic
 
 License:    BSD
@@ -78,6 +78,9 @@ cd build
 %license LICENSE.txt
 
 %changelog
+* Thu Jun 11 2020 Derek Ditch <derek@rocknsm.io> 1.0-6
+- Recompile against Zeek 3.1.4
+
 * Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 1.0-5
 - Bump to upstream latest
 - Recompile with g++ > 8 and cmake 3
