@@ -20,6 +20,9 @@ Patch3: suricata-4.1.4-socket.patch
 
 BuildRequires: gcc gcc-c++
 BuildRequires: cargo rust >= 1.33
+%if 0%{?rhel} == 7
+BuildRequires: llvm7.0-libs
+%endif
 BuildRequires: libyaml-devel 
 %if 0%{?rhel} < 8
 BuildRequires: python36-PyYAML
