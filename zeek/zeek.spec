@@ -13,7 +13,7 @@
 %endif
 
 Name:             zeek
-Version:          3.1.3
+Version:          3.1.4
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
@@ -209,6 +209,9 @@ cd build
 
 ################################################################################
 %changelog
+* Thu Jun 11 2020 Derek Ditch <derek@rocknsm.io> 3.1.4-1
+- Version bump to 3.1.4
+
 * Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 3.1.3-1
 - Bump version for latest feature release
 - Switched completely to python3
