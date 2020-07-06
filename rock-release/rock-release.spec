@@ -14,7 +14,7 @@
 
 Name:           rock-release
 Version:        2.5
-Release:        1
+Release:        2
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
@@ -29,7 +29,7 @@ Source1:        LICENSE
 Source2:        rocknsm.repo
 Source3:        rocknsm-testing.repo
 Source4:        https://packagecloud.io/rocknsm/2_5/gpgkey#/RPM-GPG-KEY-RockNSM-pkgcloud-2_5
-Source5:	https://copr-be.cloud.fedoraproject.org/results/@rocknsm/testing/pubkey.gpg#/RPM-GPG-KEY-RockNSM-Testing
+Source5:        https://copr-be.cloud.fedoraproject.org/results/@rocknsm/testing/pubkey.gpg#/RPM-GPG-KEY-RockNSM-Testing
 
 BuildArch:     noarch
 Requires:      redhat-release >= 7
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Mon Jul 6 2020 <derek@rocknsm.io> - 2.5-2
+- Update repo files to use releasever variable
+
 * Wed Nov 6 2019 Johnathon Hall <johnathon@rocknsm.io> - 2.5-1
 - Update release to 2.5 repo and GPG key
 
