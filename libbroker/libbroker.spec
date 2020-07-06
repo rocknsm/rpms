@@ -19,9 +19,11 @@ Source0:        https://download.zeek.org/%{distname}-%{version}.tar.gz
 %if 0%{?rhel} < 8
 BuildRequires:    cmake3
 %global cmake  /usr/bin/cmake3
+%global ctest  /usr/bin/ctest3
 %else
 BuildRequires:    cmake
 %global cmake  /usr/bin/cmake
+%global ctest  /usr/bin/ctest
 %endif
 BuildRequires:  sqlite-devel
 BuildRequires:  caf-devel >= 0.17.3
