@@ -1,36 +1,48 @@
+%global __python %{python3}
+
 Name:           zeekctl
-Version:        2.0.0
-Release:        2%{?dist}
+Version:        2.1.0
+Release:        1%{?dist}
 Summary:        Tool for managing Zeek deployments.
 
 License:        BSD
 URL:            https://github.com/zeek/zeekctl
-Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
+Source0:        https://download.zeek.org/%{name}-%{version}.tar.gz
 Source1:        zeek.service
 
 Provides:       broctl
 Obsoletes:      broctl < 2.0.0
 
-BuildRequires:  cmake >= 2.6.3
-BuildRequires:  gcc-c++
-BuildRequires:  python2-devel
-BuildRequires:  capstats >= 0.26
-BuildRequires:  trace-summary >= 0.88
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3  >= 3.0.0
+%global cmake %cmake3
+%else
+BuildRequires:    cmake   >= 3.0.0
+%endif
+%global debug_package %{nil}
+
+
+BuildRequires:  python3-devel
+BuildRequires:  python3-libs
+BuildRequires:  python3-pysubnettree
+
+BuildRequires:  capstats
+BuildRequires:  trace-summary >= 0.90
 BuildRequires:  systemd
-BuildRequires:  swig
-BuildRequires:  libpcap-devel
-BuildRequires:  zeek-core >= 3.0.0
+BuildRequires:  zeek-core >= 3.1.0
 BuildRequires:  /usr/sbin/sendmail
 
 
-Requires:       zeek-core >= 3.0.0
-Requires:       libpcap
-Requires:       python2
+Requires:       zeek-core >= 3.1.0
+Requires:       python3
+Requires:       python3-libs
+Requires:       python3-pysubnettree
+Requires:       python3-broker
+
 Requires:       bash
 Requires:       capstats
-Requires:       trace-summary
+Requires:       trace-summary >= 0.90
 Requires:       /usr/sbin/sendmail
-Requires:       python2-broker
 
 
 Requires(pre):    /usr/bin/getent
@@ -45,17 +57,23 @@ ZeekControl is an interactive interface for managing a Zeek installation which
 allows you to, e.g., start/stop the monitoring or update its configuration.
 
 %prep
-%setup -q
+%autosetup
+
+# Remove aux packages to prefer rpm versions
+rm -rf aux/*
 
 # Fix the hard-coded paths in ZeekControl options
 sed -E -i.orig '
   /("LibDir"|"PluginZeekDir")/s|/lib|%{_libdir}|;
-  /LibDirInternal/s|/lib/zeekctl|%{python2_sitelib}/ZeekControl|;
+  /LibDirInternal/s|/lib/zeekctl|%{python3_sitelib}/ZeekControl|;
   s|(%{_exec_prefix})+||
 ' ZeekControl/options.py
 
 # Shebang
 sed -i -e '1i#! /usr/bin/bash' bin/set-zeek-path bin/helpers/to-bytes.awk
+
+# Force python3
+sed -i '/^FindRequiredPackage(PythonInterp)/i set(Python_ADDITIONAL_VERSIONS 3)' CMakeLists.txt
 
 %build
 mkdir build; cd build
@@ -63,15 +81,16 @@ mkdir build; cd build
   -DZEEK_ROOT_DIR=%{_prefix} \
   -DZEEK_ETC_INSTALL_DIR=%{_sysconfdir}/zeek \
   -DZEEK_SCRIPT_INSTALL_PATH=%{_datadir}/zeek \
-  -DPY_MOD_INSTALL_DIR=%{python2_sitelib} \
+  -DPY_MOD_INSTALL_DIR=%{python3_sitelib} \
   -DZEEK_LOCAL_STATE_DIR:PATH=%{_localstatedir} \
   -DZEEK_SPOOL_DIR:PATH=%{_localstatedir}/spool/zeek \
   -DZEEK_LOG_DIR:PATH=%{_localstatedir}/log/zeek \
 ..
-make %{?_smp_mflags}
+%make_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
+cd build
 %make_install
 
 # Install service file
@@ -91,18 +110,13 @@ rm -rf $RPM_BUILD_ROOT
 %{__install} -d -m 755 %{buildroot}%{_localstatedir}/spool/zeek/tmp
 
 # Fix zeekctl python location
-mv %{buildroot}/usr/lib/zeekctl/ZeekControl/ %{buildroot}%{python2_sitelib}/ZeekControl/
-mv %{buildroot}/usr/lib/zeekctl/BroControl/ %{buildroot}%{python2_sitelib}/BroControl/
-mv %{buildroot}/usr/lib/zeekctl/plugins %{buildroot}%{python2_sitelib}/ZeekControl/plugins
-
-# Remove capstats, trace-summary, and pysubnettree
-rm -f %{buildroot}/usr/bin/capstats
-rm -f %{buildroot}/usr/bin/trace-summary
-rm -f %{buildroot}%{python2_sitelib}/SubnetTree.*
-rm -f %{buildroot}%{python2_sitelib}/_SubnetTree.*
+mkdir -p %{buildroot}%{python3_sitelib}
+mv %{buildroot}/usr/lib/zeekctl/ZeekControl/ %{buildroot}%{python3_sitelib}/ZeekControl/
+mv %{buildroot}/usr/lib/zeekctl/BroControl/ %{buildroot}%{python3_sitelib}/BroControl/
+mv %{buildroot}/usr/lib/zeekctl/plugins %{buildroot}%{python3_sitelib}/ZeekControl/plugins
 
 # Python byte compile zeekctl module
-%py_byte_compile %{__python2} %{buildroot}%{py_sitedir}
+#%py_byte_compile %{python3} %{buildroot}%{py_sitedir}
 
 ################################################################################
 %pre
@@ -140,10 +154,9 @@ exit 0
 %{_prefix}/lib/broctl
 %{_bindir}/broctl
 %{_bindir}/zeekctl
-%{python2_sitelib}/BroControl
-%{python2_sitelib}/ZeekControl
+%{python3_sitelib}/BroControl
+%{python3_sitelib}/ZeekControl
 %{_mandir}/man8/zeekctl.8*
-%{_mandir}/man1/trace-summary.1*
 
 %dir %attr(-, zeek, zeek) %{_localstatedir}/log/zeek/
 %dir %attr(-, zeek, zeek) %{_localstatedir}/spool/zeek/
@@ -156,6 +169,9 @@ exit 0
 %attr(-, zeek, zeek) %{_datadir}/zeekctl/scripts/
 
 %changelog
+* Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 2.1.0-1
+- Updated for Zeek 3.1.x
+
 * Tue Sep 24 2019 Derek Ditch <derek@rocknsm.io> 2.0.0-2
 - Updated for Zeek 3.0.0
 

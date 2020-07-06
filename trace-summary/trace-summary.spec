@@ -1,14 +1,14 @@
 Name:           trace-summary
-Version:        0.89
+Version:        0.90
 Release:        1%{?dist}
 Summary:        Generates network traffic summaries.
 
 License:        BSD
 URL:            https://github.com/zeek/trace-summary
-Source0:        https://www.zeek.org/downloads/%{name}-%{version}.tar.gz
+Source0:        https://download.zeek.org/%{name}-%{version}.tar.gz
 
-Requires:       pysubnettree
-Requires:       python
+Requires:       python3-pysubnettree
+Requires:       python3
 
 %description
 trace-summary is a Python script that generates break-downs of
@@ -21,6 +21,8 @@ incoming vs. outgoing traffic, per subnet, and per time-interval.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+sed -i 's|/usr/bin/env python|/usr/bin/python3|' trace-summary
 %{__install} -D trace-summary %{buildroot}%{_bindir}/trace-summary
 
 %files
@@ -30,6 +32,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/trace-summary
 
 %changelog
+* Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 0.90-1
+- Bump to 0.90
+
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.89-1
 - Version bump
 

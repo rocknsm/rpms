@@ -1,20 +1,28 @@
 %global BIFCL_VER 1:1.2
-%global BINPAC_VER 1:0.54
-%global BROKER_VER 1.2.0
-%global CAF_VER 0.17.3
-%global ZEEKAUX_VER 0.43
-%global ZEEKCTL_VER 2.0.0
+%global BINPAC_VER 1:0.55.1
+%global BROKER_VER 1.3.3
+%global CAF_VER 0.17.5
+%global ZEEKAUX_VER 0.44
+%global ZEEKCTL_VER 2.1.0
+
+%if 0%{?rhel} < 8
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
+%endif
 
 Name:             zeek
-Version:          3.0.1
+Version:          3.1.3
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
 License:          BSD
 URL:              http://bro.org
-Source0:          http://www.bro.org/downloads/%{name}-%{version}-minimal.tar.gz
-Source1:          https://github.com/zeek/paraglob/archive/7a0e8ce458f683a2772a4563ab39a02d926df5c7.tar.gz#/paraglob-7a0e8c.tar.gz
-Patch0:           https://github.com/zeek/zeek/compare/release/3.0...dcode:dcode/gnu-install-dirs.patch#/%{name}-gnu-install-dirs.patch
+Source0:          https://download.zeek.org/%{name}-%{version}-minimal.tar.gz
+Source1:          https://github.com/zeek/paraglob/archive/v0.4.1.tar.gz#/paraglob-0.4.1.tar.gz
+Patch0:           https://github.com/zeek/zeek/compare/release/3.1...dcode:topic/dcode/gnuinstalldirs.patch#/01-%{name}-%{version}-gnu-install-dirs.patch
+Patch1:           https://patch-diff.githubusercontent.com/raw/zeek/zeek/pull/954.patch#/02-%{name}-%{version}-bzar-dcerpc-constants.patch
 
 Provides:         bro = %{version}
 Obsoletes:        bro < %{version}
@@ -23,7 +31,15 @@ Requires:         zeek-core = %{version}-%{release}
 Requires:         zeekctl >= %{ZEEKCTL_VER}
 Requires:         zeek-aux >= %{ZEEKAUX_VER}
 
-BuildRequires:    cmake >= 2.8.12
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3  >= 3.0.0
+%global cmake %cmake3
+%global ctest /usr/bin/ctest3
+%else
+BuildRequires:    cmake   >= 3.0.0
+%global ctest /usr/bin/ctest
+%endif 
+
 
 %description
 Zeek is an open-source, Unix-based Network Intrusion Detection System (NIDS)
@@ -56,17 +72,19 @@ BuildRequires:    libpcap-devel
 Requires:         openssl
 BuildRequires:    openssl-devel
 Requires:         zlib
+Requires:         krb5-libs
 
 BuildRequires:    binpac = %{BINPAC_VER}
 BuildRequires:    binpac-devel = %{BINPAC_VER}
 BuildRequires:    bifcl = %{BIFCL_VER}
-BuildRequires:    gcc-c++
+BuildRequires:    %{?scl_prefix}gcc-c++ >= 8
 BuildRequires:    openssl-devel
 BuildRequires:    flex
 BuildRequires:    bison >= 2.5
-BuildRequires:    python2
+BuildRequires:    python3-devel
 BuildRequires:    sed
 BuildRequires:    git
+BuildRequires:    krb5-devel
 
 Provides:         bro-core = %{version}
 Obsoletes:        bro-core < %{version}
@@ -90,6 +108,8 @@ Requires:   binpac-devel = %{BINPAC_VER}
 Requires:   libpcap-devel
 Requires:   libbroker-devel = %{BROKER_VER}
 Requires:   caf-devel >= %{CAF_VER}
+Requires:   python3-devel
+Requires:   krb5-devel
 Requires:   bind-devel
 Requires:   gperftools-devel
 Requires:   openssl-devel
@@ -104,21 +124,22 @@ This package contains the development headers needed to build new Zeek plugins.
 %prep
 %autosetup -n %{name}-%{version}-minimal -S git
 
+# Temporary hack and patch
 cd aux/paraglob
 tar zxf %{SOURCE1} --strip-components 1
-
-# This is a temp work around until I can build a proper patch
-sed -i '/RequireCXX11/a  include(GNUInstallDirs)' CMakeLists.txt
+sed -i '/project(paraglob)/a include(GNUInstallDirs)' CMakeLists.txt
+sed -i 's/${CMAKE_INSTALL_PREFIX}\/lib/${CMAKE_INSTALL_LIBDIR}/' CMakeLists.txt
+sed -i 's/DESTINATION include/DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/' CMakeLists.txt
 sed -i 's/DESTINATION lib/DESTINATION ${CMAKE_INSTALL_LIBDIR}/' src/CMakeLists.txt
-sed -i 's/DESTINATION include/DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/' src/CMakeLists.txt
-sed -i 's/DESTINATION bin/DESTINATION ${CMAKE_INSTALL_BINDIR}/' tools/CMakeLists.txt
 
 ################################################################################
 %build
 mkdir build; cd build
+%{?scl_enable} 
 %cmake \
   -DZEEK_ROOT_DIR:PATH=%{_prefix} \
-  -DPY_MOD_INSTALL_DIR:PATH=%{python2_sitelib} \
+  -DPY_MOD_INSTALL_DIR:PATH=%{python3_sitelib} \
+  -DPYTHON_EXECUTABLE:PATH=%{python3} \
   -DZEEK_SCRIPT_INSTALL_PATH:PATH=%{_datadir}/%{name} \
   -DZEEK_ETC_INSTALL_DIR:PATH=%{_sysconfdir}/%{name} \
   -DENABLE_MOBILE_IPV6:BOOL=ON \
@@ -134,17 +155,26 @@ mkdir build; cd build
   -DBROKER_ROOT_DIR:PATH=%{_prefix} \
   -DCAF_INCLUDE_DIRS:PATH=%{_includedir} \
   ..
+%{?scl_disable}
 
+%{?scl_enable} 
 %make_build
+%{?scl_disable}
 
 ################################################################################
 %install
 cd build
+
+%{?scl_enable} 
 %make_install
+%{?scl_disable}
 
 ################################################################################
 %check
-ctest -V %{?_smp_mflags}
+cd build
+%{?scl_enable} 
+%ctest -V %{?_smp_mflags}
+%{?scl_disable}
 
 ################################################################################
 %files
@@ -164,6 +194,7 @@ ctest -V %{?_smp_mflags}
 %{_datadir}/%{name}/base/
 %{_datadir}/%{name}/zeekygen/
 %{_datadir}/%{name}/policy/
+%{_datadir}/%{name}/test-all-policy.zeek
 %config(noreplace) %{_datadir}/%{name}/site/local.zeek
 
 %files devel
@@ -178,6 +209,11 @@ ctest -V %{?_smp_mflags}
 
 ################################################################################
 %changelog
+* Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 3.1.3-1
+- Bump version for latest feature release
+- Switched completely to python3
+- Switched build to use cmake3 and gcc >= 8
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 3.0.1-1
 - Version bump for upstream bugfixes
 

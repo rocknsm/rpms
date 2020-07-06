@@ -1,23 +1,23 @@
 Name:    hyperscan
-Version: 5.1.0
+Version: 5.2.1
 Release: 1%{?dist}
 Summary: High-performance regular expression matching library
 
 License: BSD
 URL:     https://www.hyperscan.io/
 Source0: https://github.com/intel/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Source1: https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
+Source1: https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz
 
-BuildRequires:  cmake
-BuildRequires:	pcre-devel
-BuildRequires:	python
-BuildRequires:  ragel
-BuildRequires:	sqlite-devel
-BuildRequires:  libpcap-devel
 BuildRequires:  gcc-c++
-
-Requires:	pcre
-Requires:	sqlite
+%if 0%{?rhel} >= 8 || 0%{?fedora}
+BuildRequires:  boost-devel >= 1.57.0
+%endif
+BuildRequires:  cmake
+BuildRequires:  pcre-devel
+BuildRequires:  python3
+BuildRequires:  ragel
+BuildRequires:  sqlite-devel >= 3.0
+BuildRequires:  libpcap-devel
 
 #package requires SSE support and fails to build on non x86_64 archs
 ExclusiveArch: x86_64
@@ -33,24 +33,6 @@ expressions and for the matching of regular expressions across streams
 of data.
 
 Hyperscan is typically used in a DPI library stack.
-
-%package static
-Summary: Static library library files for the hyperscan library
-Provides: %{name}%{?_isa}
-
-%description static
-Hyperscan is a high-performance multiple regex matching library. It
-follows the regular expression syntax of the commonly-used libpcre
-library, but is a standalone library with its own C API.
-
-Hyperscan uses hybrid automata techniques to allow simultaneous
-matching of large numbers (up to tens of thousands) of regular
-expressions and for the matching of regular expressions across streams
-of data.
-
-Hyperscan is typically used in a DPI library stack.
-
-This package provides static library files for the hyperscan library.
 
 %package devel
 Summary: Libraries and header files for the hyperscan library
@@ -73,21 +55,21 @@ needed for developing Hyperscan applications.
 
 %prep
 %autosetup
-(cd include && tar zxf %{SOURCE1} boost_1_66_0/boost --strip-components=1)
+%if 0%{?rhel} < 8
+(cd include && tar zxf %{SOURCE1} boost_1_69_0/boost --strip-components=1)
+
+# Force python3
+sed -i '/^find_package(PythonInterp)/ s/PythonInterp/PythonInterp 3/' CMakeLists.txt
+%endif
 
 %build
-%cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DBUILD_STATIC_AND_SHARED:BOOL=ON \
-       -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true .
-
+%cmake -DBUILD_SHARED_LIBS:BOOL=ON -DBUILD_STATIC_AND_SHARED:BOOL=OFF .
 %make_build
 
 %install
-make install DESTDIR=%{buildroot}
-cp lib/libhs.a %{buildroot}%{_libdir}
+%make_install
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files
 %doc %{_defaultdocdir}/%{name}/examples/README.md
@@ -96,38 +78,53 @@ cp lib/libhs.a %{buildroot}%{_libdir}
 %license COPYING
 %license LICENSE
 %{_libdir}/*.so.*
-%{_libdir}/*.so
-
-%files static
-%{_libdir}/*.a
 
 %files devel
+%{_libdir}/*.so
 %{_libdir}/pkgconfig/libhs.pc
 %{_includedir}/hs/
 
 %changelog
-* Mon Feb 11 2019 Derek Ditch <derek@rocknsm.io> - 5.1.0-1
-- update version to 5.1.0
+* Wed Oct 30 2019 Jason Taylor <jtfas90@gmail.com> - 5.2.1-1
+- Latest upstream release
 
-* Tue Oct 02 2018 Jason Taylor <jtfas90@gmail.com> - 5.0.0-1
-- update version to 5.0.0
-- update bundled boost to 1.66.0
-- updated links
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.1.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
-* Wed Feb  7 2018 Jason Ish <ish@unx.ca> - 4.7.0-1
-- Update to 4.7.0.
+* Wed Apr 10 2019 Jason Taylor <jtfas90@gmail.com> - 5.1.1-1
+- Latest upstream version (#1698365)
+- Removed patch added for FTBFS (#1675120)
 
-* Thu Jan  4 2018 Jason Ish <ish@unx.ca> - 4.6.0-1
-- Update to v4.6.0.
+* Tue Feb 12 2019 Björn Esser <besser82@fedoraproject.org> - 5.1.0-1
+- Latest upstream version (#1671192)
+- Add patch to fix build (#1675120)
 
-* Thu Jul 27 2017 Jason Ish <ish@unx.ca> - 4.5.2-1
-- Update to 4.5.2.
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.0.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
-* Thu Jul 27 2017 Jason Ish <ish@unx.ca> - 4.5.1-2
-- Break out the static libs into their own package.
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 5.0.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
-* Wed Jun 28 2017 Jason Ish <ish@unx.ca> - 4.4.1-2
-- Include static library.
+* Mon Jul 09 2018 Jason Taylor <jtfas90@gmail.com> - 5.0.0-1
+- Latest upstream version
+
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 4.7.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Thu Jan 25 2018 Jason Taylor <jtfas90@gmail.com> - 4.7.0-1
+- upstream bugfix release
+
+* Fri Sep 22 2017 Jason Taylor <jtfas90@gmail.com> - 4.6.0-1
+- latest upstream release
+
+* Wed Aug 02 2017 Fedora Release Engineering <releng@fedoraproject.org> - 4.5.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
+* Thu Jul 27 2017 Jason Taylor <jtfas90@gmail.com> - 4.5.2-1
+- upstream bugfix release
+
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 4.5.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
 * Fri Jun 16 2017 Jason Taylor <jtfas90@gmail.com> - 4.5.1-1
 - upstream bugfix release
@@ -140,9 +137,6 @@ cp lib/libhs.a %{buildroot}%{_libdir}
 - Update to latest upstream
 - Add CMakeLists.txt path patch
 - Spec file updates to meet packaging standards
-
-* Mon Jan 30 2017 Jason Ish <ish@unx.ca> - 4.4.0-1
-- Update to 4.4.0.
 
 * Fri Sep 2 2016 Jason Taylor <jtfas90@gmail.com> - 4.3.1-1
 - Updated to latest upstream release.

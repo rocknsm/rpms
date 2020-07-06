@@ -12,14 +12,21 @@
 # published by the Open Source Initiative.
 
 %define docdir %{_datadir}/doc/%{name}-%{version}
-%if 0%{?fedora_version} == 20 || 0%{?fedora_version} == 21 || 0%{?suse_version} == 1310 || 0%{?suse_version} == 1320
+%if 0%{?fedora_version} >= 20 || 0%{?rhel} >= 7
 %define supportsOpenCL 1
+%endif
+
+%if 0%{?rhel} < 8
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
 %endif
 
 %define         dist_name actor-framework
 
 Name:           caf
-Version:        0.17.3
+Version:        0.17.5
 Release:        1%{?dist}
 Summary:        C++ actor framework
 License:        BSD
@@ -28,10 +35,29 @@ Source0:        https://github.com/actor-framework/%{dist_name}/archive/%{versio
 Requires:       libcaf_core == %{version}
 Requires:       libcaf_io   == %{version}
 Requires:       libcaf_openssl == %{version}
-BuildRequires:  cmake       >= 2.8
-BuildRequires:  gcc-c++     >= 4.8
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3
+%global cmake %cmake3
+%else
+BuildRequires:    cmake
+%endif
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
 BuildRequires:  openssl-devel
-BuildRequires:  python-devel
+
+BuildRequires:  python3-sphinx
+%if 0%{?rhel} < 8
+%global sphinx_build /usr/bin/sphinx-build-3
+%else
+%global sphinx_build /usr/bin/sphinx-build
+%endif
+
+%if 0%{?rhel} < 8
+BuildRequires:  python36-GitPython
+BuildRequires:  python36-sphinx_rtd_theme
+%else
+BuildRequires:  python3-GitPython
+%endif
+
 %if 0%{?supportsOpenCL}
 Requires:       libcaf_opencl == %{version}
 BuildRequires:  opencl-headers
@@ -44,17 +70,23 @@ lightweight & fast actor implementations, pattern matching for messages,
 network transparent messaging, and more.
 
 %prep
-%autosetup -n %{dist_name}-%{version} -p1
+%autosetup -S git -n %{dist_name}-%{version}
 
 %build
 mkdir build; cd build
+
+%{?scl_enable} 
 %cmake -DCAF_NO_EXAMPLES:BOOL=yes ..
 %make_build
-make doc
+%{?scl_disable}
+
+cd ../manual
+%sphinx_build . html
 
 %check
-#make --directory=build test
-ctest -V %{?_smp_mflags}
+%{?scl_enable} 
+make --directory=build test
+%{?scl_disable}
 
 # By default CAF installs itself into /usr/lib, but some distros may use
 # directories like /usr/lib64 or even /usr/lib32, the right location is
@@ -69,6 +101,9 @@ ctest -V %{?_smp_mflags}
 rm -rf %{buildroot}
 %make_install --directory=build
 
+mkdir -p %{buildroot}/%{_docdir}/caf-doc/
+cp -a manual/html %{buildroot}/%{_docdir}/caf-doc/
+
 %clean
 rm -rf %{buildroot}
 
@@ -80,6 +115,8 @@ rm -rf %{buildroot}
 %package -n libcaf_core
 Summary:  C++ actor framework: core library
 License:  BSD
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_core
 CAF is an open source C++11 actor model implementation featuring
@@ -89,21 +126,24 @@ compiled library.
 
 %files -n libcaf_core
 %doc README*
-%doc %{_datadir}/caf/tools/
+%{_datadir}/caf/tools/
+
 %license LICENSE*
 %{_libdir}/libcaf_core.so.*
 
 %post -n libcaf_core
-/sbin/ldconfig
+%{?ldconfig}
 
 %postun -n libcaf_core
-/sbin/ldconfig
+%{?ldconfig}
 
 # ---- libcaf_io ----
 %package -n libcaf_io
 Summary:  C++ actor framework: IO library
 License:  BSD
 Requires: libcaf_core == %{version}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_io
 CAF is an open source C++11 actor model implementation featuring
@@ -117,13 +157,15 @@ compiled library.
 %{_libdir}/libcaf_io.so.*
 
 %post -n libcaf_io
-/sbin/ldconfig
+%{?ldconfig}
 
 # ---- libcaf_openssl ----
 %package -n libcaf_openssl
 Summary:  C++ actor framework: OpenSSL library
 License:  BSD
 Requires: libcaf_core == %{version}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_openssl
 CAF is an open source C++11 actor model implementation featuring
@@ -137,10 +179,10 @@ compiled library.
 %{_libdir}/libcaf_openssl.so.*
 
 %post -n libcaf_openssl
-/sbin/ldconfig
+%{?ldconfig}
 
 %postun -n libcaf_openssl
-/sbin/ldconfig
+%{?ldconfig}
 
 # ---- libcaf_opencl ----
 %if 0%{?supportsOpenCL}
@@ -148,6 +190,8 @@ compiled library.
 Summary:  C++ actor framework: OpenCL support library
 License:  BSD
 Requires: libcaf_core == %{version}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description -n libcaf_opencl
 CAF is an open source C++11 actor model implementation featuring
@@ -161,10 +205,10 @@ compiled library.
 %{_libdir}/libcaf_opencl.so.*
 
 %post -n libcaf_opencl
-/sbin/ldconfig
+%{?ldconfig}
 
 %postun -n libcaf_opencl
-/sbin/ldconfig
+%{?ldconfig}
 %endif
 
 # ---- caf-devel ----
@@ -188,7 +232,7 @@ CAF. This package will also install all of them.
 Summary:  C++ actor framework: documentation in HTML format
 License:  BSD
 Requires: caf == %{version}
-BuildRequires: doxygen
+
 
 %description doc
 This package includes documentation for CAF developer, available in HTML or
@@ -199,9 +243,14 @@ manual.
 %files doc
 %doc README*
 %license LICENSE*
-%doc build/doc/html
+%{_docdir}/caf-doc/
 
 %changelog
+* Tue May 19 2020 Derek Ditch <derek@rocknsm.io> 0.17.5-1
+- Bump version to 0.17.5 to fix doc builds w/ python3
+- Explicitly build with python3-devel
+- Build with devtoolset 8 and cmake3
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 0.17.3-1
 - Version bump to latest upstream release
 

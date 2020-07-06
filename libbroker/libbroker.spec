@@ -1,19 +1,33 @@
 %global distname broker
+
+%if 0%{?rhel} < 8
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
+%endif
+
 Name:           libbroker
-Version:        1.2.0
-Release:        2%{?dist}
+Version:        1.3.3
+Release:        1%{?dist}
 Summary:        Zeek's messaging library.
 
 License:        BSD
-URL:            https://docs.zeek.org/projects/broker/en/stable/
-Source0:        https://www.zeek.org/downloads/%{distname}-%{version}.tar.gz
+URL:            https://docs.zeek.org/projects/%{distname}/
+Source0:        https://download.zeek.org/%{distname}-%{version}.tar.gz
 
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3
+%global cmake  /usr/bin/cmake3
+%else
+BuildRequires:    cmake
+%global cmake  /usr/bin/cmake
+%endif
 BuildRequires:  sqlite-devel
 BuildRequires:  caf-devel >= 0.17.3
 BuildRequires:  openssl-devel
-BuildRequires:  gcc-c++
-BuildRequires:  cmake
-BuildRequires:  python2-devel
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
+BuildRequires:  python3-devel
 Requires:       libcaf_core >= 0.17.3
 Requires:       libcaf_io >= 0.17.3
 Requires:       libcaf_openssl >= 0.17.3
@@ -33,41 +47,53 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 ################################################################################
-%package     -n python2-%{distname}
+%package     -n python3-%{distname}
 Summary:        Python bindings for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description -n python2-%{distname}
-The python2-%{distname} package contains Python bindings for
+%description -n python3-%{distname}
+The python3-%{distname} package contains Python bindings for
 developing applications that use %{name}.
 
-Requires:       python2
+Requires:       python3
 
 %prep
 %autosetup -n %{distname}-%{version}
 
 %build
 mkdir build; cd build
+
+%{?scl_enable} 
 %cmake \
   -DCAF_ROOT_DIR=%{_prefix} \
   -DBROKER_ROOT_DIR=%{_prefix} \
-  -DPY_MOD_INSTALL_DIR=%{python_sitearch} \
+  -DPY_MOD_INSTALL_DIR=%{python3_sitearch} \
   -DPYTHON_INCLUDE_DIR=%{_includedir} \
   -DPYTHON_LIBRARIES=%{_libdir} \
   -DINSTALL_LIB_DIR=%{_libdir} \
   ..
+%{?scl_disable}
+
+%{?scl_enable}
 %make_build
+%{?scl_disable}
 
 %install
 rm -rf %{buildroot}
+
+%{?scl_enable} 
 %make_install
+%{?scl_disable}
+
 find %{buildroot} -name '*.la' -delete
 
 %check
-ctest -V %{?_smp_mflags}
+cd build
+%{?scl_enable} 
+%ctest -V %{?_smp_mflags}
+%{?scl_disable}
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
 %files
@@ -81,13 +107,16 @@ ctest -V %{?_smp_mflags}
 %{_includedir}/*
 %{_libdir}/*.so
 
-%files -n python2-%{distname}
+%files -n python3-%{distname}
 %doc
-%dir %{python2_sitearch}/broker
-%{python2_sitearch}/broker/*
-
+%dir %{python3_sitearch}/broker
+%{python3_sitearch}/broker/*
 
 %changelog
+* Tue May 19 2020 Derek Ditch <derek@rocknsm.io> 1.3.3-1
+- Version bump to 1.3.3
+- Update download and docs links
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.2.0-2
 - Recompile against CAF 0.17.3
 

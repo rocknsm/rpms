@@ -1,24 +1,42 @@
 %global     distname GQUIC_Protocol_Analyzer
-%global     commit0 89b7b45043db496e64ea9189b8ddfc681d0c77a7
+%global     commit0 12d9dfe468f4774d6d57edf2758fa293fe5d5f42
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global     commitdate 20190816
+%global     commitdate 20200511
+
+%global BIFCL_VER 1:1.2
+%global BINPAC_VER 1:0.55.1
+%global ZEEK_VER 3.1.3
+
+%if 0%{?rhel} < 8
+%global scl devtoolset-8
+%global scl_prefix devtoolset-8-
+%global scl_enable cat << EOSCL | scl enable %{scl} -
+%global scl_disable EOSCL
+%endif
 
 Name:       zeek-plugin-gquic
 Version:    1.0
-Release:    4.%{commitdate}git%{shortcommit0}%{?dist}
+Release:    5.%{commitdate}git%{shortcommit0}%{?dist}
 Summary:    Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic
 
 License:    BSD
 URL:        https://github.com/salesforce/%{distname}
 Source0:    https://github.com/salesforce/%{distname}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Patch0:     https://github.com/salesforce/GQUIC_Protocol_Analyzer/compare/master...dcode:master.patch#/01-%{name}-%{shortcommit0}-zeek3.1-fixes.patch
 
-BuildRequires:  cmake >= 2.8
-BuildRequires:  zeek-devel = 3.0.1
-BuildRequires:  bifcl = 1:1.2
-BuildRequires:  binpac-devel = 1:0.54
-BuildRequires:  binpac = 1:0.54
-BuildRequires:  gcc-c++
-Requires:       zeek-core  = 3.0.1
+%if 0%{?rhel} < 8
+BuildRequires:    cmake3  >= 3.0.0
+%global cmake %cmake3
+%else
+BuildRequires:    cmake   >= 3.0.0
+%endif 
+BuildRequires:  zeek-devel = %{ZEEK_VER}
+BuildRequires:  bifcl = %{BIFCL_VER}
+BuildRequires:  binpac-devel = %{BINPAC_VER}
+BuildRequires:  binpac = %{BINPAC_VER}
+BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
+BuildRequires:  git
+Requires:       zeek-core  = %{ZEEK_VER}
 
 Obsoletes:      bro-plugin-gquic < 1.0-3
 Provides:       bro-plugin-gquic = %{version}-%{release}
@@ -27,10 +45,11 @@ Provides:       bro-plugin-gquic = %{version}-%{release}
 Protocol analyzer that detects, dissects, fingerprints, and logs GQUIC traffic.
 
 %prep
-%autosetup -n %{distname}-%{commit0}
+%autosetup -n %{distname}-%{commit0} -S git
 
 %build
 mkdir build; cd build
+%{?scl_enable}
 %cmake \
   -DCMAKE_MODULE_PATH=%{_datadir}/zeek/cmake \
   -DBRO_CONFIG_CMAKE_DIR=%{_datadir}/zeek/cmake \
@@ -38,10 +57,17 @@ mkdir build; cd build
   -DBRO_CONFIG_PREFIX=%{_prefix} \
   -DBRO_CONFIG_INCLUDE_DIR=%{_includedir}/zeek \
   ..
+%{?scl_disable}
+
+%{?scl_enable}
 %make_build
+%{?scl_disable}
 
 %install
+cd build
+%{?scl_enable}
 %make_install
+%{?scl_disable}
 
 %files
 
@@ -52,6 +78,10 @@ mkdir build; cd build
 %license LICENSE.txt
 
 %changelog
+* Thu May 21 2020 Derek Ditch <derek@rocknsm.io> 1.0-5
+- Bump to upstream latest
+- Recompile with g++ > 8 and cmake 3
+
 * Mon Dec 16 2019 Derek Ditch <derek@rocknsm.io> 1.0-4
 - Recompile against Zeek 3.0.1
 
