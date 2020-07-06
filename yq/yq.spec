@@ -46,7 +46,7 @@ install -p -m 755 bin/%{name} %{buildroot}%{_bindir}
 %{_bindir}/%{name}
 
 %changelog
-* Mon Jun 6 2020 Derek Ditch <derek@rocknsm.io> 3.3.2-1
+* Mon Jul 6 2020 Derek Ditch <derek@rocknsm.io> 3.3.2-1
 - Update to latest version upstream
 
 * Mon Mar 25 2019 Bradford Dabbs <brad@perched.io> 2.3.0-1
