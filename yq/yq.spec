@@ -20,33 +20,20 @@ yq is a lightweight and portable command-line YAML processor.
 
 The aim of the project is to be the jq or sed of yaml files.
 
-
-
 %prep
 %autosetup -n %{name}-%{version}
 
 %build
 
-mkdir -p gopath/src/github.com/%{git_org}/%{name}
-export GOPATH=${PWD}/gopath
-export PATH=${GOPATH}:${PATH}
-rsync -az --exclude=gopath/ ./ gopath/src/github.com/%{git_org}/%{name}
-cd gopath/src/github.com/%{git_org}/%{name}
-
-# Get go dependencies
-go get -u github.com/kardianos/govendor
-go install github.com/kardianos/govendor
-
-# Build the yq binary
-${GOPATH}/bin/govendor sync
-go build -o %{name} -ldflags=-linkmode=external
+# Build the yq binary - requires internet for dependencies
+go  build -o bin/%{name}
 
 %install
 rm -rf %{buildroot}
 
 # Install binaries & scripts
 install -d %{buildroot}%{_bindir}
-install -p -m 755 gopath/src/github.com/%{git_org}/%{name}/%{name} %{buildroot}%{_bindir}
+install -p -m 755 bin/%{name} %{buildroot}%{_bindir}
 
 %files
 %doc README.md LICENSE
