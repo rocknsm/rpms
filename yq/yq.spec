@@ -25,11 +25,10 @@ The aim of the project is to be the jq or sed of yaml files.
 
 %build
 
-# This is needed to generate a BuildID
-function gobuild { go build -a -ldflags "-B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n')" -v -x "$@"; }
 
 # Build the yq binary - requires internet for dependencies
-gobuild -o bin/%{name}
+# ldflags are needed to generate a BuildID
+go build -o bin/%{name} -a -ldflags "-B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n') -linkmode=external" -v -x
 
 %install
 rm -rf %{buildroot}
