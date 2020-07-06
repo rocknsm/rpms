@@ -4,7 +4,7 @@
 %global _dwz_low_mem_die_limit 0
 
 Name:           yq
-Version:        2.3.0
+Version:        3.3.2
 Release:        1%{?dist}
 Summary:        Process YAML documents from the CLI
 
@@ -56,5 +56,8 @@ install -p -m 755 gopath/src/github.com/%{git_org}/%{name}/%{name} %{buildroot}%
 %{_bindir}/%{name}
 
 %changelog
+* Mon Jun 6 2020 Derek Ditch <derek@rocknsm.io> 3.3.2-1
+- Update to latest version upstream
+
 * Mon Mar 25 2019 Bradford Dabbs <brad@perched.io> 2.3.0-1
  - Initial creation of spec file
