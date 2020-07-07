@@ -30,6 +30,11 @@ BuildRequires:  caf-devel >= 0.17.3
 BuildRequires:  openssl-devel
 BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
 BuildRequires:  python3-devel
+%if 0%{?rhel} < 8
+BuildRequires:  python36-pyOpenSSL
+%else
+BuildRequires:  python3-pyOpenSSL
+%endif
 Requires:       libcaf_core >= 0.17.3
 Requires:       libcaf_io >= 0.17.3
 Requires:       libcaf_openssl >= 0.17.3
@@ -58,6 +63,11 @@ The python3-%{distname} package contains Python bindings for
 developing applications that use %{name}.
 
 Requires:       python3
+%if 0%{?rhel} < 8
+Requires:  python36-pyOpenSSL
+%else
+Requires:  python3-pyOpenSSL
+%endif
 
 %prep
 %autosetup -n %{distname}-%{version}
@@ -65,7 +75,7 @@ Requires:       python3
 %build
 mkdir build; cd build
 
-%{?scl_enable} 
+%{?scl_enable}
 %cmake \
   -DCAF_ROOT_DIR=%{_prefix} \
   -DBROKER_ROOT_DIR=%{_prefix} \
@@ -83,7 +93,7 @@ mkdir build; cd build
 %install
 rm -rf %{buildroot}
 
-%{?scl_enable} 
+%{?scl_enable}
 %make_install
 %{?scl_disable}
 
@@ -91,7 +101,7 @@ find %{buildroot} -name '*.la' -delete
 
 %check
 cd build
-%{?scl_enable} 
+%{?scl_enable}
 %ctest -V %{?_smp_mflags}
 %{?scl_disable}
 
