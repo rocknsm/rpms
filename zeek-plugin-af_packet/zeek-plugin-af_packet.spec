@@ -1,5 +1,9 @@
 %global     distname zeek-af_packet-plugin
 
+%global BIFCL_VER 1:1.2
+%global BINPAC_VER 1:0.55.1
+%global ZEEK_VER 3.1.4
+
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
 %global scl_prefix devtoolset-8-
@@ -9,7 +13,7 @@
 
 Name:       zeek-plugin-af_packet
 Version:    2.0.0
-Release:    1%{?dist}
+Release:    2%{?dist}
 Epoch:      2
 Summary:    Native AF_Packet support plugin for Zeek.
 
@@ -26,12 +30,12 @@ BuildRequires:    cmake   >= 3.0.0
 BuildRequires:  kernel-devel
 BuildRequires:  libpcap-devel
 BuildRequires:  zlib-devel
-BuildRequires:  zeek-devel = 3.1.3
-BuildRequires:  bifcl = 1:1.2
-BuildRequires:  binpac-devel = 1:0.55.1
-BuildRequires:  binpac = 1:0.55.1
+BuildRequires:  zeek-devel = %{ZEEK_VER}
+BuildRequires:  bifcl = %{BIFCL_VER}
+BuildRequires:  binpac-devel = %{BINPAC_VER}
+BuildRequires:  binpac = %{BINPAC_VER}
 BuildRequires:  %{?scl_prefix}gcc-c++ >= 8
-Requires:       zeek-core = 3.1.3
+Requires:       zeek-core = %{ZEEK_VER}
 Requires:       libpcap
 Requires:       zlib
 
@@ -74,6 +78,9 @@ cd build
 %{_libdir}/zeek/plugins/Zeek_AF_Packet/
 
 %changelog
+* Thu Jun 11 2020 Derek Ditch <derek@rocknsm.io> 2.0.0-2
+- Recompile against Zeek 3.1.4
+
 * Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 2.0.0-1
 - Version bump upstream, renamed Bro to Zeek
 - Compiled with gcc > 8 and cmake3
