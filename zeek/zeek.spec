@@ -1,4 +1,4 @@
-%global BIFCL_VER 1:1.2
+%global BIFCL_VER 1:1.3.0
 %global BINPAC_VER 1:0.55.1
 %global BROKER_VER 1.3.3
 %global CAF_VER 0.17.5
@@ -13,7 +13,7 @@
 %endif
 
 Name:             zeek
-Version:          3.1.3
+Version:          3.1.4
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 
@@ -25,7 +25,7 @@ Patch0:           https://github.com/zeek/zeek/compare/release/3.1...dcode:topic
 Patch1:           https://patch-diff.githubusercontent.com/raw/zeek/zeek/pull/954.patch#/02-%{name}-%{version}-bzar-dcerpc-constants.patch
 
 Provides:         bro = %{version}
-Obsoletes:        bro < %{version}
+Obsoletes:        bro < 3.0.0
 
 Requires:         zeek-core = %{version}-%{release}
 Requires:         zeekctl >= %{ZEEKCTL_VER}
@@ -38,7 +38,7 @@ BuildRequires:    cmake3  >= 3.0.0
 %else
 BuildRequires:    cmake   >= 3.0.0
 %global ctest /usr/bin/ctest
-%endif 
+%endif
 
 
 %description
@@ -57,7 +57,6 @@ connecting to certain services, or patterns of failed connection attempts).
 Summary:          The core zeek installation (without zeekctl, zeek-aux, or develpment files).
 Requires:         libbroker = %{BROKER_VER}
 BuildRequires:    libbroker-devel = %{BROKER_VER}
-Requires:         caf >= %{CAF_VER}
 BuildRequires:    caf-devel >= %{CAF_VER}
 Requires:         bind-libs
 BuildRequires:    bind-devel
@@ -72,6 +71,7 @@ BuildRequires:    libpcap-devel
 Requires:         openssl
 BuildRequires:    openssl-devel
 Requires:         zlib
+BuildRequires:    zlib-devel
 Requires:         krb5-libs
 
 BuildRequires:    binpac = %{BINPAC_VER}
@@ -85,6 +85,7 @@ BuildRequires:    python3-devel
 BuildRequires:    sed
 BuildRequires:    git
 BuildRequires:    krb5-devel
+BuildRequires:    swig
 
 Provides:         bro-core = %{version}
 Obsoletes:        bro-core < %{version}
@@ -99,7 +100,6 @@ inception. Today, it is relied upon operationally in particular by many
 scientific environments for securing their cyberinfrastructure. Zeek's user
 community includes major universities, research labs, supercomputing centers,
 and open-science communities.
-
 
 %package devel
 Summary:    The development headers for Zeek
@@ -135,7 +135,7 @@ sed -i 's/DESTINATION lib/DESTINATION ${CMAKE_INSTALL_LIBDIR}/' src/CMakeLists.t
 ################################################################################
 %build
 mkdir build; cd build
-%{?scl_enable} 
+%{?scl_enable}
 %cmake \
   -DZEEK_ROOT_DIR:PATH=%{_prefix} \
   -DPY_MOD_INSTALL_DIR:PATH=%{python3_sitelib} \
@@ -157,7 +157,7 @@ mkdir build; cd build
   ..
 %{?scl_disable}
 
-%{?scl_enable} 
+%{?scl_enable}
 %make_build
 %{?scl_disable}
 
@@ -165,14 +165,14 @@ mkdir build; cd build
 %install
 cd build
 
-%{?scl_enable} 
+%{?scl_enable}
 %make_install
 %{?scl_disable}
 
 ################################################################################
 %check
 cd build
-%{?scl_enable} 
+%{?scl_enable}
 %ctest -V %{?_smp_mflags}
 %{?scl_disable}
 
@@ -209,6 +209,10 @@ cd build
 
 ################################################################################
 %changelog
+* Wed Jul 8 2020 Derek Ditch <derek@rocknsm.io> 3.1.4-1
+- Bump version for latest feature release
+- Aligned build dependencies with upstream
+
 * Wed May 20 2020 Derek Ditch <derek@rocknsm.io> 3.1.3-1
 - Bump version for latest feature release
 - Switched completely to python3
