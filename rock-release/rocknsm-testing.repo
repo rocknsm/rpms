@@ -1,6 +1,6 @@
 [rocknsm-testing]
 name=RockNSM - Testing - $basearch
-baseurl=https://copr-be.cloud.fedoraproject.org/results/@rocknsm/testing/epel-7-$basearch/
+baseurl=https://copr-be.cloud.fedoraproject.org/results/@rocknsm/testing/epel-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
