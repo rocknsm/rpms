@@ -13,8 +13,8 @@
 # limitations under the License.
 
 Name:           rock-release
-Version:        2.5
-Release:        2
+Version:        2.6
+Release:        1
 Summary:        RockNSM repository configuration
 
 Group:          System Environment/Base
