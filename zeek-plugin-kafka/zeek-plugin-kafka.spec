@@ -3,7 +3,7 @@
 %global     shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global     commitdate 20200519
 
-%global BIFCL_VER 1:1.2
+%global BIFCL_VER 1:1.7.0
 %global BINPAC_VER 1:0.60.0
 %global ZEEK_VER 5.0.7
 %global LIBRDKAFKA_VER 1.4.0
