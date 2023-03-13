@@ -6,7 +6,7 @@
 %endif
 
 Name:           zeek-aux
-Version:        0.44
+Version:        0.50
 Release:        1%{?dist}
 Epoch:          1
 Summary:        Zeek Auxiliary Programs
@@ -41,16 +41,16 @@ Requires:       libpcap
 
 %build
 mkdir build; cd build
-%{?scl_enable} 
+%{?scl_enable}
 %cmake ..
 %{?scl_disable}
 
-%{?scl_enable} 
+%{?scl_enable}
 %make_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{?scl_enable} 
+%{?scl_enable}
 %make_install
 %{?scl_disable}
 
@@ -75,4 +75,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Aug 22 2019 Bradford Dabbs <brad@dabbs.io> 0.43-1
 - Packaging zeek-aux vs bro-aux
-

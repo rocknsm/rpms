@@ -1,7 +1,7 @@
 %global     distname zeek-community-id
-%global BIFCL_VER 1:1.2
-%global BINPAC_VER 1:0.55.1
-%global ZEEK_VER 3.1.4
+%global BIFCL_VER 1:1.7.0
+%global BINPAC_VER 1:0.60.0
+%global ZEEK_VER 5.0.7
 
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
@@ -24,7 +24,7 @@ BuildRequires:    cmake3  >= 3.0.0
 %global cmake %cmake3
 %else
 BuildRequires:    cmake   >= 3.0.0
-%endif 
+%endif
 BuildRequires:  zeek-devel = %{ZEEK_VER}
 BuildRequires:  bifcl = %{BIFCL_VER}
 BuildRequires:  binpac-devel = %{BINPAC_VER}

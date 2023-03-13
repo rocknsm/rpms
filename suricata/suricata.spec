@@ -1,6 +1,6 @@
 Summary: Intrusion Detection System
 Name: suricata
-Version: 5.0.3
+Version: 6.0.10
 Release: 1%{?dist}
 License: GPLv2
 URL: https://suricata-ids.org/
@@ -23,7 +23,7 @@ BuildRequires: cargo rust >= 1.33
 %if 0%{?rhel} == 7
 BuildRequires: llvm7.0-libs
 %endif
-BuildRequires: libyaml-devel 
+BuildRequires: libyaml-devel
 %if 0%{?rhel} < 8
 BuildRequires: python36-PyYAML
 %else
@@ -77,7 +77,7 @@ UDP, ICMP, HTTP, TLS, FTP and SMB! ), Gzip Decompression, Fast IP
 Matching, and GeoIP identification.
 
 %prep
-%setup -q 
+%setup -q
 install -m 644 %{SOURCE2} doc/
 %patch1 -p1
 %patch2 -p1
@@ -500,4 +500,3 @@ getent passwd suricata >/dev/null || useradd -r -M -s /sbin/nologin suricata
 
 * Sat Feb 27 2010 Steve Grubb <sgrubb@redhat.com> 0.8.1-1
 - Initial packaging
-

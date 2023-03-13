@@ -1,9 +1,9 @@
-%global BIFCL_VER 1:1.3.0
-%global BINPAC_VER 1:0.55.1
-%global BROKER_VER 1.3.3
+%global BIFCL_VER 1:1.7.0
+%global BINPAC_VER 1:0.60.0
+%global BROKER_VER 2.4.2
 %global CAF_VER 0.17.5
-%global ZEEKAUX_VER 0.44
-%global ZEEKCTL_VER 2.1.0
+%global ZEEKAUX_VER 0.50
+%global ZEEKCTL_VER 2.5.0
 
 %if 0%{?rhel} < 8
 %global scl devtoolset-8
@@ -13,7 +13,7 @@
 %endif
 
 Name:             zeek
-Version:          3.1.4
+Version:          5.0.7
 Release:          1%{?dist}
 Summary:          A Network Intrusion Detection System and Analysis Framework
 

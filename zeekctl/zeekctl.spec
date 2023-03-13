@@ -1,7 +1,7 @@
 %global __python %{python3}
 
 Name:           zeekctl
-Version:        2.1.0
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        Tool for managing Zeek deployments.
 
